@@ -4,5 +4,27 @@
 /* Other colors */
 body {
   font-family: var(--font-public-sans);
-  background-color: #F8F4F0;
+  background-color: #f8f4f0;
+}
+
+.card {
+  padding: 32px;
+  border-radius: 12px;
+  color: #201f24;
+  background-color: white;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.card-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.card-link span {
+  font-size: 14px;
+  color: #696868;
 }/*# sourceMappingURL=style.css.map */

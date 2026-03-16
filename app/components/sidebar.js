@@ -36,12 +36,12 @@ const Sidebar = ({}) => {
   const pathname = usePathname();
 
   return (
-    <nav className="w-[300px] h-full fixed top-0 left-0 flex flex-col pb-6 bg-grey-900 text-grey-300 rounded-r-2xl">
-      <div className="px-8 py-10">
+    <nav className="fixed bottom-0 md:top-0 left-0 w-full md:w-[300px] md:h-full px-4 sm:px-10 md:px-0 md:pb-6 flex flex-col bg-grey-900 text-grey-300 max-md:rounded-t-2xl md:rounded-r-2xl">
+      <div className="hidden md:block px-8 py-10">
         <Image src={Logo} height="22" alt="finance Logo" className="w-auto" />
       </div>
 
-      <div className="mt-6 flex flex-col gap-1 pr-6">
+      <div className="mt-2 md:mt-6 md:pr-6 flex md:flex-col justify-between sm:gap-1">
         {SidebarMenu.map((menu) => {
           const Icon = menu.icon;
           const isActive = pathname == menu.href;
@@ -50,19 +50,26 @@ const Sidebar = ({}) => {
             <Link
               key={menu.id}
               href={menu.href}
-              className={`relative px-8 py-4 flex items-center gap-4 text-base font-bold ${isActive && "bg-beige-100 text-grey-900 rounded-r-xl"}`}
+              className={`relative w-full max-md:w-[104px] pt-2 pb-3 md:py-4 md:px-8 flex max-md:flex-col items-center justify-center sm:justify-end md:justify-start gap-1 md:gap-4 text-base font-bold ${
+                isActive &&
+                "bg-beige-100 text-grey-900 max-md:rounded-t-xl md:rounded-r-xl"
+              }`}
             >
               {isActive && (
-                <div className="absolute top-0 left-0 w-[6px] h-full bg-green"></div>
+                <div className="absolute bottom-0 md:top-0 left-0 w-full h-[6px] md:w-[6px] md:h-full bg-green"></div>
               )}
+
               <Icon className={`${isActive && "text-green"}`} />
-              <div>{menu.label}</div>
+
+              <div className="hidden sm:block text-xs md:text-base max-md:text-center">
+                {menu.label}
+              </div>
             </Link>
           );
         })}
       </div>
 
-      <button className="px-8 py-4 mt-auto flex items-center gap-4">
+      <button className="hidden md:flex mt-auto px-8 py-4 items-center gap-4">
         <MinimizeMenuIcon />
         <span>Minimize Menu</span>
       </button>
