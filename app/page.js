@@ -1,6 +1,7 @@
 import Summary from "./components/summary";
 import Pots from "./components/pots";
 import Transactions from "./components/transactions";
+import Budgets from "./components/budgets";
 import RecurringBills from "./components/recurringBills";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
         </div>
 
         <div className="col-span-5 flex flex-col gap-6">
+          <Budgets />
           <RecurringBills />
         </div>
       </main>

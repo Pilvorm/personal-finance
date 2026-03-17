@@ -1,30 +1,31 @@
 import { CaretRight, PotsIconGreen } from "./icons";
 import Link from "next/link";
+import Category from "./category";
 
 const potsList = [
   {
     id: "savings",
     label: "Savings",
     amount: 159,
-    color: "bg-green",
+    color: "green",
   },
   {
     id: "gift",
     label: "Gift",
     amount: 40,
-    color: "bg-cyan",
+    color: "cyan",
   },
   {
     id: "concert-ticket",
     label: "Concert Ticket",
     amount: 110,
-    color: "bg-navy",
+    color: "navy",
   },
   {
     id: "new-laptop",
     label: "New Laptop",
     amount: 10,
-    color: "bg-yellow",
+    color: "yellow",
   },
 ];
 
@@ -55,14 +56,7 @@ export default function Pots() {
         {/* Right */}
         <div className="grid grid-cols-2 gap-4">
           {potsList.map((pot) => (
-            <div key={pot.id} className="pots-category flex items-center gap-4">
-              <div className={`w-[4px] h-full rounded-lg ${pot.color}`} />
-
-              <div>
-                <h3 className="text-grey-500">{pot.label}</h3>
-                <div className="mt-1 text-sm font-bold">${pot.amount}</div>
-              </div>
-            </div>
+            <Category key={pot.label} color={pot.color} label={pot.label} amount={pot.amount}/>
           ))}
         </div>
       </div>

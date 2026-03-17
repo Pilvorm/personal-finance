@@ -27,4 +27,22 @@ body {
 .card-link span {
   font-size: 14px;
   color: #696868;
+}
+
+.donut {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background: conic-gradient(var(--segments));
+  position: relative;
+}
+
+/* inner cut-out */
+.donut::after {
+  content: "";
+  position: absolute;
+  inset: 48px; /* thickness of ring */
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.25);
 }/*# sourceMappingURL=style.css.map */
