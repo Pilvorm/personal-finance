@@ -2,7 +2,7 @@ import { Public_Sans } from "next/font/google";
 import "./globals.css";
 import "./style.css";
 
-import Sidebar from "./components/sidebar";
+import LayoutClient from "./components/layoutClient";
 
 const publicSans = Public_Sans({
   variable: "--font-public-sans",
@@ -17,11 +17,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${publicSans.variable} antialiased`}
-      >
-        <Sidebar />
-        {children}
+      <body className={`${publicSans.variable} antialiased`}>
+        <LayoutClient>{children}</LayoutClient>
       </body>
     </html>
   );

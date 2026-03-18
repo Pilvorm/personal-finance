@@ -41,9 +41,11 @@ export default function Pots() {
         </Link>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-5">
+      <div
+        className="mt-5 flex gap-5 flex-col sm:flex-row flex-wrap md:flex-col xl:flex-row"
+      >
         {/* Left */}
-        <div className="p-4 flex items-center gap-4 bg-beige-100 rounded-xl">
+        <div className="flex-1 p-4 flex items-center gap-4 bg-beige-100 rounded-xl">
           <div className="w-10 h-10">
             <PotsIconGreen className={"mx-auto"} />
           </div>
@@ -54,9 +56,14 @@ export default function Pots() {
         </div>
 
         {/* Right */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="flex-1 grid grid-cols-2 gap-4">
           {potsList.map((pot) => (
-            <Category key={pot.label} color={pot.color} label={pot.label} amount={pot.amount}/>
+            <Category
+              key={pot.label}
+              color={pot.color}
+              label={pot.label}
+              amount={pot.amount}
+            />
           ))}
         </div>
       </div>

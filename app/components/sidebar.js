@@ -32,13 +32,17 @@ const SidebarMenu = [
   },
 ];
 
-const Sidebar = ({}) => {
+const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 md:top-0 left-0 w-full md:w-[300px] md:h-full px-4 sm:px-10 md:px-0 md:pb-6 flex flex-col bg-grey-900 text-grey-300 max-md:rounded-t-2xl md:rounded-r-2xl">
-      <div className="hidden md:block px-8 py-10">
-        <Image src={Logo} height="22" alt="finance Logo" className="w-auto" />
+    <nav
+      className={`fixed bottom-0 md:top-0 left-0 w-full md:h-full ${isMenuOpen ? "md:w-[300px]" : "md:w-fit"} transition-all duration-300 px-4 sm:px-10 md:px-0 md:pb-6 flex flex-col bg-grey-900 text-grey-300 max-md:rounded-t-2xl md:rounded-r-2xl z-10`}
+    >
+      <div className="hidden md:block px-8 py-10 w-fit h-[22px]">
+        {isMenuOpen && (
+          <Image src={Logo} height="22" alt="finance Logo" className="w-auto" />
+        )}
       </div>
 
       <div className="mt-2 md:mt-6 md:pr-6 flex md:flex-col justify-between sm:gap-1">
@@ -59,19 +63,24 @@ const Sidebar = ({}) => {
                 <div className="absolute bottom-0 md:top-0 left-0 w-full h-[6px] md:w-[6px] md:h-full bg-green"></div>
               )}
 
-              <Icon className={`${isActive && "text-green"}`} />
+              <Icon className={`w-6 h-6 ${isActive && "text-green"}`} />
 
-              <div className="hidden sm:block text-xs md:text-base max-md:text-center">
-                {menu.label}
-              </div>
+              {isMenuOpen && (
+                <div className="hidden sm:block text-xs md:text-base max-md:text-center">
+                  {menu.label}
+                </div>
+              )}
             </Link>
           );
         })}
       </div>
 
-      <button className="hidden md:flex mt-auto px-8 py-4 items-center gap-4">
-        <MinimizeMenuIcon />
-        <span>Minimize Menu</span>
+      <button
+        onClick={() => setIsMenuOpen((prev) => !prev)}
+        className="hidden md:flex mt-auto px-8 py-4 items-center gap-4"
+      >
+        <MinimizeMenuIcon className="w-6 h-6"/>
+        {isMenuOpen && <span>Minimize Menu</span>}
       </button>
     </nav>
   );

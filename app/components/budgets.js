@@ -28,30 +28,42 @@ export default function Budgets() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="card-title">Budgets</h2>
-        <Link href="/" className="card-link">
+        <Link href="/" className="card-link flex items-center gap-1">
           <span>See Details</span>
           <CaretRight />
         </Link>
       </div>
 
-      <div className="mt-5 grid grid-cols-[3fr_2fr] justify-between gap-8">
+      {/* Content */}
+      <div className="mt-5 grid gap-8 items-center grid-cols-1 sm:grid-cols-[3fr_1fr] xl:grid-cols-[3fr_2fr]">
+        
         {/* Chart */}
-        <div
-          className="donut flex items-center justify-center"
-          style={{ "--segments": gradient }}
-        >
-          <div className="z-10">
-            <div className="text-[32px] font-bold">$338</div>
-            <span className="mt-2 text-sm text-grey-500">of $975 limit</span>
+        <div className="flex justify-center">
+          <div
+            className="donut flex items-center justify-center"
+            style={{ "--segments": gradient }}
+          >
+            <div className="z-10 text-center">
+              <div className="text-[32px] font-bold">$338</div>
+              <span className="mt-2 block text-sm text-grey-500">
+                of $975 limit
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Legend/Categories */}
-        <div className="flex flex-col gap-4 justify-center">
-            {budgetsData.map((budget) => (
-                <Category key={budget.label} color={budget.tagColor} label={budget.label} amount={budget.amount}/>
-            ))}
+        {/* Categories */}
+        <div className="grid gap-4 grid-cols-2 sm:grid-cols-1">
+          {budgetsData.map((budget) => (
+            <Category
+              key={budget.label}
+              color={budget.tagColor}
+              label={budget.label}
+              amount={budget.amount}
+            />
+          ))}
         </div>
+
       </div>
     </div>
   );

@@ -17,9 +17,9 @@ export default function RecurringBills() {
       </div>
 
       <div className="mt-5">
-        <div className="relative w-full px-4 py-5 flex items-center justify-between bg-beige-100 rounded-xl border-l-5 border-green">
-            <h3 className="text-sm text-grey-500 z-3">Paid Bills</h3>
-            <div className="text-sm font-bold z-3">$190.00</div>
+        <div className="w-full px-4 py-5 flex items-center justify-between bg-beige-100 rounded-xl border-l-5 border-green">
+            <h3 className="text-sm text-grey-500">Paid Bills</h3>
+            <div className="text-sm font-bold">$190.00</div>
         </div>
       </div>
     </div>
