@@ -35,6 +35,11 @@ body {
   background-color: $beige-100;
 }
 
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+}
+
 .card {
   padding: 32px;
   border-radius: 12px;
@@ -74,4 +79,13 @@ body {
   background: white;
   border-radius: 50%;
   box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.25);
+}
+
+.menu-items {
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+}
+
+.btn-basic {
+  border-radius: 8px;
+  border: 1px solid $grey-500;
 }

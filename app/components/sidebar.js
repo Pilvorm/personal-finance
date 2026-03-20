@@ -54,16 +54,15 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
             <Link
               key={menu.id}
               href={menu.href}
-              className={`relative w-full max-md:w-[104px] pt-2 pb-3 md:py-4 md:px-8 flex max-md:flex-col items-center justify-center sm:justify-end md:justify-start gap-1 md:gap-4 text-base font-bold ${
-                isActive &&
-                "bg-beige-100 text-grey-900 max-md:rounded-t-xl md:rounded-r-xl"
-              }`}
+              className={`relative group w-full max-md:w-[104px] pt-2 pb-3 md:py-4 md:px-8 flex max-md:flex-col items-center justify-center sm:justify-end md:justify-start gap-1 md:gap-4 text-base font-bold transition-all ease-out duration-100 ${isActive ? "bg-beige-100 text-grey-900 max-md:rounded-t-xl md:rounded-r-xl" : ""} hover:bg-beige-100 hover:text-grey-900 max-md:hover:rounded-t-xl md:hover:rounded-r-xl`}
             >
               {isActive && (
                 <div className="absolute bottom-0 md:top-0 left-0 w-full h-[6px] md:w-[6px] md:h-full bg-green"></div>
               )}
 
-              <Icon className={`w-6 h-6 ${isActive && "text-green"}`} />
+              <Icon
+                className={`w-6 h-6 transition-all ease-out duration-100 ${isActive ? "text-green" : "group-hover:text-green"}`}
+              />
 
               {isMenuOpen && (
                 <div className="hidden sm:block text-xs md:text-base max-md:text-center">
@@ -77,9 +76,9 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
 
       <button
         onClick={() => setIsMenuOpen((prev) => !prev)}
-        className="hidden md:flex mt-auto px-8 py-4 items-center gap-4"
+        className="cursor-pointer hidden md:flex mt-auto px-8 py-4 items-center gap-4"
       >
-        <MinimizeMenuIcon className="w-6 h-6"/>
+        <MinimizeMenuIcon className="w-6 h-6" />
         {isMenuOpen && <span>Minimize Menu</span>}
       </button>
     </nav>

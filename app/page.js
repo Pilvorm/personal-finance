@@ -7,7 +7,7 @@ import RecurringBills from "./components/recurringBills";
 export default function Home() {
   return (
     <div id="overview" className="pt-8 pb-24 px-10 md:py-8">
-      <h1 className="text-[32px] font-bold">Overview</h1>
+      <h1 className="page-title">Overview</h1>
       <Summary />
 
       <main className="flex flex-col md:flex-row flex-wrap lg:grid grid-cols-12 gap-6">
