@@ -4,49 +4,40 @@ import Image from "next/image";
 import Logo from "@/public/assets/images/logo-large.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
+import { MinimizeMenuIcon } from "./icons";
+import { SIDEBAR_MENU } from "../data";
 
-import {
-  OverviewIcon,
-  TransactionsIcon,
-  BudgetsIcon,
-  PotsIcon,
-  RecurringBillsIcon,
-  MinimizeMenuIcon,
-} from "./icons";
-
-const SidebarMenu = [
-  { id: "overview", label: "Overview", href: "/", icon: OverviewIcon },
-  {
-    id: "transactions",
-    label: "Transactions",
-    href: "/transactions",
-    icon: TransactionsIcon,
-  },
-  { id: "budgets", label: "Budgets", href: "/budgets", icon: BudgetsIcon },
-  { id: "pots", label: "Pots", href: "/pots", icon: PotsIcon },
-  {
-    id: "recurring-bills",
-    label: "Recurring Bills",
-    href: "/recurring-bills",
-    icon: RecurringBillsIcon,
-  },
-];
+const visibility = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
 
 const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
   const pathname = usePathname();
 
   return (
     <nav
-      className={`fixed bottom-0 md:top-0 left-0 w-full md:h-full ${isMenuOpen ? "md:w-[300px]" : "md:w-fit"} transition-all duration-300 px-4 sm:px-10 md:px-0 md:pb-6 flex flex-col bg-grey-900 text-grey-300 max-md:rounded-t-2xl md:rounded-r-2xl z-10`}
+      className={`fixed bottom-0 md:top-0 left-0 w-full md:h-full ${isMenuOpen ? "md:w-[300px]" : "md:w-[112px]"} transition-all duration-300 px-4 sm:px-10 md:px-0 md:pb-6 flex flex-col bg-grey-900 text-grey-300 max-md:rounded-t-2xl md:rounded-r-2xl z-10`}
     >
-      <div className="hidden md:block px-8 py-10 w-fit h-[22px]">
-        {isMenuOpen && (
-          <Image src={Logo} height="22" alt="finance Logo" className="w-auto" />
-        )}
+      <div className="hidden md:block px-8 py-10 w-max h-[22px]">
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              variants={visibility}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <Image src={Logo} width={122} height={22} alt="finance Logo" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="mt-2 md:mt-6 md:pr-6 flex md:flex-col justify-between sm:gap-1">
-        {SidebarMenu.map((menu) => {
+        {SIDEBAR_MENU.map((menu) => {
           const Icon = menu.icon;
           const isActive = pathname == menu.href;
 
@@ -59,27 +50,44 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
               {isActive && (
                 <div className="absolute bottom-0 md:top-0 left-0 w-full h-[6px] md:w-[6px] md:h-full bg-green"></div>
               )}
-
               <Icon
-                className={`w-6 h-6 transition-all ease-out duration-100 ${isActive ? "text-green" : "group-hover:text-green"}`}
+                className={`shrink-0 w-6 h-6 transition-all ease-out duration-100 ${isActive ? "text-green" : "group-hover:text-green"}`}
               />
-
-              {isMenuOpen && (
-                <div className="hidden sm:block text-xs md:text-base max-md:text-center">
-                  {menu.label}
-                </div>
-              )}
+              <AnimatePresence>
+                {isMenuOpen && (
+                  <motion.div
+                    variants={visibility}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="hidden sm:block text-xs md:text-base whitespace-nowrap"
+                  >
+                    {menu.label}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </Link>
           );
         })}
       </div>
-
       <button
         onClick={() => setIsMenuOpen((prev) => !prev)}
         className="cursor-pointer hidden md:flex mt-auto px-8 py-4 items-center gap-4"
       >
-        <MinimizeMenuIcon className="w-6 h-6" />
-        {isMenuOpen && <span>Minimize Menu</span>}
+        <MinimizeMenuIcon className="shrink-0 w-6 h-6" />
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.span
+              variants={visibility}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="text-nowrap"
+            >
+              Minimize Menu
+            </motion.span>
+          )}
+        </AnimatePresence>
       </button>
     </nav>
   );
