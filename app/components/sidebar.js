@@ -19,9 +19,9 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
 
   return (
     <nav
-      className={`fixed bottom-0 md:top-0 left-0 w-full md:h-full ${isMenuOpen ? "md:w-[300px]" : "md:w-[112px]"} transition-all duration-300 px-4 sm:px-10 md:px-0 md:pb-6 flex flex-col bg-grey-900 text-grey-300 max-md:rounded-t-2xl md:rounded-r-2xl z-10`}
+      className={`fixed bottom-0 lg:top-0 left-0 w-full lg:h-full ${isMenuOpen ? "lg:w-[300px]" : "lg:w-[112px]"} transition-all duration-300 px-4 sm:px-10 lg:px-0 lg:pb-6 flex flex-col bg-grey-900 text-grey-300 max-lg:rounded-t-2xl lg:rounded-r-2xl z-10`}
     >
-      <div className="hidden md:block px-8 py-10 w-max h-[22px]">
+      <div className="hidden lg:block px-8 py-10 w-max h-[22px]">
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
@@ -36,7 +36,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
         </AnimatePresence>
       </div>
 
-      <div className="mt-2 md:mt-6 md:pr-6 flex md:flex-col justify-between sm:gap-1">
+      <div className="mt-2 lg:mt-6 lg:pr-6 flex lg:flex-col justify-between sm:gap-1">
         {SIDEBAR_MENU.map((menu) => {
           const Icon = menu.icon;
           const isActive = pathname == menu.href;
@@ -45,10 +45,10 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
             <Link
               key={menu.id}
               href={menu.href}
-              className={`relative group w-full max-md:w-[104px] pt-2 pb-3 md:py-4 md:px-8 flex max-md:flex-col items-center justify-center sm:justify-end md:justify-start gap-1 md:gap-4 text-base font-bold transition-all ease-out duration-100 ${isActive ? "bg-beige-100 text-grey-900 max-md:rounded-t-xl md:rounded-r-xl" : ""} hover:bg-beige-100 hover:text-grey-900 max-md:hover:rounded-t-xl md:hover:rounded-r-xl`}
+              className={`relative group w-full max-lg:w-[104px] pt-2 pb-3 lg:py-4 lg:px-8 flex max-lg:flex-col items-center justify-center sm:justify-end lg:justify-start gap-1 lg:gap-4 text-base font-bold transition-all ease-out duration-100 ${isActive ? "bg-beige-100 text-grey-900 max-lg:rounded-t-xl lg:rounded-r-xl" : ""} hover:bg-beige-100 hover:text-grey-900 max-lg:hover:rounded-t-xl lg:hover:rounded-r-xl`}
             >
               {isActive && (
-                <div className="absolute bottom-0 md:top-0 left-0 w-full h-[6px] md:w-[6px] md:h-full bg-green"></div>
+                <div className="absolute bottom-0 lg:top-0 left-0 w-full h-[6px] lg:w-[6px] lg:h-full bg-green"></div>
               )}
               <Icon
                 className={`shrink-0 w-6 h-6 transition-all ease-out duration-100 ${isActive ? "text-green" : "group-hover:text-green"}`}
@@ -60,7 +60,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="hidden sm:block text-xs md:text-base whitespace-nowrap"
+                    className="hidden sm:block text-xs lg:text-base whitespace-nowrap"
                   >
                     {menu.label}
                   </motion.div>
@@ -72,7 +72,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
       </div>
       <button
         onClick={() => setIsMenuOpen((prev) => !prev)}
-        className="cursor-pointer hidden md:flex mt-auto px-8 py-4 items-center gap-4"
+        className="cursor-pointer hidden lg:flex mt-auto px-8 py-4 items-center gap-4"
       >
         <MinimizeMenuIcon className="shrink-0 w-6 h-6" />
         <AnimatePresence>

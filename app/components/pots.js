@@ -42,7 +42,7 @@ export default function Pots() {
       </div>
 
       <div
-        className="mt-5 flex gap-5 flex-col sm:flex-row flex-wrap md:flex-col xl:flex-row"
+        className="mt-5 flex gap-5 flex-col sm:flex-row flex-wrap"
       >
         {/* Left */}
         <div className="flex-1 p-4 flex items-center gap-4 bg-beige-100 rounded-xl">

@@ -59,4 +59,26 @@ body {
 .btn-basic {
   border-radius: 8px;
   border: 1px solid #696868;
+}
+
+.hover-basic {
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+.hover-basic:hover {
+  color: white;
+  background: #201f24;
+  transition: all 0.1s ease-in-out;
+}
+
+#transaction-table {
+  margin-top: 24px;
+}
+#transaction-table thead th {
+  font-weight: normal;
+  margin: 24px 0;
+  padding: 16px 0;
+}
+#transaction-table tbody td {
+  padding: 16px 0;
 }/*# sourceMappingURL=style.css.map */

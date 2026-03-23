@@ -13,7 +13,7 @@ export default function LayoutClient({ children }) {
       <div
         className={`
           transition-all duration-300
-          ${isMenuOpen ? "md:ml-[300px]" : "md:ml-[112px]"}
+          ${isMenuOpen ? "lg:ml-[300px]" : "lg:ml-[112px]"}
         `}
       >
         {children}

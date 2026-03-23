@@ -89,3 +89,28 @@ body {
   border-radius: 8px;
   border: 1px solid $grey-500;
 }
+
+.hover-basic {
+  cursor: pointer;
+  transition: all 0.100s ease-in-out;
+  
+  &:hover {
+    color: white;
+    background: $grey-900;
+    transition: all 0.100s ease-in-out;
+  }
+}
+
+#transaction-table {
+  margin-top: 24px;
+
+  thead th {
+    font-weight: normal;
+    margin: 24px 0;
+    padding: 16px 0;
+  }
+
+  tbody td {
+    padding: 16px 0;
+  }
+}

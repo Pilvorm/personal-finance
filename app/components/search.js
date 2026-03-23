@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SearchIcon, CaretDown } from "./icons";
+import { SearchIcon, CaretDown, Sort, Filter } from "./icons";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
 const sortOptions = [
@@ -24,7 +24,7 @@ const categories = [
   "Education",
   "Lifestyle",
   "Shopping",
-  "General"
+  "General",
 ];
 
 export default function Search({ placeholder }) {
@@ -32,22 +32,27 @@ export default function Search({ placeholder }) {
   const [category, setCategory] = useState(categories[0]);
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="btn-basic w-[320px] px-5 py-3 flex items-center justify-between">
-        <input type="text" placeholder={placeholder} className="focus:outline-none" />
+    <div className="flex max-md:flex-wrap items-center justify-between gap-6">
+      <div className="btn-basic w-fit md:w-[320px] px-5 py-3 flex items-center justify-between">
+        <input
+          type="text"
+          placeholder={placeholder}
+          className="w-fit focus:outline-none"
+        />
         <SearchIcon />
       </div>
 
       <div className="flex items-center gap-6">
         {/* Sort */}
         <div className="flex items-center gap-2">
-          <div className="text-sm text-grey-500">Sort by</div>
+          <div className="max-md:hidden text-sm text-grey-500">Sort by</div>
           <Menu>
-            <MenuButton
-              className={`btn-basic cursor-pointer px-5 py-3 flex items-center gap-4 text-sm outline-none`}
-            >
-              Latest
-              <CaretDown />
+            <MenuButton>
+              <div className="btn-basic cursor-pointer px-5 py-3 hidden md:flex items-center gap-4 text-sm outline-none">
+                {sort}
+                <CaretDown />
+              </div>
+              <Sort className="md:hidden"/>
             </MenuButton>
 
             <MenuItems
@@ -70,13 +75,14 @@ export default function Search({ placeholder }) {
 
         {/* Category */}
         <div className="flex items-center gap-2">
-          <div className="text-sm text-grey-500">Category</div>
+          <div className="max-md:hidden text-sm text-grey-500">Category</div>
           <Menu>
-            <MenuButton
-              className={`btn-basic cursor-pointer px-5 py-3 flex items-center gap-4 text-sm outline-none`}
-            >
-              Latest
-              <CaretDown />
+            <MenuButton>
+              <div className="btn-basic cursor-pointer px-5 py-3 hidden md:flex items-center gap-4 text-sm outline-none">
+                {category}
+                <CaretDown />
+              </div>
+              <Filter className="md:hidden"/>
             </MenuButton>
 
             <MenuItems
@@ -87,7 +93,7 @@ export default function Search({ placeholder }) {
               {categories.map((option, idx) => (
                 <MenuItem key={option} onClick={() => setSort(option)}>
                   <button
-                    className={`group cursor-pointer capitalize flex w-full items-center gap-2 rounded-lg px-3 py-1.5 transition duration-50 ease-out data-focus:bg-beige-100 ${option == category && "font-bold"}`}
+                    className={`group cursor-pointer capitalize truncate flex w-full items-center gap-2 rounded-lg px-3 py-1.5 transition duration-50 ease-out data-focus:bg-beige-100 ${option == category && "font-bold"}`}
                   >
                     {option}
                   </button>

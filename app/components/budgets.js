@@ -35,7 +35,7 @@ export default function Budgets() {
       </div>
 
       {/* Content */}
-      <div className="mt-5 grid gap-8 items-center grid-cols-1 sm:grid-cols-[3fr_1.5fr] lg:flex justify-center flex-wrap xl:grid-cols-[3fr_2fr]">
+      <div className="mt-5 grid gap-8 items-center grid-cols-1 sm:grid-cols-[3fr_1.5fr] lg:flex justify-center flex-wrap xl:grid xl:grid-cols-[3fr_2fr]">
         
         {/* Chart */}
         <div className="flex justify-center">
@@ -53,7 +53,7 @@ export default function Budgets() {
         </div>
 
         {/* Categories */}
-        <div className="grid gap-4 grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1">
+        <div className="grid gap-4 grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-1">
           {budgetsData.map((budget) => (
             <Category
               key={budget.label}

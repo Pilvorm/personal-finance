@@ -6,7 +6,7 @@ import RecurringBills from "./components/recurringBills";
 
 export default function Home() {
   return (
-    <div id="overview" className="pt-8 pb-24 px-10 md:py-8">
+    <div id="overview" className="px-4 pt-8 pb-24 md:px-10 md:py-8">
       <h1 className="page-title">Overview</h1>
       <Summary />
 
