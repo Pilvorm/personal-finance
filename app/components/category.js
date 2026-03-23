@@ -1,4 +1,4 @@
-export default function Category({ color, label, amount }) {
+export default function Category({ color, label, limit, row, spending, className }) {
   const colorMap = {
     /* Primary palette */
     green: "bg-green",
@@ -21,12 +21,12 @@ export default function Category({ color, label, amount }) {
   };
 
   return (
-    <div className="pots-category flex items-center gap-4">
+    <div className={`pots-category flex items-center gap-4 ${className || ""}`}>
       <div className={`min-w-[4px] h-full rounded-lg ${colorMap[color]}`} />
 
-      <div>
+      <div className={`flex gap-1 ${row ? "w-full items-center justify-between" : "flex-col"}`}>
         <h3 className="text-grey-500">{label}</h3>
-        <div className="mt-1 text-sm font-bold">${amount}</div>
+        <div className="text-sm font-bold">${limit}</div>
       </div>
     </div>
   );

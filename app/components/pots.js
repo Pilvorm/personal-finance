@@ -6,25 +6,25 @@ const potsList = [
   {
     id: "savings",
     label: "Savings",
-    amount: 159,
+    limit: 159,
     color: "green",
   },
   {
     id: "gift",
     label: "Gift",
-    amount: 40,
+    limit: 40,
     color: "cyan",
   },
   {
     id: "concert-ticket",
     label: "Concert Ticket",
-    amount: 110,
+    limit: 110,
     color: "navy",
   },
   {
     id: "new-laptop",
     label: "New Laptop",
-    amount: 10,
+    limit: 10,
     color: "yellow",
   },
 ];
@@ -62,7 +62,7 @@ export default function Pots() {
               key={pot.label}
               color={pot.color}
               label={pot.label}
-              amount={pot.amount}
+              limit={pot.limit}
             />
           ))}
         </div>

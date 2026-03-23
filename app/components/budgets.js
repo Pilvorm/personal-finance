@@ -1,20 +1,15 @@
 import { CaretRight } from "./icons";
 import Link from "next/link";
 import Category from "./category";
-
-const budgetsData = [
-  { label: "Entertainment", amount: 50, color: "#2F7F73", tagColor: "green" },
-  { label: "Bills", amount: 750, color: "#7DB9C8", tagColor: "cyan" },
-  { label: "Dining", amount: 75, color: "#E6C29F", tagColor: "yellow" },
-  { label: "Personal", amount: 100, color: "#6B6A77", tagColor: "navy" },
-];
+import DonutChart from "./donutChart";
+import { BUDGETS_DATA } from "../data";
 
 export default function Budgets() {
-  const total = budgetsData.reduce((acc, item) => acc + item.amount, 0);
+  const total = BUDGETS_DATA.reduce((acc, item) => acc + item.amount, 0);
 
   let current = 0;
 
-  const gradient = budgetsData
+  const gradient = BUDGETS_DATA
     .map((item) => {
       const start = current;
       const percent = (item.amount / total) * 100;
@@ -39,27 +34,17 @@ export default function Budgets() {
         
         {/* Chart */}
         <div className="flex justify-center">
-          <div
-            className="donut flex items-center justify-center"
-            style={{ "--segments": gradient }}
-          >
-            <div className="z-10 text-center">
-              <div className="text-[32px] font-bold">$338</div>
-              <span className="mt-2 block text-sm text-grey-500">
-                of $975 limit
-              </span>
-            </div>
-          </div>
+          <DonutChart />
         </div>
 
         {/* Categories */}
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-1">
-          {budgetsData.map((budget) => (
+          {BUDGETS_DATA.map((budget) => (
             <Category
               key={budget.label}
               color={budget.tagColor}
               label={budget.label}
-              amount={budget.amount}
+              limit={budget.limit}
             />
           ))}
         </div>
