@@ -5,19 +5,6 @@ import DonutChart from "./donutChart";
 import { BUDGETS_DATA } from "../data";
 
 export default function Budgets() {
-  const total = BUDGETS_DATA.reduce((acc, item) => acc + item.amount, 0);
-
-  let current = 0;
-
-  const gradient = BUDGETS_DATA
-    .map((item) => {
-      const start = current;
-      const percent = (item.amount / total) * 100;
-      current += percent;
-      return `${item.color} ${start}% ${current}%`;
-    })
-    .join(", ");
-
   return (
     <div id="budgets-card" className="card">
       {/* Header */}
@@ -25,7 +12,7 @@ export default function Budgets() {
         <h2 className="card-title">Budgets</h2>
         <Link href="/" className="card-link flex items-center gap-1">
           <span>See Details</span>
-          <CaretRight />
+          <CaretRight/>
         </Link>
       </div>
 

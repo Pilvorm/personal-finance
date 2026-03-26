@@ -13,7 +13,7 @@ export default function Transactions() {
         <h2 className="card-title">Transactions</h2>
         <Link href="/" className="card-link">
           <span>View All</span>
-          <CaretRight />
+          <CaretRight/>
         </Link>
       </div>
 

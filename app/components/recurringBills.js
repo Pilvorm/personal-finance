@@ -12,7 +12,7 @@ export default function RecurringBills() {
         <h2 className="card-title">Recurring Bills</h2>
         <Link href="/" className="card-link">
           <span>See Details</span>
-          <CaretRight />
+          <CaretRight/>
         </Link>
       </div>
 

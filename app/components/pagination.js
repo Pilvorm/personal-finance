@@ -7,7 +7,7 @@ export default function Pagination({}) {
   return (
     <div className="flex items-center justify-between my-8">
       <button className="btn-basic hover-basic group w-25 h-10 px-5 py-3 flex items-center justify-center gap-4 text-sm">
-        <CaretLeft className="text-[#696868] group-hover:text-white transition duration-100 ease-in-out" />
+        <CaretLeft dynamic={true} className="text-[#696868] group-hover:text-white transition duration-100 ease-in-out" />
         Prev
       </button>
 
@@ -22,7 +22,7 @@ export default function Pagination({}) {
 
       <button className="btn-basic hover-basic group w-25 h-10 px-5 py-3 flex items-center justify-center gap-4 text-sm">
         Next
-        <CaretRight className="text-[#696868] group-hover:text-white transition duration-100 ease-in-out" />
+        <CaretRight dynamic={true} className="text-[#696868] group-hover:text-white transition duration-100 ease-in-out" />
       </button>
     </div>
   );

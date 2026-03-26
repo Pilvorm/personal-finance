@@ -1,5 +1,6 @@
 import DonutChart from "../components/donutChart";
 import Category from "../components/category";
+import BudgetCategory from "../components/budgetCategory";
 import { BUDGETS_DATA } from "../data";
 
 export default function Budgets() {
@@ -13,7 +14,8 @@ export default function Budgets() {
       </div>
 
       <main className="my-8 flex flex-col lg:grid grid-cols-12 gap-6">
-        <div className="card col-span-5 flex flex-col md:grid grid-cols-2 lg:flex items-center justify-center gap-12">
+        {/* Left */}
+        <div className="card sticky top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 lg:flex items-center justify-center gap-12">
           <div className="flex justify-center">
             <DonutChart />
           </div>
@@ -27,6 +29,7 @@ export default function Budgets() {
                   key={budget.label}
                   color={budget.tagColor}
                   label={budget.label}
+                  spending={budget.spending}
                   limit={budget.limit}
                   row={true}
                   className={
@@ -38,10 +41,18 @@ export default function Budgets() {
             </div>
           </div>
         </div>
-        <div className="col-span-7">
-            <div className="card">
 
-            </div>
+        {/* Right */}
+        <div className="col-span-7 flex flex-col gap-6">
+          {BUDGETS_DATA.map((budget, index) => (
+            <BudgetCategory
+              key={budget.label}
+              color={budget.tagColor}
+              label={budget.label}
+              spending={budget.spending}
+              limit={budget.limit}
+            />
+          ))}
         </div>
       </main>
     </div>

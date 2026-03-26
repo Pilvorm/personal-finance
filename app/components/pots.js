@@ -37,7 +37,7 @@ export default function Pots() {
         <h2 className="card-title">Pots</h2>
         <Link href="/" className="card-link">
           <span>See Details</span>
-          <CaretRight />
+          <CaretRight/>
         </Link>
       </div>
 
