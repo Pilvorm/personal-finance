@@ -1,11 +1,13 @@
+import PageHeader from "../components/pageHeader";
 import Image from "next/image";
 import Search from "../components/search";
 import Pagination from "../components/pagination";
 
 export default function Transactions() {
   return (
-    <div id="transactions" className="px-4 pt-8 pb-24 md:px-10 md:py-8">
-      <h1 className="page-title">Transactions</h1>
+    <div id="transactions" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
+      <PageHeader title="Transactions"/>
+
       <main className="card my-8">
         <Search placeholder={"Search transactions"} />
 

@@ -1,33 +1,7 @@
-import { CaretRight, PotsIconGreen } from "./icons";
+import { CaretRight, PotsIconGreen } from "../icons";
 import Link from "next/link";
-import Category from "./category";
-
-const potsList = [
-  {
-    id: "savings",
-    label: "Savings",
-    limit: 159,
-    color: "green",
-  },
-  {
-    id: "gift",
-    label: "Gift",
-    limit: 40,
-    color: "cyan",
-  },
-  {
-    id: "concert-ticket",
-    label: "Concert Ticket",
-    limit: 110,
-    color: "navy",
-  },
-  {
-    id: "new-laptop",
-    label: "New Laptop",
-    limit: 10,
-    color: "yellow",
-  },
-];
+import Category from "../category";
+import { POTS_DATA } from "../../data";
 
 export default function Pots() {
   return (
@@ -37,13 +11,11 @@ export default function Pots() {
         <h2 className="card-title">Pots</h2>
         <Link href="/" className="card-link">
           <span>See Details</span>
-          <CaretRight/>
+          <CaretRight />
         </Link>
       </div>
 
-      <div
-        className="mt-5 flex gap-5 flex-col sm:flex-row flex-wrap"
-      >
+      <div className="mt-5 flex gap-5 flex-col sm:flex-row flex-wrap">
         {/* Left */}
         <div className="flex-1 p-4 flex items-center gap-4 bg-beige-100 rounded-xl">
           <div className="w-10 h-10">
@@ -57,12 +29,12 @@ export default function Pots() {
 
         {/* Right */}
         <div className="flex-1 grid grid-cols-2 gap-4">
-          {potsList.map((pot) => (
+          {POTS_DATA.slice(0, 4).map((pot) => (
             <Category
               key={pot.label}
               color={pot.color}
               label={pot.label}
-              limit={pot.limit}
+              customValue={pot.totalSaved}
             />
           ))}
         </div>

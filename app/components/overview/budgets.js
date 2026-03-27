@@ -1,8 +1,8 @@
-import { CaretRight } from "./icons";
+import { CaretRight } from "../icons";
 import Link from "next/link";
-import Category from "./category";
-import DonutChart from "./donutChart";
-import { BUDGETS_DATA } from "../data";
+import Category from "../category";
+import DonutChart from "../donutChart";
+import { BUDGETS_DATA } from "../../data";
 
 export default function Budgets() {
   return (

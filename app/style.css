@@ -71,6 +71,16 @@ body {
   transition: all 0.1s ease-in-out;
 }
 
+.hover-invert {
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+.hover-invert:hover {
+  color: #201f24;
+  background: white;
+  transition: all 0.1s ease-in-out;
+}
+
 #transaction-table {
   margin-top: 24px;
 }

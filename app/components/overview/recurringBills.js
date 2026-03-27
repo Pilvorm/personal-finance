@@ -1,4 +1,4 @@
-import { CaretRight } from "./icons";
+import { CaretRight } from "../icons";
 import Link from "next/link";
 
 export default function RecurringBills() {

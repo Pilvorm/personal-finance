@@ -24,6 +24,44 @@ export const SIDEBAR_MENU = [
   },
 ];
 
+export const POTS_DATA = [
+  {
+    id: "savings",
+    label: "Savings",
+    totalSaved: 159,
+    target: 2000,
+    color: "green",
+  },
+  {
+    id: "gift",
+    label: "Gift",
+    totalSaved: 40,
+    target: 60,
+    color: "cyan",
+  },
+  {
+    id: "concert-ticket",
+    label: "Concert Ticket",
+    totalSaved: 110,
+    target: 150,
+    color: "navy",
+  },
+  {
+    id: "new-laptop",
+    label: "New Laptop",
+    totalSaved: 10,
+    target: 1000,
+    color: "yellow",
+  },
+  {
+    id: "holiday",
+    label: "Holiday",
+    totalSaved: 531,
+    target: 1440,
+    color: "purple",
+  },
+];
+
 export const BUDGETS_DATA = [
   {
     label: "Entertainment",

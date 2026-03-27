@@ -1,13 +1,14 @@
-import Summary from "./components/summary";
-import Pots from "./components/pots";
-import Transactions from "./components/transactions";
-import Budgets from "./components/budgets";
-import RecurringBills from "./components/recurringBills";
+import PageHeader from "./components/pageHeader";
+import Summary from "./components/overview/summary";
+import Pots from "./components/overview/pots";
+import Transactions from "./components/overview/transactions";
+import Budgets from "./components/overview/budgets";
+import RecurringBills from "./components/overview/recurringBills";
 
 export default function Home() {
   return (
-    <div id="overview" className="px-4 pt-8 pb-24 md:px-10 md:py-8">
-      <h1 className="page-title">Overview</h1>
+    <div id="overview" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
+      <PageHeader title="Overview"/>
       <Summary />
 
       <main className="flex flex-col md:flex-row flex-wrap lg:grid grid-cols-12 gap-6">

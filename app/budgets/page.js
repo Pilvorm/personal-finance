@@ -1,21 +1,17 @@
+import PageHeader from "../components/pageHeader";
 import DonutChart from "../components/donutChart";
 import Category from "../components/category";
-import BudgetCategory from "../components/budgetCategory";
+import BudgetCard from "../components/budgetCard";
 import { BUDGETS_DATA } from "../data";
 
 export default function Budgets() {
   return (
-    <div id="budgets" className="px-4 pt-8 pb-24 md:px-10 md:py-8">
-      <div className="flex items-center justify-between">
-        <h1 className="page-title">Budgets</h1>
-        <button className="p-4 bg-grey-900 rounded-lg text-white text-sm font-bold">
-          + Add New Budget
-        </button>
-      </div>
+    <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
+      <PageHeader title="Budgets" action="+ Add New Budget"/>
 
       <main className="my-8 flex flex-col lg:grid grid-cols-12 gap-6">
         {/* Left */}
-        <div className="card sticky top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 lg:flex items-center justify-center gap-12">
+        <div className="card lg:sticky lg:top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 lg:flex items-center justify-center gap-12">
           <div className="flex justify-center">
             <DonutChart />
           </div>
@@ -45,7 +41,7 @@ export default function Budgets() {
         {/* Right */}
         <div className="col-span-7 flex flex-col gap-6">
           {BUDGETS_DATA.map((budget, index) => (
-            <BudgetCategory
+            <BudgetCard
               key={budget.label}
               color={budget.tagColor}
               label={budget.label}
