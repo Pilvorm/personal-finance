@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import Logo from "@/public/assets/images/logo-large.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -30,7 +28,11 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
               animate="animate"
               exit="exit"
             >
-              <Image src={Logo} width={122} height={22} alt="finance Logo" />
+              <img
+                src="/assets/images/logo-large.svg"
+                alt="finance Logo"
+                className="w-[122px] h-[22px]"
+              />
             </motion.div>
           )}
         </AnimatePresence>

@@ -1,6 +1,6 @@
-import PageHeader from "../components/pageHeader";
-import CategoryHeader from "../components/categoryHeader";
-import { POTS_DATA } from "../data";
+import PageHeader from "../../components/pageHeader";
+import CategoryHeader from "../../components/categoryHeader";
+import { POTS_DATA } from "../../data";
 
 const PotsCard = ({ color, label, totalSaved, target }) => {
   const percent = Math.min((totalSaved / target) * 100, 100);

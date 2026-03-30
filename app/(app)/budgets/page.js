@@ -1,8 +1,8 @@
-import PageHeader from "../components/pageHeader";
-import DonutChart from "../components/donutChart";
-import Category from "../components/category";
-import BudgetCard from "../components/budgetCard";
-import { BUDGETS_DATA } from "../data";
+import PageHeader from "../../components/pageHeader";
+import DonutChart from "../../components/donutChart";
+import Category from "../../components/category";
+import BudgetCard from "../../components/budgetCard";
+import { BUDGETS_DATA } from "../../data";
 
 export default function Budgets() {
   return (

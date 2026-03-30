@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import PageHeader from "../components/pageHeader";
+import PageHeader from "../../components/pageHeader";
 import Image from "next/image";
-import Search from "../components/search";
-import Pagination from "../components/pagination";
-import Dropdown from "../components/dropdown";
-import { SORT_OPTIONS } from "../data";
+import Search from "../../components/search";
+import Pagination from "../../components/pagination";
+import Dropdown from "../../components/dropdown";
+import { SORT_OPTIONS } from "../../data";
 
 const categories = [
   "All Transactions",

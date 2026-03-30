@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import PageHeader from "../components/pageHeader";
-import { RecurringBillsOutline } from "../components/icons";
-import Search from "../components/search";
-import Dropdown from "../components/dropdown";
-import { SORT_OPTIONS } from "../data";
+import PageHeader from "../../components/pageHeader";
+import { RecurringBillsOutline } from "../../components/icons";
+import Search from "../../components/search";
+import Dropdown from "../../components/dropdown";
+import { SORT_OPTIONS } from "../../data";
 
 export default function RecurringBills() {
   const [sort, setSort] = useState(SORT_OPTIONS[0]);

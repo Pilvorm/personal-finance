@@ -1,9 +1,9 @@
-import PageHeader from "./components/pageHeader";
-import Summary from "./components/overview/summary";
-import Pots from "./components/overview/pots";
-import Transactions from "./components/overview/transactions";
-import Budgets from "./components/overview/budgets";
-import RecurringBills from "./components/overview/recurringBills";
+import PageHeader from "../components/pageHeader";
+import Summary from "../components/overview/summary";
+import Pots from "../components/overview/pots";
+import Transactions from "../components/overview/transactions";
+import Budgets from "../components/overview/budgets";
+import RecurringBills from "../components/overview/recurringBills";
 
 export default function Home() {
   return (
