@@ -24,6 +24,16 @@ export const SIDEBAR_MENU = [
   },
 ];
 
+export const SORT_OPTIONS = [
+  "Latest",
+  "Oldest",
+  "A to Z",
+  "Z to A",
+  "Highest",
+  "Lowest",
+];
+
+
 export const POTS_DATA = [
   {
     id: "savings",
