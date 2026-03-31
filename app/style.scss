@@ -41,7 +41,7 @@ body {
 }
 
 .card {
-  padding: 32px;
+  padding: 24px 20px;
   border-radius: 12px;
   color: $grey-900;
   background-color: white;
@@ -61,6 +61,11 @@ body {
     font-size: 14px;
     color: $grey-500;
   }
+}
+
+input:focus {
+  outline: 1px solid $green;
+  transition: all 0.125s ease-in-out;
 }
 
 .donut {
@@ -92,23 +97,23 @@ body {
 
 .hover-basic {
   cursor: pointer;
-  transition: all 0.100s ease-in-out;
-  
+  transition: all 0.1s ease-in-out;
+
   &:hover {
     color: white;
     background: $grey-900;
-    transition: all 0.100s ease-in-out;
+    transition: all 0.1s ease-in-out;
   }
 }
 
 .hover-invert {
   cursor: pointer;
-  transition: all 0.100s ease-in-out;
-  
+  transition: all 0.1s ease-in-out;
+
   &:hover {
     color: $grey-900;
     background: white;
-    transition: all 0.100s ease-in-out;
+    transition: all 0.1s ease-in-out;
   }
 }
 
@@ -123,5 +128,11 @@ table {
 
   tbody td {
     padding: 16px 0;
+  }
+}
+
+@media screen and (min-width: 640px) {
+  .card {
+    padding: 32px;
   }
 }

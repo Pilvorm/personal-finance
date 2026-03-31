@@ -13,7 +13,7 @@ body {
 }
 
 .card {
-  padding: 32px;
+  padding: 24px 20px;
   border-radius: 12px;
   color: #201f24;
   background-color: white;
@@ -32,6 +32,11 @@ body {
 .card-link span {
   font-size: 14px;
   color: #696868;
+}
+
+input:focus {
+  outline: 1px solid #277c78;
+  transition: all 0.125s ease-in-out;
 }
 
 .donut {
@@ -91,4 +96,10 @@ table thead th {
 }
 table tbody td {
   padding: 16px 0;
+}
+
+@media screen and (min-width: 640px) {
+  .card {
+    padding: 32px;
+  }
 }/*# sourceMappingURL=style.css.map */

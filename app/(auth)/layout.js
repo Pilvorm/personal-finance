@@ -2,7 +2,7 @@ import { Public_Sans } from "next/font/google";
 import "../globals.css"
 import "../style.css";
 
-import LayoutMain from "../components/layoutMain";
+import LayoutAuth from "../components/layoutAuth";
 
 const publicSans = Public_Sans({
   variable: "--font-public-sans",
@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${publicSans.variable} antialiased`}>
-        <LayoutMain>{children}</LayoutMain>
+        <LayoutAuth>{children}</LayoutAuth>
       </body>
     </html>
   );

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Sidebar from "./sidebar";
 
-export default function LayoutClient({ children }) {
+export default function LayoutMain({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   return (
