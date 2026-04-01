@@ -47,8 +47,8 @@ export default function Transactions() {
             {/* Category */}
             <Dropdown
               label={"Category"}
-              value={sort}
-              setValue={setSort}
+              value={category}
+              setValue={setCategory}
               options={categories}
               type={"filter"}
             />

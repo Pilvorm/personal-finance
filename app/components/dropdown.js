@@ -26,7 +26,7 @@ export default function Dropdown({ label, value, setValue, options, type }) {
           {options.map((option, idx) => (
             <MenuItem key={option} onClick={() => setValue(option)}>
               <button
-                className={`group cursor-pointer capitalize flex w-full items-center gap-2 rounded-lg px-3 py-1.5 transition duration-50 ease-out data-focus:bg-beige-100 ${option == value && "font-bold"}`}
+                className={`group cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 transition duration-50 ease-out data-focus:bg-beige-100 ${option == value && "font-bold"}`}
               >
                 {option}
               </button>
