@@ -20,7 +20,7 @@ export default function Budgets() {
           <Modal
             title="Add New Budget"
             description="Choose a category to set a spending budget. These categories can help you monitor spending."
-            fn={() => setIsOpen(false)}
+            setIsOpen={setIsOpen}
           >
             <p>Lorem</p>
           </Modal>
