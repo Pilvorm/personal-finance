@@ -6,7 +6,7 @@ import { categoriesTable } from "./schema";
 const db = drizzle(process.env.DATABASE_URL!);
 
 async function main() {
-  console.log("🌱 Seeding categories...");
+  console.log("Seeding categories...");
 
   const categoryData: typeof categoriesTable.$inferInsert[] = [
     { name: "Entertainment", type: "expense" },
@@ -23,13 +23,13 @@ async function main() {
 
   await db.insert(categoriesTable).values(categoryData).onConflictDoNothing();
 
-  console.log("✅ Categories seeded!");
+  console.log("Categories seeded successfully!");
 
   const allCategories = await db.select().from(categoriesTable);
-  console.log("📦 Categories in DB:", allCategories);
+  console.log("Categories in DB:", allCategories);
 }
 
 main().catch((err) => {
-  console.error("❌ Seed failed:", err);
+  console.error("Seed failed:", err);
   process.exit(1);
 });

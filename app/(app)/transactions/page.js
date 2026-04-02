@@ -8,6 +8,8 @@ import Pagination from "../../components/pagination";
 import Dropdown from "../../components/dropdown";
 import { SORT_OPTIONS } from "../../data";
 
+import { useQuery } from "@tanstack/react-query";
+
 const categories = [
   "All Transactions",
   "Entertainment",
@@ -25,6 +27,17 @@ const categories = [
 export default function Transactions() {
   const [sort, setSort] = useState(SORT_OPTIONS[0]);
   const [category, setCategory] = useState(categories[0]);
+
+  const { status, data, error } = useQuery({
+    queryKey: ["transactions"],
+    queryFn: async () => {
+      const res = await fetch("/api/transactions");
+      return res.json();
+    },
+  });
+
+  console.log("DATA");
+  console.log(data);
 
   return (
     <div id="transactions" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -66,48 +79,81 @@ export default function Transactions() {
           </thead>
 
           <tbody className="">
-            <tr className="block md:table-row border-b border-grey-100">
-              {/* Recipient */}
-              <td className="flex items-center justify-between md:table-cell">
-                <div className="flex items-center gap-4">
-                  <Image
-                    src="/assets/images/avatars/emma-richardson.jpg"
-                    alt="Avatar"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                  <div>
-                    <div className="text-sm font-bold">Emma Richardson</div>
-                    {/* Category shown only on mobile */}
-                    <div className="mt-1 text-xs text-grey-500 md:hidden">
-                      General
+            {data?.map((item) => {
+              const isPositive = Number(item.amount) > 0;
+
+              return (
+                <tr
+                  key={item.id}
+                  className="block md:table-row border-b border-grey-100"
+                >
+                  {/* Recipient */}
+                  <td className="flex items-center justify-between md:table-cell">
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src={`/assets/images/avatars/${item.avatar}`}
+                        alt={item.name}
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                      <div>
+                        <div className="text-sm font-bold">{item.name}</div>
+
+                        {/* Mobile category */}
+                        <div className="mt-1 text-xs text-grey-500 md:hidden">
+                          {item.categoryName || "General"}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                {/* Amount + date (mobile) */}
-                <div className="flex flex-col items-end md:hidden">
-                  <div className="text-sm text-green font-bold">+$75.50</div>
-                  <span className="mt-1 text-xs text-grey-500">
-                    19 Aug 2024
-                  </span>
-                </div>
-              </td>
+                    {/* Mobile amount + date */}
+                    <div className="flex flex-col items-end md:hidden">
+                      <div
+                        className={`text-sm font-bold ${
+                          isPositive && "text-green"
+                        }`}
+                      >
+                        {isPositive ? "+" : "-"}$
+                        {Math.abs(Number(item.amount)).toFixed(2)}
+                      </div>
 
-              {/* Desktop-only columns */}
-              <td className="hidden md:table-cell text-sm text-grey-500">
-                General
-              </td>
+                      <span className="mt-1 text-xs text-grey-500">
+                        {new Date(item.date).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </td>
 
-              <td className="hidden md:table-cell text-sm text-grey-500">
-                19 Aug 2024
-              </td>
+                  {/* Desktop category */}
+                  <td className="hidden md:table-cell text-sm text-grey-500">
+                    {item.categoryName || "General"}
+                  </td>
 
-              <td className="hidden md:table-cell text-sm font-bold text-green text-right">
-                +$75.50
-              </td>
-            </tr>
+                  {/* Desktop date */}
+                  <td className="hidden md:table-cell text-sm text-grey-500">
+                    {new Date(item.date).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </td>
+
+                  {/* Desktop amount */}
+                  <td
+                    className={`hidden md:table-cell text-sm font-bold text-right ${
+                      isPositive && "text-green"
+                    }`}
+                  >
+                    {isPositive ? "+" : "-"}$
+                    {Math.abs(Number(item.amount)).toFixed(2)}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <Pagination />

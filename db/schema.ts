@@ -29,9 +29,10 @@ export const transactionsTable = pgTable("transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
 
   userId: integer("user_id").notNull(),
-  categoryId: integer("category_id").notNull(),
+  categoryId: integer("category_id").notNull().references(() => categoriesTable.id),
 
   name: varchar({ length: 255 }).notNull(), // sender/recipient
+  avatar: varchar({ length: 255 }).notNull(),
   amount: numeric({ precision: 10, scale: 2 }).notNull(), // supports decimals
 
   date: timestamp("date").notNull(),
@@ -43,7 +44,7 @@ export const budgetsTable = pgTable("budgets", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
 
   userId: integer("user_id").notNull(),
-  categoryId: integer("category_id").notNull(),
+  categoryId: integer("category_id").notNull().references(() => categoriesTable.id),
 
   max: numeric({ precision: 10, scale: 2 }).notNull(),
 

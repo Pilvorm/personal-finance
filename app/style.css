@@ -34,7 +34,7 @@ body {
   color: #696868;
 }
 
-input:focus {
+.auth-input:focus {
   outline: 1px solid #277c78;
   transition: all 0.125s ease-in-out;
 }

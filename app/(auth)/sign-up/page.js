@@ -20,7 +20,7 @@ export default function SignUp() {
             type="text"
             name="name"
             id="name"
-            className="btn-basic px-5 py-3"
+            className="btn-basic auth-input px-5 py-3"
           />
         </div>
 
@@ -32,7 +32,7 @@ export default function SignUp() {
             type="email"
             name="email"
             id="email"
-            className="btn-basic px-5 py-3"
+            className="btn-basic auth-input px-5 py-3"
           />
         </div>
 

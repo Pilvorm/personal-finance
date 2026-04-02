@@ -20,7 +20,7 @@ export default function Login() {
             type="email"
             name="email"
             id="email"
-            className="btn-basic px-5 py-3"
+            className="btn-basic auth-input px-5 py-3"
           />
         </div>
 
@@ -33,7 +33,7 @@ export default function Login() {
               type={showPassword ? "text" : "password"}
               name="password"
               id="password"
-              className="btn-basic px-5 py-3 w-full"
+              className="btn-basic auth-input px-5 py-3 w-full"
             />
             <button
               type="button"

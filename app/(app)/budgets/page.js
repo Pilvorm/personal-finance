@@ -1,13 +1,33 @@
+"use client";
+
+import { useState } from "react";
+
 import PageHeader from "../../components/pageHeader";
 import DonutChart from "../../components/donutChart";
 import Category from "../../components/category";
 import BudgetCard from "../../components/budgetCard";
+import Modal from "../../components/modal";
 import { BUDGETS_DATA } from "../../data";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function Budgets() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
-      <PageHeader title="Budgets" action="+ Add New Budget"/>
+      <AnimatePresence>
+        {isOpen && (
+          <Modal
+            title="Add New Budget"
+            description="Choose a category to set a spending budget. These categories can help you monitor spending."
+            fn={() => setIsOpen(false)}
+          >
+            <p>Lorem</p>
+          </Modal>
+        )}
+      </AnimatePresence>
+
+      <PageHeader title="Budgets" action="+ Add New Budget" fn={() => setIsOpen(true)} />
 
       <main className="my-8 flex flex-col lg:grid grid-cols-12 gap-6">
         {/* Left */}

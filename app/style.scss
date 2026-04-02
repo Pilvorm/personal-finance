@@ -63,7 +63,7 @@ body {
   }
 }
 
-input:focus {
+.auth-input:focus {
   outline: 1px solid $green;
   transition: all 0.125s ease-in-out;
 }
