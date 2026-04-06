@@ -5,7 +5,7 @@ import Image from "next/image";
 import PageHeader from "../../components/pageHeader";
 import { RecurringBillsOutline } from "../../components/icons";
 import Search from "../../components/search";
-import Dropdown from "../../components/dropdown";
+import Dropdown from "../../components/dropdowns/dropdown";
 import { SORT_OPTIONS } from "../../data";
 
 export default function RecurringBills() {

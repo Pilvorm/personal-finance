@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 
-import PageHeader from "../../components/pageHeader";
-import DonutChart from "../../components/donutChart";
-import Category from "../../components/category";
-import BudgetCard from "../../components/budgetCard";
-import Modal from "../../components/modal";
-import { BUDGETS_DATA } from "../../data";
+import PageHeader from "@/app/components/pageHeader";
+import DonutChart from "@/app/components/donutChart";
+import Category from "@/app/components/category";
+import BudgetCard from "@/app/components/budgetCard";
 import { AnimatePresence, motion } from "motion/react";
+import BudgetModal from "@/app/components/modal/budgetModal";
+import { THEMES, BUDGETS_DATA } from "@/app/data";
 
 export default function Budgets() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,17 +17,15 @@ export default function Budgets() {
     <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
       <AnimatePresence>
         {isOpen && (
-          <Modal
-            title="Add New Budget"
-            description="Choose a category to set a spending budget. These categories can help you monitor spending."
-            setIsOpen={setIsOpen}
-          >
-            <p>Lorem</p>
-          </Modal>
+          <BudgetModal setIsOpen={setIsOpen} />
         )}
       </AnimatePresence>
 
-      <PageHeader title="Budgets" action="+ Add New Budget" fn={() => setIsOpen(true)} />
+      <PageHeader
+        title="Budgets"
+        action="+ Add New Budget"
+        fn={() => setIsOpen(true)}
+      />
 
       <main className="my-8 flex flex-col lg:grid grid-cols-12 gap-6">
         {/* Left */}

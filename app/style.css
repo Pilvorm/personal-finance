@@ -7,6 +7,40 @@ body {
   background-color: #f8f4f0;
 }
 
+/* Chrome, Safari, Edge */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -webkit-appearance: textfield;
+          appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.submit-btn {
+  cursor: pointer;
+  padding: 16px;
+  width: 100%;
+  background-color: #201f24;
+  color: white;
+  font-weight: 700;
+  border-radius: 8px;
+  transition: background-color 0.125s ease-in-out;
+}
+.submit-btn:hover {
+  background-color: #f8f4f0;
+  color: black;
+  transition: background-color 0.125s ease-in-out;
+}
+
+.menu-items {
+  z-index: 100;
+}
+
 .page-title {
   font-size: 32px;
   font-weight: 700;
@@ -84,6 +118,16 @@ body {
   color: #201f24;
   background: white;
   transition: all 0.1s ease-in-out;
+}
+
+.hover-btn,
+.hover-option {
+  transition: background-color 0.075s ease-in-out;
+}
+.hover-btn:hover,
+.hover-option:hover {
+  background-color: #f8f4f0;
+  transition: background-color 0.075s ease-in-out;
 }
 
 table {

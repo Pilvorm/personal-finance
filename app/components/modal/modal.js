@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { Close } from "./icons";
+import { Close } from "../icons";
 
 export default function Modal({ title, description, children, setIsOpen }) {
   return (
@@ -7,7 +7,7 @@ export default function Modal({ title, description, children, setIsOpen }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.15 }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       className="fixed top-0 left-0 bg-black/50 w-full h-full z-100 px-6 md:px-12 flex flex-col items-center justify-center"
     >
       <div className="card w-full max-w-[560px] flex flex-col gap-5">

@@ -58,7 +58,7 @@ export default function SignUp() {
           </div>
         </div>
 
-        <button type="submit" className="cursor-pointer my-8 p-4 w-full bg-grey-900 text-white font-bold rounded-lg">
+        <button type="submit" className="submit-btn my-8">
           Create Account
         </button>
 

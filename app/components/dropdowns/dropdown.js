@@ -1,8 +1,9 @@
 "use client";
 
-import { CaretDown, Sort, Filter } from "./icons";
+import { CaretDown, Sort, Filter } from "../icons";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DROPDOWN_ANIMATION } from "@/app/data";
 
 export default function Dropdown({ label, value, setValue, options, type }) {
   return (
@@ -30,25 +31,22 @@ export default function Dropdown({ label, value, setValue, options, type }) {
                 <MenuItems
                   static
                   as={motion.div}
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.12, ease: [0.22, 1, 0.36, 1] }}
+                  variants={DROPDOWN_ANIMATION}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  transition="transition"
                   anchor="bottom end"
-                  className="menu-items w-32 px-1 py-3 text-sm origin-top-right rounded-lg bg-white focus:outline-none"
+                  className="menu-items w-(--button-width) px-1 py-3 text-sm origin-top-right rounded-lg bg-white focus:outline-none"
                 >
                   {options.map((option) => (
                     <MenuItem key={option}>
-                      {({ active }) => (
-                        <button
-                          onClick={() => setValue(option)}
-                          className={`cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 transition duration-75 ${
-                            active ? "bg-beige-100" : ""
-                          } ${option === value ? "font-bold" : ""}`}
-                        >
-                          {option}
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setValue(option)}
+                        className={`hover-option cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 ${option === value ? "font-bold" : ""}`}
+                      >
+                        {option}
+                      </button>
                     </MenuItem>
                   ))}
                 </MenuItems>

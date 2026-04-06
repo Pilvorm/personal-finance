@@ -15,7 +15,7 @@ const colorMap = {
   magenta: "bg-magenta",
   blue: "bg-blue",
   "navy-grey": "bg-navy-grey",
-  "army-green": "bg-army-green",
+  army: "bg-army",
   gold: "bg-gold",
   orange: "bg-orange",
 };

@@ -1,6 +1,6 @@
-import { db } from "../../../db";
+import { db } from "@/db";
 import { eq, desc } from "drizzle-orm";
-import { transactionsTable, categoriesTable } from "../../../db/schema";
+import { transactionsTable, categoriesTable } from "@/db/schema";
 
 export async function GET() {
   try {

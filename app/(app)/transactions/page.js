@@ -5,30 +5,16 @@ import PageHeader from "../../components/pageHeader";
 import Image from "next/image";
 import Search from "../../components/search";
 import Pagination from "../../components/pagination";
-import Dropdown from "../../components/dropdown";
+import Dropdown from "../../components/dropdowns/dropdown";
 import { SORT_OPTIONS } from "../../data";
 
 import { useQuery } from "@tanstack/react-query";
 
-const categories = [
-  "All Transactions",
-  "Entertainment",
-  "Bills",
-  "Groceries",
-  "Dining Out",
-  "Transportation",
-  "Personal Care",
-  "Education",
-  "Lifestyle",
-  "Shopping",
-  "General",
-];
-
 export default function Transactions() {
   const [sort, setSort] = useState(SORT_OPTIONS[0]);
-  const [category, setCategory] = useState(categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState("All Transactions");
 
-  const { status, data, error } = useQuery({
+  const { data: transactionsData } = useQuery({
     queryKey: ["transactions"],
     queryFn: async () => {
       const res = await fetch("/api/transactions");
@@ -36,8 +22,21 @@ export default function Transactions() {
     },
   });
 
-  console.log("DATA");
-  console.log(data);
+  const { data: categoriesData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await fetch("/api/categories");
+      return res.json();
+    },
+  });
+
+  const categoryOptions = [
+    { id: "all", name: "All Transactions" },
+    ...(categoriesData ?? []),
+  ];
+
+  console.log("what the fuck")
+  console.log(categoryOptions);
 
   return (
     <div id="transactions" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -60,9 +59,9 @@ export default function Transactions() {
             {/* Category */}
             <Dropdown
               label={"Category"}
-              value={category}
-              setValue={setCategory}
-              options={categories}
+              value={selectedCategory}
+              setValue={setSelectedCategory}
+              options={categoryOptions.map((option) => option.name)}
               type={"filter"}
             />
           </div>
@@ -79,7 +78,7 @@ export default function Transactions() {
           </thead>
 
           <tbody className="">
-            {data?.map((item) => {
+            {transactionsData?.map((item) => {
               const isPositive = Number(item.amount) > 0;
 
               return (
