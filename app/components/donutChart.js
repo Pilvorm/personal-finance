@@ -1,16 +1,23 @@
-import { BUDGETS_DATA } from "../data";
+import { THEMES } from "../data";
 
-export default function DonutChart() {
-  const total = BUDGETS_DATA.reduce((acc, item) => acc + item.limit, 0);
+const getColor = (themeId) => {
+  return THEMES.find((t) => t.id === themeId)?.color || "#ccc";
+};
+
+export default function DonutChart({ budgetsData = [] }) {
+  const total = budgetsData.reduce((acc, item) => acc + Number(item.max), 0);
+
+  const totalSpent = budgetsData.reduce((acc, item) => acc + item.spending, 0);
 
   let current = 0;
 
-  const gradient = BUDGETS_DATA
+  const gradient = budgetsData
     .map((item) => {
       const start = current;
-      const percent = (item.limit / total) * 100;
+      const percent = (Number(item.max) / total) * 100;
       current += percent;
-      return `${item.color} ${start}% ${current}%`;
+
+      return `${getColor(item.theme)} ${start}% ${current}%`;
     })
     .join(", ");
 
@@ -20,8 +27,10 @@ export default function DonutChart() {
       style={{ "--segments": gradient }}
     >
       <div className="z-10 text-center">
-        <div className="text-[32px] font-bold">$338</div>
-        <span className="mt-2 block text-sm text-grey-500">of $975 limit</span>
+        <div className="text-[32px] font-bold">${totalSpent}</div>
+        <span className="mt-2 block text-sm text-grey-500">
+          of ${total} limit
+        </span>
       </div>
     </div>
   );
