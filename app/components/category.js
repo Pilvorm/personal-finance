@@ -21,9 +21,9 @@ const colorMap = {
 };
 
 export default function Category({
-  color,
-  label,
-  limit,
+  theme,
+  name,
+  max,
   customValue,
   row,
   spending,
@@ -31,23 +31,23 @@ export default function Category({
 }) {
 
   const spendingVal = spending?.toFixed(2);
-  const limitVal = limit?.toFixed(2);
+  const maxVal = Number(max)?.toFixed(2);
 
   return (
     <div className={`pots-category flex items-center gap-4 ${className || ""}`}>
-      <div className={`min-w-1 h-full rounded-lg ${colorMap[color]}`} />
+      <div className={`min-w-1 h-full rounded-lg ${colorMap[theme]}`} />
 
       <div
         className={`flex gap-1 ${row ? "w-full items-center justify-between" : "flex-col"}`}
       >
-        <h3 className="text-grey-500">{label}</h3>
+        <h3 className="text-grey-500">{name}</h3>
         {spending ? (
           <div className="flex items-center gap-2">
             <div className="font-bold">${spendingVal}</div>
-            <div className="text-xs text-grey-500">of ${limitVal}</div>
+            <div className="text-xs text-grey-500">of ${maxVal}</div>
           </div>
         ) : (
-          <div className="text-sm font-bold">${limitVal || customValue}</div>
+          <div className="text-sm font-bold">${customValue ? customValue : maxVal}</div>
         )}
       </div>
     </div>

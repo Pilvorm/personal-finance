@@ -32,8 +32,8 @@ export default function Pots() {
           {POTS_DATA.slice(0, 4).map((pot) => (
             <Category
               key={pot.label}
-              color={pot.color}
-              label={pot.label}
+              theme={pot.color}
+              name={pot.label}
               customValue={pot.totalSaved}
             />
           ))}

@@ -3,12 +3,12 @@ import { AnimatePresence, motion } from "motion/react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { DROPDOWN_ANIMATION } from "../data";
 
-export default function CategoryHeader({ color, label }) {
+export default function CategoryHeader({ theme, category }) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <div className={`w-4 h-4 rounded-full bg-${color}`}></div>
-        <span className="text-xl font-bold">{label}</span>
+        <div className={`w-4 h-4 rounded-full bg-${theme}`}></div>
+        <span className="text-xl font-bold">{category}</span>
       </div>
 
       <Menu>

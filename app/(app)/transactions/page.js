@@ -35,9 +35,6 @@ export default function Transactions() {
     ...(categoriesData ?? []),
   ];
 
-  console.log("what the fuck")
-  console.log(categoryOptions);
-
   return (
     <div id="transactions" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
       <PageHeader title="Transactions" />

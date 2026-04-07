@@ -8,17 +8,27 @@ import Category from "@/app/components/category";
 import BudgetCard from "@/app/components/budgetCard";
 import { AnimatePresence, motion } from "motion/react";
 import BudgetModal from "@/app/components/modal/budgetModal";
-import { THEMES, BUDGETS_DATA } from "@/app/data";
+// import { THEMES, BUDGETS_DATA } from "@/app/data";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Budgets() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const { status, data, error } = useQuery({
+    queryKey: ["budgets"],
+    queryFn: async () => {
+      const res = await fetch("/api/budgets");
+      return res.json();
+    },
+  });
+
+  console.log("BUDGETS");
+  console.log(data);
+
   return (
     <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
       <AnimatePresence>
-        {isOpen && (
-          <BudgetModal setIsOpen={setIsOpen} />
-        )}
+        {isOpen && <BudgetModal setIsOpen={setIsOpen} />}
       </AnimatePresence>
 
       <PageHeader
@@ -31,23 +41,23 @@ export default function Budgets() {
         {/* Left */}
         <div className="card lg:sticky lg:top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 lg:flex items-center justify-center gap-12">
           <div className="flex justify-center">
-            <DonutChart />
+            <DonutChart budgetsData={data} />
           </div>
 
           {/* Categories */}
           <div className="w-full">
             <h2 className="card-title">Spending Summary</h2>
             <div className="mt-6 w-full grid gap-4 grid-cols-1">
-              {BUDGETS_DATA.map((budget, index) => (
+              {data?.map((budget, index) => (
                 <Category
-                  key={budget.label}
-                  color={budget.tagColor}
-                  label={budget.label}
+                  key={budget.categoryName}
+                  theme={budget.theme}
+                  name={budget.categoryName}
                   spending={budget.spending}
-                  limit={budget.limit}
+                  max={budget.max}
                   row={true}
                   className={
-                    index !== BUDGETS_DATA.length - 1 &&
+                    index !== data.length - 1 &&
                     "pb-4 border-b-1 border-grey-100"
                   }
                 />
@@ -58,13 +68,14 @@ export default function Budgets() {
 
         {/* Right */}
         <div className="col-span-7 flex flex-col gap-6">
-          {BUDGETS_DATA.map((budget, index) => (
+          {data?.map((budget, index) => (
             <BudgetCard
-              key={budget.label}
-              color={budget.tagColor}
-              label={budget.label}
+              key={budget.categoryName}
+              theme={budget.theme}
+              category={budget.categoryName}
               spending={budget.spending}
-              limit={budget.limit}
+              max={budget.max}
+              spendingList={budget.transactions}
             />
           ))}
         </div>

@@ -11,6 +11,7 @@ export async function GET() {
         amount: transactionsTable.amount,
         date: transactionsTable.date,
         avatar: transactionsTable.avatar,
+        categoryId: transactionsTable.categoryId,
         categoryName: categoriesTable.name,
       })
       .from(transactionsTable)
