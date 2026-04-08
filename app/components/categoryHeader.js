@@ -3,7 +3,39 @@ import { AnimatePresence, motion } from "motion/react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { DROPDOWN_ANIMATION } from "../data";
 
-export default function CategoryHeader({ theme, category }) {
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+export default function CategoryHeader({ id, theme, category }) {
+  const queryClient = useQueryClient();
+
+  const deleteBudget = useMutation({
+    mutationFn: async (id) => {
+      await fetch(`/api/budgets/${id}`, {
+        method: "DELETE",
+      });
+    },
+    
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["budgets"] });
+
+      const previous = queryClient.getQueryData(["budgets"]);
+
+      queryClient.setQueryData(["budgets"], (old) =>
+        old?.filter((b) => b.id !== id),
+      );
+
+      return { previous };
+    },
+
+    onError: (err, id, context) => {
+      queryClient.setQueryData(["budgets"], context.previous);
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
+    },
+  });
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -37,7 +69,11 @@ export default function CategoryHeader({ theme, category }) {
                     </button>
                   </MenuItem>
                   <MenuItem>
-                    <button className="hover-option cursor-pointer w-full px-3 py-1.5 text-left text-red rounded-lg transition duration-75 ">
+                    <button
+                      onClick={() => deleteBudget.mutate(id)}
+                      disabled={deleteBudget.isPending}
+                      className="hover-option cursor-pointer w-full px-3 py-1.5 text-left text-red rounded-lg transition duration-75 "
+                    >
                       Delete Budget
                     </button>
                   </MenuItem>

@@ -6,9 +6,8 @@ import PageHeader from "@/app/components/pageHeader";
 import DonutChart from "@/app/components/donutChart";
 import Category from "@/app/components/category";
 import BudgetCard from "@/app/components/budgetCard";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import BudgetModal from "@/app/components/modal/budgetModal";
-// import { THEMES, BUDGETS_DATA } from "@/app/data";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Budgets() {
@@ -20,10 +19,7 @@ export default function Budgets() {
       const res = await fetch("/api/budgets");
       return res.json();
     },
-  });
-
-  console.log("BUDGETS");
-  console.log(data);
+  })
 
   return (
     <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -68,16 +64,19 @@ export default function Budgets() {
 
         {/* Right */}
         <div className="col-span-7 flex flex-col gap-6">
-          {data?.map((budget, index) => (
-            <BudgetCard
-              key={budget.categoryName}
-              theme={budget.theme}
-              category={budget.categoryName}
-              spending={budget.spending}
-              max={budget.max}
-              spendingList={budget.transactions}
-            />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {data?.map((budget, index) => (
+              <BudgetCard
+                key={budget.categoryName}
+                id={budget.id}
+                theme={budget.theme}
+                category={budget.categoryName}
+                spending={budget.spending}
+                max={budget.max}
+                spendingList={budget.transactions}
+              />
+            ))}
+          </AnimatePresence>
         </div>
       </main>
     </div>

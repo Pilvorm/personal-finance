@@ -1,10 +1,22 @@
+"use client";
+
 import { CaretRight } from "../icons";
 import Link from "next/link";
 import Category from "../category";
 import DonutChart from "../donutChart";
 import { BUDGETS_DATA } from "../../data";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Budgets() {
+
+  const { status, data, error } = useQuery({
+    queryKey: ["budgets"],
+    queryFn: async () => {
+      const res = await fetch("/api/budgets");
+      return res.json();
+    },
+  });
+
   return (
     <div id="budgets-card" className="card">
       {/* Header */}
@@ -21,7 +33,7 @@ export default function Budgets() {
         
         {/* Chart */}
         <div className="flex justify-center">
-          <DonutChart />
+          <DonutChart budgetsData={data} />
         </div>
 
         {/* Categories */}

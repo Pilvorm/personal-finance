@@ -3,23 +3,39 @@ import { CaretRight } from "./icons";
 import Category from "./category";
 import CategoryHeader from "./categoryHeader";
 import TransactionItem from "./transactionItem";
+import { motion } from "motion/react";
 
 export default function BudgetCard({
+  id,
   theme,
   category,
   spending,
   max,
   spendingList,
 }) {
-
   const percent = Math.min((spending / Number(max)) * 100, 100);
   const spendingVal = spending.toFixed(2);
   const maxVal = Number(max).toFixed(2);
   const remaining = Math.max(maxVal - spendingVal, 0).toFixed(2);
 
+  const budgetCardAnimation = {
+    initial: { opacity: 0, y: -10, scale: 1 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, scale: 0.95 },
+  };
+
   return (
-    <div className="card">
-      <CategoryHeader theme={theme} category={category} />
+    <motion.div
+      layout
+      layoutId={id}
+      key={id}
+      variants={budgetCardAnimation}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="card"
+    >
+      <CategoryHeader id={id} theme={theme} category={category} />
 
       {/* Spending and Remaining */}
       <div className="mt-5 flex flex-col gap-4">
@@ -62,6 +78,6 @@ export default function BudgetCard({
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
