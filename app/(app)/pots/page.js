@@ -1,20 +1,22 @@
+"use client";
+
 import PageHeader from "../../components/pageHeader";
 import CategoryHeader from "../../components/categoryHeader";
 import { POTS_DATA } from "../../data";
 
-const PotsCard = ({ color, label, totalSaved, target }) => {
+const PotsCard = ({ theme, name, totalSaved, target }) => {
   const percent = Math.min((totalSaved / target) * 100, 100);
   const savedVal = totalSaved.toFixed(2);
   const targetVal = target.toLocaleString("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});;
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
   return (
     <div className="card flex flex-col gap-6">
-      <CategoryHeader color={color} label={label} />
+      <CategoryHeader theme={theme} name={name} />
 
       <div className="">
         <div className="flex items-center justify-between">
@@ -27,14 +29,12 @@ const PotsCard = ({ color, label, totalSaved, target }) => {
           <div className="w-full h-2 bg-beige-100 rounded-sm">
             <div
               style={{ width: `${percent}%` }}
-              className={`h-full bg-${color} rounded-sm`}
+              className={`h-full bg-${theme} rounded-sm`}
             ></div>
           </div>
 
           <div className="mt-3 flex items-center justify-between text-xs text-grey-500">
-            <div className="font-bold">
-              {percent.toFixed(1)}%
-            </div>
+            <div className="font-bold">{percent.toFixed(1)}%</div>
             <div className="">Target of {targetVal}</div>
           </div>
         </div>
@@ -61,8 +61,8 @@ export default function Pots() {
         {POTS_DATA.map((pot) => (
           <PotsCard
             key={pot.label}
-            color={pot.color}
-            label={pot.label}
+            theme={pot.theme}
+            name={pot.name}
             totalSaved={pot.totalSaved}
             target={pot.target}
           />

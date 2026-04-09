@@ -29,12 +29,12 @@ export default function Category({
   spending,
   className,
 }) {
-
   const spendingVal = spending?.toFixed(2);
   const maxVal = Number(max)?.toFixed(2);
+  const customVal = Number(customValue)?.toFixed(2);
 
   return (
-    <div className={`pots-category flex items-center gap-4 ${className || ""}`}>
+    <div className={`flex items-center gap-4 ${className || ""}`}>
       <div className={`min-w-1 h-full rounded-lg ${colorMap[theme]}`} />
 
       <div
@@ -47,7 +47,7 @@ export default function Category({
             <div className="text-xs text-grey-500">of ${maxVal}</div>
           </div>
         ) : (
-          <div className="text-sm font-bold">${customValue ? customValue : maxVal}</div>
+          <div className="text-sm font-bold">${customVal}</div>
         )}
       </div>
     </div>

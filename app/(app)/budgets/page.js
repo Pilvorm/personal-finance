@@ -70,7 +70,7 @@ export default function Budgets() {
                 key={budget.categoryName}
                 id={budget.id}
                 theme={budget.theme}
-                category={budget.categoryName}
+                name={budget.categoryName}
                 spending={budget.spending}
                 max={budget.max}
                 spendingList={budget.transactions}

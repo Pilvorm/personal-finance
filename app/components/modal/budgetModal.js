@@ -18,7 +18,7 @@ export default function BudgetModal({ setIsOpen }) {
   const [selectedCategory, setSelectedCategory] = useState(
     data ? data[0].name : "Select Category",
   );
-  const [selectedTheme, setSelectedTheme] = useState(THEMES[0].label);
+  const [selectedTheme, setSelectedTheme] = useState(THEMES[0].name);
 
   return (
     <Modal
@@ -31,7 +31,7 @@ export default function BudgetModal({ setIsOpen }) {
           label="Budget Category"
           value={selectedCategory}
           setValue={setSelectedCategory}
-          options={data ? data.map((category) => category.name) : []}
+          options={data?.map((category) => category.name) || []}
         />
         <div>
           <label className="mb-1 text-xs text-grey-500 font-bold">
@@ -53,7 +53,7 @@ export default function BudgetModal({ setIsOpen }) {
           label="Theme"
           value={selectedTheme}
           setValue={setSelectedTheme}
-          options={THEMES.map((theme) => theme.label)}
+          options={THEMES.map((theme) => theme.name)}
         />
       </div>
       <button type="submit" className="submit-btn">

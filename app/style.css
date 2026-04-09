@@ -33,7 +33,7 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.submit-btn {
+.submit-btn, .delete-btn {
   cursor: pointer;
   padding: 16px;
   width: 100%;
@@ -43,10 +43,14 @@ input[type=number] {
   border-radius: 8px;
   transition: background-color 0.125s ease-in-out;
 }
-.submit-btn:hover {
+.submit-btn:hover, .delete-btn:hover {
   background-color: #f8f4f0;
   color: black;
   transition: background-color 0.125s ease-in-out;
+}
+
+.delete-btn {
+  background-color: #c94736;
 }
 
 .menu-items {

@@ -1,18 +1,23 @@
+import { useState } from "react";
 import Link from "next/link";
 import { CaretRight } from "./icons";
 import Category from "./category";
 import CategoryHeader from "./categoryHeader";
 import TransactionItem from "./transactionItem";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import ConfirmDelete from "./modal/confirmDelete";
 
 export default function BudgetCard({
   id,
   theme,
-  category,
+  name,
   spending,
   max,
   spendingList,
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const percent = Math.min((spending / Number(max)) * 100, 100);
   const spendingVal = spending.toFixed(2);
   const maxVal = Number(max).toFixed(2);
@@ -35,7 +40,15 @@ export default function BudgetCard({
       exit="exit"
       className="card"
     >
-      <CategoryHeader id={id} theme={theme} category={category} />
+      <CategoryHeader
+        type={"Budget"}
+        theme={theme}
+        name={name}
+        del={() => setIsOpen(true)}
+      />
+      <AnimatePresence>
+        {isOpen && <ConfirmDelete type="budget" id={id} name={name} setIsOpen={setIsOpen} />}
+      </AnimatePresence>
 
       {/* Spending and Remaining */}
       <div className="mt-5 flex flex-col gap-4">

@@ -25,24 +25,24 @@ export const SIDEBAR_MENU = [
 ];
 
 export const THEMES = [
-  { id: "green", label: "Green", color: "#277c78" },
-  { id: "yellow", label: "Yellow", color: "#f2cdac" },
-  { id: "cyan", label: "Cyan", color: "#82c9d7" },
+  { id: "green", name: "Green", color: "#277c78" },
+  { id: "yellow", name: "Yellow", color: "#f2cdac" },
+  { id: "cyan", name: "Cyan", color: "#82c9d7" },
 
-  { id: "navy", label: "Navy", color: "#626070" },
-  { id: "red", label: "Red", color: "#c94736" },
-  { id: "purple", label: "Purple", color: "#826cb0" },
+  { id: "navy", name: "Navy", color: "#626070" },
+  { id: "red", name: "Red", color: "#c94736" },
+  { id: "purple", name: "Purple", color: "#826cb0" },
 
-  { id: "turquoise", label: "Turquoise", color: "#597c7c" },
-  { id: "brown", label: "Brown", color: "#93674f" },
+  { id: "turquoise", name: "Turquoise", color: "#597c7c" },
+  { id: "brown", name: "Brown", color: "#93674f" },
 
-  { id: "magenta", label: "Magenta", color: "#934f6f" },
-  { id: "blue", label: "Blue", color: "#3f82b2" },
-  { id: "navy-grey", label: "Navy Grey", color: "#97a0ac" },
+  { id: "magenta", name: "Magenta", color: "#934f6f" },
+  { id: "blue", name: "Blue", color: "#3f82b2" },
+  { id: "navy-grey", name: "Navy Grey", color: "#97a0ac" },
 
-  { id: "army", label: "Army", color: "#7f9161" },
-  { id: "gold", label: "Gold", color: "#cab361" },
-  { id: "orange", label: "Orange", color: "#be6c49" },
+  { id: "army", name: "Army", color: "#7f9161" },
+  { id: "gold", name: "Gold", color: "#cab361" },
+  { id: "orange", name: "Orange", color: "#be6c49" },
 ];
 
 export const SORT_OPTIONS = [
@@ -57,65 +57,65 @@ export const SORT_OPTIONS = [
 export const POTS_DATA = [
   {
     id: "savings",
-    label: "Savings",
+    name: "Savings",
     totalSaved: 159,
     target: 2000,
-    color: "green",
+    theme: "green",
   },
   {
     id: "gift",
-    label: "Gift",
+    name: "Gift",
     totalSaved: 40,
     target: 60,
-    color: "cyan",
+    theme: "cyan",
   },
   {
     id: "concert-ticket",
-    label: "Concert Ticket",
+    name: "Concert Ticket",
     totalSaved: 110,
     target: 150,
-    color: "navy",
+    theme: "navy",
   },
   {
     id: "new-laptop",
-    label: "New Laptop",
+    name: "New Laptop",
     totalSaved: 10,
     target: 1000,
-    color: "yellow",
+    theme: "yellow",
   },
   {
     id: "holiday",
-    label: "Holiday",
+    name: "Holiday",
     totalSaved: 531,
     target: 1440,
-    color: "purple",
+    theme: "purple",
   },
 ];
 
 export const BUDGETS_DATA = [
   {
-    label: "Entertainment",
+    name: "Entertainment",
     limit: 50,
     spending: 15,
     color: "#2F7F73",
     tagColor: "green",
   },
   {
-    label: "Bills",
+    name: "Bills",
     limit: 750,
     spending: 150,
     color: "#7DB9C8",
     tagColor: "cyan",
   },
   {
-    label: "Dining Out",
+    name: "Dining Out",
     limit: 75,
     spending: 133,
     color: "#E6C29F",
     tagColor: "yellow",
   },
   {
-    label: "Personal Care",
+    name: "Personal Care",
     limit: 100,
     spending: 40,
     color: "#6B6A77",
