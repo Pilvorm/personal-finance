@@ -6,8 +6,8 @@ import DropdownInput from "../dropdowns/dropdownInput";
 import { useQuery } from "@tanstack/react-query";
 import { THEMES } from "@/app/data";
 
-export default function BudgetModal({ setIsOpen }) {
-  const { status, data, error } = useQuery({
+export default function BudgetModal({ setIsOpen, action, data }) {
+  const { status, data: categoriesData, error } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
       const res = await fetch("/api/categories");
@@ -16,7 +16,7 @@ export default function BudgetModal({ setIsOpen }) {
   });
 
   const [selectedCategory, setSelectedCategory] = useState(
-    data ? data[0].name : "Select Category",
+    categoriesData ? categoriesData[0].name : "Select Category",
   );
   const [selectedTheme, setSelectedTheme] = useState(THEMES[0].name);
 
@@ -31,7 +31,7 @@ export default function BudgetModal({ setIsOpen }) {
           label="Budget Category"
           value={selectedCategory}
           setValue={setSelectedCategory}
-          options={data?.map((category) => category.name) || []}
+          options={categoriesData?.map((category) => category.name) || []}
         />
         <div>
           <label className="mb-1 text-xs text-grey-500 font-bold">

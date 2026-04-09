@@ -16,7 +16,7 @@ export default function BudgetCard({
   max,
   spendingList,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const percent = Math.min((spending / Number(max)) * 100, 100);
   const spendingVal = spending.toFixed(2);
@@ -44,10 +44,10 @@ export default function BudgetCard({
         type={"Budget"}
         theme={theme}
         name={name}
-        del={() => setIsOpen(true)}
+        del={() => setIsDeleting(true)}
       />
       <AnimatePresence>
-        {isOpen && <ConfirmDelete type="budget" id={id} name={name} setIsOpen={setIsOpen} />}
+        {isDeleting && <ConfirmDelete type="budget" id={id} name={name} setIsOpen={setIsDeleting} />}
       </AnimatePresence>
 
       {/* Spending and Remaining */}
