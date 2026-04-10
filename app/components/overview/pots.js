@@ -31,9 +31,9 @@ export default function Pots() {
         <div className="flex-1 grid grid-cols-2 gap-4">
           {POTS_DATA.slice(0, 4).map((pot) => (
             <Category
-              key={pot.label}
-              theme={pot.color}
-              name={pot.label}
+              key={pot.name}
+              theme={pot.theme}
+              name={pot.name}
               customValue={pot.totalSaved}
             />
           ))}

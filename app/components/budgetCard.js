@@ -1,12 +1,9 @@
-import { useState } from "react";
 import Link from "next/link";
 import { CaretRight } from "./icons";
 import Category from "./category";
 import CategoryHeader from "./categoryHeader";
 import TransactionItem from "./transactionItem";
 import { AnimatePresence, motion } from "motion/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import ConfirmDelete from "./modal/confirmDelete";
 
 export default function BudgetCard({
   id,
@@ -15,13 +12,15 @@ export default function BudgetCard({
   spending,
   max,
   spendingList,
+  onDelete,
 }) {
-  const [isDeleting, setIsDeleting] = useState(false);
+  const safeSpending = Number(spending ?? 0);
+  const safeMax = Number(max ?? 0);
 
-  const percent = Math.min((spending / Number(max)) * 100, 100);
-  const spendingVal = spending.toFixed(2);
-  const maxVal = Number(max).toFixed(2);
-  const remaining = Math.max(maxVal - spendingVal, 0).toFixed(2);
+  const percent = Math.min((safeSpending / safeMax) * 100, 100);
+  const spendingVal = safeSpending.toFixed(2);
+  const maxVal = safeMax.toFixed(2);
+  const remaining = Math.max(safeMax - safeSpending, 0).toFixed(2);
 
   const budgetCardAnimation = {
     initial: { opacity: 0, y: -10, scale: 1 },
@@ -44,11 +43,8 @@ export default function BudgetCard({
         type={"Budget"}
         theme={theme}
         name={name}
-        del={() => setIsDeleting(true)}
+        del={onDelete}
       />
-      <AnimatePresence>
-        {isDeleting && <ConfirmDelete type="budget" id={id} name={name} setIsOpen={setIsDeleting} />}
-      </AnimatePresence>
 
       {/* Spending and Remaining */}
       <div className="mt-5 flex flex-col gap-4">

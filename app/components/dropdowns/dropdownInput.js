@@ -20,7 +20,7 @@ export default function DropdownInput({
         {({ open }) => (
           <>
             <MenuButton className="w-full">
-              <div className="btn-basic cursor-pointer px-5 py-3 flex items-center justify-between gap-4 text-sm outline-none">
+              <div className="btn-basic cursor-pointer px-5 py-3 flex items-center justify-between gap-4 text-sm capitalize outline-none">
                 {type == "theme" ? (
                   <div className="flex items-center gap-3">
                     <div
@@ -46,23 +46,23 @@ export default function DropdownInput({
                   exit="exit"
                   transition="transition"
                   anchor="bottom start"
-                  className="menu-items w-(--button-width) h-75 px-1 py-3 text-sm origin-top-right rounded-lg bg-white focus:outline-none"
+                  className="menu-items w-(--button-width) h-fit px-1 py-3 text-sm origin-top-right rounded-lg bg-white focus:outline-none"
                 >
                   {options.map((option) => (
-                    <MenuItem key={option}>
+                    <MenuItem key={option.id}>
                       <button
                         onClick={() => setValue(option)}
-                        className={`hover-option cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 ${option === value ? "font-bold" : ""}`}
+                        className={`hover-option cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 ${option.name == value ? "font-bold" : ""}`}
                       >
                         {type == "theme" ? (
                           <div className="flex items-center gap-3">
                             <div
-                              className={`bg-${option?.toLowerCase()} w-4 h-4 rounded-full`}
+                              className={`bg-${option.id.toLowerCase()} w-4 h-4 rounded-full`}
                             ></div>
-                            <div>{option}</div>
+                            <div>{option.name}</div>
                           </div>
                         ) : (
-                          <div>{option}</div>
+                          <div>{option.name}</div>
                         )}
                       </button>
                     </MenuItem>

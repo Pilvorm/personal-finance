@@ -9,9 +9,11 @@ import BudgetCard from "@/app/components/budgetCard";
 import { AnimatePresence } from "motion/react";
 import BudgetModal from "@/app/components/modal/budgetModal";
 import { useQuery } from "@tanstack/react-query";
+import ConfirmDelete from "@/app/components/modal/confirmDelete";
 
 export default function Budgets() {
   const [isOpen, setIsOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const { status, data, error } = useQuery({
     queryKey: ["budgets"],
@@ -19,12 +21,27 @@ export default function Budgets() {
       const res = await fetch("/api/budgets");
       return res.json();
     },
-  })
+  });
+
+  const usedCategories = new Set(data?.map((c) => c.categoryName));
+  const usedThemes = new Set(data?.map((t) => t.theme));
 
   return (
     <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
+      {/* Add New Budget */}
       <AnimatePresence>
-        {isOpen && <BudgetModal setIsOpen={setIsOpen} />}
+        {isOpen && <BudgetModal setIsOpen={setIsOpen} usedCategories={usedCategories} usedThemes={usedThemes}/>}
+      </AnimatePresence>
+
+      {/* Delete Budget */}
+      <AnimatePresence>
+        {deleteTarget && (
+          <ConfirmDelete
+            id={deleteTarget.id}
+            name={deleteTarget.name}
+            setIsOpen={() => setDeleteTarget(null)}
+          />
+        )}
       </AnimatePresence>
 
       <PageHeader
@@ -46,7 +63,7 @@ export default function Budgets() {
             <div className="mt-6 w-full grid gap-4 grid-cols-1">
               {data?.map((budget, index) => (
                 <Category
-                  key={budget.categoryName}
+                  key={budget.id}
                   theme={budget.theme}
                   name={budget.categoryName}
                   spending={budget.spending}
@@ -74,6 +91,12 @@ export default function Budgets() {
                 spending={budget.spending}
                 max={budget.max}
                 spendingList={budget.transactions}
+                onDelete={() =>
+                  setDeleteTarget({
+                    id: budget.id,
+                    name: budget.categoryName,
+                  })
+                }
               />
             ))}
           </AnimatePresence>

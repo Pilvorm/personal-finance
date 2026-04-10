@@ -7,23 +7,39 @@ import DonutChart from "../donutChart";
 import { BUDGETS_DATA } from "../../data";
 import { useQuery } from "@tanstack/react-query";
 
+function groupBudgets(budgets, limit = 4) {
+  if (budgets.length <= limit) return budgets;
+
+  const visible = budgets.slice(0, limit - 1);
+  const rest = budgets.slice(limit - 1);
+
+  const others = {
+    id: "others",
+    categoryName: "Others",
+    theme: "navy-grey",
+    max: rest.reduce((acc, item) => acc + Number(item.max), 0),
+    spending: rest.reduce((acc, item) => acc + item.spending, 0),
+  };
+
+  return [...visible, others];
+}
+
 export default function Budgets() {
-  const { status, data, error } = useQuery({
+  const { status, data = [], error } = useQuery({
     queryKey: ["budgets"],
     queryFn: async () => {
       const res = await fetch("/api/budgets");
       return res.json();
     },
+    select: (data) => groupBudgets(data, 4)
   });
-
-  console.log(data);
 
   return (
     <div id="budgets-card" className="card">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="card-title">Budgets</h2>
-        <Link href="/" className="card-link flex items-center gap-1">
+        <Link href="/budgets" className="card-link flex items-center gap-1 hover:underline">
           <span>See Details</span>
           <CaretRight />
         </Link>
@@ -40,7 +56,7 @@ export default function Budgets() {
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-1">
           {data?.map((budget) => (
             <Category
-              key={budget.categoryName}
+              key={budget.id}
               theme={budget.theme}
               name={budget.categoryName}
               customValue={budget.max}

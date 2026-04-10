@@ -51,3 +51,26 @@ export async function GET() {
     return Response.json({ error: err.message }, { status: 500 });
   }
 }
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+
+    const { categoryId, max, theme } = body;
+
+    const inserted = await db
+      .insert(budgetsTable)
+      .values({
+        userId: 1,
+        categoryId,
+        max: String(max),
+        theme,
+      })
+      .returning();
+
+    return Response.json(inserted[0]);
+  } catch (err: any) {
+    console.error("POST ERROR:", err);
+    return Response.json({ error: err.message }, { status: 500 });
+  }
+}
