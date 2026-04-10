@@ -16,6 +16,8 @@ export default function Budgets() {
     },
   });
 
+  console.log(data);
+
   return (
     <div id="budgets-card" className="card">
       {/* Header */}

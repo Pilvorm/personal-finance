@@ -38,7 +38,7 @@ export default function Category({
       <div className={`min-w-1 h-full rounded-lg ${colorMap[theme]}`} />
 
       <div
-        className={`flex gap-1 ${row ? "w-full items-center justify-between" : "flex-col"}`}
+        className={`flex gap-1 ${row ? "w-full flex-col items-start xl:flex-row xl:items-center justify-between" : "flex-col"}`}
       >
         <h3 className="text-grey-500">{name}</h3>
         {spending ? (

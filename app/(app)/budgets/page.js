@@ -67,7 +67,7 @@ export default function Budgets() {
           <AnimatePresence mode="popLayout">
             {data?.map((budget, index) => (
               <BudgetCard
-                key={budget.categoryName}
+                key={budget.id}
                 id={budget.id}
                 theme={budget.theme}
                 name={budget.categoryName}
