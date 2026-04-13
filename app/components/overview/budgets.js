@@ -5,24 +5,8 @@ import Link from "next/link";
 import Category from "../category";
 import DonutChart from "../donutChart";
 import { BUDGETS_DATA } from "../../data";
+import { groupBudgets } from "@/app/lib/helper";
 import { useQuery } from "@tanstack/react-query";
-
-function groupBudgets(budgets, limit = 4) {
-  if (budgets.length <= limit) return budgets;
-
-  const visible = budgets.slice(0, limit - 1);
-  const rest = budgets.slice(limit - 1);
-
-  const others = {
-    id: "others",
-    categoryName: "Others",
-    theme: "navy-grey",
-    max: rest.reduce((acc, item) => acc + Number(item.max), 0),
-    spending: rest.reduce((acc, item) => acc + item.spending, 0),
-  };
-
-  return [...visible, others];
-}
 
 export default function Budgets() {
   const { status, data = [], error } = useQuery({

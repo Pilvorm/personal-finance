@@ -1,8 +1,4 @@
-import { THEMES } from "../data";
-
-const getColor = (themeId) => {
-  return THEMES.find((t) => t.id === themeId)?.color || "#ccc";
-};
+import { getColor } from "../lib/helper";
 
 export default function DonutChart({ budgetsData = [] }) {
   const total = budgetsData.reduce((acc, item) => acc + Number(item.max), 0);

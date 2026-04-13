@@ -12,6 +12,7 @@ export default function BudgetCard({
   spending,
   max,
   spendingList,
+  onEdit,
   onDelete,
 }) {
   const safeSpending = Number(spending ?? 0);
@@ -43,6 +44,7 @@ export default function BudgetCard({
         type={"Budget"}
         theme={theme}
         name={name}
+        edit={onEdit}
         del={onDelete}
       />
 

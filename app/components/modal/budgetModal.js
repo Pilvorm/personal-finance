@@ -6,10 +6,13 @@ import DropdownInput from "../dropdowns/dropdownInput";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { THEMES } from "@/app/data";
 
+const EXCLUDED_THEMES = new Set(["beige"]);
+
 export default function BudgetModal({
   setIsOpen,
   usedCategories = new Set(),
   usedThemes = new Set(),
+  editData = null,
 }) {
   const { data: categoriesData = [] } = useQuery({
     queryKey: ["categories"],
@@ -23,79 +26,121 @@ export default function BudgetModal({
   const [selectedTheme, setSelectedTheme] = useState(null);
   const [budget, setBudget] = useState("");
 
+  const isEdit = !!editData;
+
   const availableCategories = useMemo(
-    () => categoriesData.filter((c) => !usedCategories.has(c.name)),
-    [categoriesData, usedCategories],
+    () =>
+      categoriesData.filter(
+        (c) => !usedCategories.has(c.name) || c.name === editData?.categoryName,
+      ),
+    [categoriesData, usedCategories, editData],
   );
 
   const availableThemes = useMemo(
-    () => THEMES.filter((t) => !usedThemes.has(t.id)),
-    [usedThemes],
+    () =>
+      THEMES.filter(
+        (t) =>
+          !EXCLUDED_THEMES.has(t.id) &&
+          (!usedThemes.has(t.id) || t.id === editData?.theme),
+      ),
+    [usedThemes, editData],
   );
 
   useEffect(() => {
-    if (availableCategories.length && !selectedCategory) {
+    if (!isEdit && availableCategories.length && !selectedCategory) {
       setSelectedCategory(availableCategories[0]);
     }
-  }, [availableCategories, selectedCategory]);
+  }, [availableCategories, selectedCategory, isEdit]);
 
   useEffect(() => {
-    if (availableThemes.length && !selectedTheme) {
+    if (!isEdit && availableThemes.length && !selectedTheme) {
       setSelectedTheme(availableThemes[0]);
     }
-  }, [availableThemes, selectedTheme]);
+  }, [availableThemes, selectedTheme, isEdit]);
+
+  //  Prefill for editing
+  useEffect(() => {
+    if (editData && categoriesData.length) {
+
+      const foundCategory = categoriesData.find(
+        (c) => c.name === editData.categoryName,
+      );
+      const foundTheme = THEMES.find((t) => t.id === editData.theme);
+
+      setSelectedCategory(foundCategory || null);
+      setSelectedTheme(foundTheme || null);
+      setBudget(editData.max);
+    }
+  }, [editData, categoriesData]);
 
   const queryClient = useQueryClient();
 
-  const addBudget = useMutation({
-    mutationFn: async (newBudget) => {
-      const res = await fetch("/api/budgets", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+  const saveBudget = useMutation({
+    mutationFn: async (payload) => {
+      const res = await fetch(
+        isEdit ? `/api/budgets/${editData.id}` : "/api/budgets",
+        {
+          method: isEdit ? "PATCH" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(newBudget),
-      });
+      );
 
       return res.json();
     },
 
-    onMutate: async (newBudget) => {
+    onMutate: async (payload) => {
       await queryClient.cancelQueries({ queryKey: ["budgets"] });
-
       const previous = queryClient.getQueryData(["budgets"]);
 
-      // Optimistic data must match server response shape 1:1
-      const optimisticBudget = {
-        id: Date.now(),
-        categoryId: newBudget.categoryId,
-        categoryName: selectedCategory.name,
-        max: newBudget.max,
-        theme: newBudget.theme,
-        spending: 0,
-        transactions: [],
-      };
+       // Optimistic data must match server response shape 1:1
+      queryClient.setQueryData(["budgets"], (old = []) => {
+        if (isEdit) {
+          return old.map((b) =>
+            b.id === editData.id
+              ? {
+                  ...b,
+                  categoryId: payload.categoryId,
+                  categoryName: selectedCategory.name,
+                  max: payload.max,
+                  theme: payload.theme,
+                }
+              : b,
+          );
+        }
 
-      queryClient.setQueryData(["budgets"], (old = []) => [
-        ...old,
-        optimisticBudget,
-      ]);
+        // Create
+        const optimisticBudget = {
+          id: Date.now(),
+          categoryId: payload.categoryId,
+          categoryName: selectedCategory.name,
+          max: payload.max,
+          theme: payload.theme,
+          spending: 0,
+          transactions: [],
+        };
+
+        return [...old, optimisticBudget];
+      });
 
       return { previous };
     },
 
-    onError: (err, newBudget, context) => {
+    onError: (err, payload, context) => {
       queryClient.setQueryData(["budgets"], context.previous);
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["budgets"] });
+      setIsOpen(); // close modal
     },
   });
 
   return (
     <Modal
-      title="Add New Budget"
+      title={isEdit ? "Edit Budget" : "Add New Budget"}
       description="Choose a category to set a spending budget."
       setIsOpen={setIsOpen}
     >
@@ -137,17 +182,17 @@ export default function BudgetModal({
 
       <button
         type="submit"
+        disabled={!selectedCategory || !selectedTheme || !budget}
         onClick={() =>
-          addBudget.mutate({
+          saveBudget.mutate({
             categoryId: selectedCategory.id,
             max: budget,
             theme: selectedTheme.id,
           })
         }
-        // Add isPending and close modal later
         className="submit-btn"
       >
-        Add Budget
+        {isEdit ? "Save Changes" : "Add Budget"}
       </button>
     </Modal>
   );

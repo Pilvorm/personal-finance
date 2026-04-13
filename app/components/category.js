@@ -1,24 +1,4 @@
-const colorMap = {
-  /* Primary palette */
-  green: "bg-green",
-  yellow: "bg-yellow",
-  cyan: "bg-cyan",
-  navy: "bg-navy",
-  red: "bg-red",
-  purple: "bg-purple",
-  beige: "bg-beige-100",
-
-  /* Other colors */
-  "purple-light": "bg-purple-light",
-  turquoise: "bg-turquoise",
-  brown: "bg-brown",
-  magenta: "bg-magenta",
-  blue: "bg-blue",
-  "navy-grey": "bg-navy-grey",
-  army: "bg-army",
-  gold: "bg-gold",
-  orange: "bg-orange",
-};
+import { getColor } from "../lib/helper";
 
 export default function Category({
   theme,
@@ -32,10 +12,14 @@ export default function Category({
   const spendingVal = spending?.toFixed(2);
   const maxVal = Number(max)?.toFixed(2);
   const customVal = Number(customValue)?.toFixed(2);
+  const color = getColor(theme);
 
   return (
     <div className={`flex items-center gap-4 ${className || ""}`}>
-      <div className={`min-w-1 h-full rounded-lg ${colorMap[theme]}`} />
+      <div
+        style={{ backgroundColor: color }}
+        className={`min-w-1 h-full rounded-lg`}
+      />
 
       <div
         className={`flex gap-1 ${row ? "w-full flex-col items-start xl:flex-row xl:items-center justify-between" : "flex-col"}`}

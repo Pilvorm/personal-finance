@@ -13,6 +13,7 @@ import ConfirmDelete from "@/app/components/modal/confirmDelete";
 
 export default function Budgets() {
   const [isOpen, setIsOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const { status, data, error } = useQuery({
@@ -30,7 +31,17 @@ export default function Budgets() {
     <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
       {/* Add New Budget */}
       <AnimatePresence>
-        {isOpen && <BudgetModal setIsOpen={setIsOpen} usedCategories={usedCategories} usedThemes={usedThemes}/>}
+        {(isOpen || editTarget) && (
+          <BudgetModal
+            setIsOpen={() => {
+              setIsOpen(false);
+              setEditTarget(null);
+            }}
+            usedCategories={usedCategories}
+            usedThemes={usedThemes}
+            editData={editTarget}
+          />
+        )}
       </AnimatePresence>
 
       {/* Delete Budget */}
@@ -91,6 +102,7 @@ export default function Budgets() {
                 spending={budget.spending}
                 max={budget.max}
                 spendingList={budget.transactions}
+                onEdit={() => setEditTarget(budget)}
                 onDelete={() =>
                   setDeleteTarget({
                     id: budget.id,

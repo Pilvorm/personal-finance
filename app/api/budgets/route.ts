@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { eq, desc } from "drizzle-orm";
+import { eq, asc, desc } from "drizzle-orm";
 import { transactionsTable, budgetsTable, categoriesTable } from "@/db/schema";
 
 export async function GET() {
@@ -16,7 +16,8 @@ export async function GET() {
       .leftJoin(
         categoriesTable,
         eq(budgetsTable.categoryId, categoriesTable.id),
-      );
+      )
+      .orderBy(asc(budgetsTable.id));;
 
     const transactions = await db
       .select({

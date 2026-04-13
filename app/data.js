@@ -25,6 +25,7 @@ export const SIDEBAR_MENU = [
 ];
 
 export const THEMES = [
+  {id: "beige", name: "Beige", color: "#f8f4f0"},
   { id: "green", name: "Green", color: "#277c78" },
   { id: "yellow", name: "Yellow", color: "#f2cdac" },
   { id: "cyan", name: "Cyan", color: "#82c9d7" },
