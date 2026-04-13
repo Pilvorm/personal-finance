@@ -1,3 +1,5 @@
+"use client";
+
 import { getColor } from "../lib/helper";
 
 export default function Category({

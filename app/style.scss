@@ -68,6 +68,10 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+.card-link:hover span {
+  text-decoration: underline;
+}
+
 .submit-btn, .delete-btn {
   cursor: pointer;
   padding: 16px;

@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import PageHeader from "../../components/pageHeader";
 import CategoryHeader from "../../components/categoryHeader";
+import PotModal from "@/app/components/modal/potModal";
 import { POTS_DATA } from "../../data";
 
 const PotsCard = ({ theme, name, totalSaved, target }) => {
@@ -16,7 +19,13 @@ const PotsCard = ({ theme, name, totalSaved, target }) => {
 
   return (
     <div className="card flex flex-col gap-6">
-      <CategoryHeader theme={theme} name={name} />
+      <CategoryHeader
+        type={"Pot"}
+        theme={theme}
+        name={name}
+        // edit={onEdit}
+        // del={onDelete}
+      />
 
       <div className="">
         <div className="flex items-center justify-between">
@@ -53,14 +62,34 @@ const PotsCard = ({ theme, name, totalSaved, target }) => {
 };
 
 export default function Pots() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+
   return (
     <div id="pots" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
-      <PageHeader title="Pots" action="+ Add New Pots" />
+      <AnimatePresence>
+        {(isOpen || editTarget) && (
+          <PotModal
+            setIsOpen={() => {
+              setIsOpen(false);
+              setEditTarget(null);
+            }}
+            editData={editTarget}
+          />
+        )}
+      </AnimatePresence>
+
+      <PageHeader
+        title="Pots"
+        action="+ Add New Pots"
+        fn={() => setIsOpen(true)}
+      />
 
       <main className="my-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {POTS_DATA.map((pot) => (
           <PotsCard
-            key={pot.label}
+            key={pot.name}
             theme={pot.theme}
             name={pot.name}
             totalSaved={pot.totalSaved}

@@ -1,45 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import PageHeader from "../../components/pageHeader";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import Search from "../../components/search";
-import Pagination from "../../components/pagination";
-import Dropdown from "../../components/dropdowns/dropdown";
-import { SORT_OPTIONS } from "../../data";
-import { useDebounce } from "../../lib/helper";
+import { useSearchParams, useRouter } from "next/navigation";
+import PageHeader from "@/app/components/pageHeader";
+import Search from "@/app/components/search";
+import Pagination from "@/app/components/pagination";
+import Dropdown from "@/app/components/dropdowns/dropdown";
+import { SORT_OPTIONS } from "@/app/data";
+import { useDebounce } from "@/app/lib/helper";
 
 import { useQuery } from "@tanstack/react-query";
 
 export default function Transactions() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const debouncedSearch = useDebounce(searchTerm, 400);
+  const initialSort = searchParams.get("sort") || "latest";
+  const initialCategory = searchParams.get("category") || "all";
+  const initialSearch = searchParams.get("search") || "";
+
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+
+  const [selectedSort, setSelectedSort] = useState(
+    SORT_OPTIONS.find((opt) => opt.value === initialSort) ||
+      SORT_OPTIONS[0]
+  );
 
   const [selectedCategory, setSelectedCategory] = useState({
     id: "all",
     name: "All Transactions",
   });
 
-  const { data: transactionsData } = useQuery({
-    queryKey: [
-      "transactions",
-      selectedSort.value,
-      selectedCategory.id,
-      debouncedSearch,
-    ],
-    queryFn: async () => {
-      const params = new URLSearchParams({
-        sort: selectedSort.value,
-        category: String(selectedCategory.id),
-        search: debouncedSearch,
-      });
-
-      const res = await fetch(`/api/transactions?${params}`);
-      return res.json();
-    },
-  });
+  const debouncedSearch = useDebounce(searchTerm, 400);
 
   const { data: categoriesData } = useQuery({
     queryKey: ["categories"],
@@ -54,8 +47,64 @@ export default function Transactions() {
     ...(categoriesData ?? []),
   ];
 
+  useEffect(() => {
+    if (!categoriesData) return;
+
+    if (initialCategory === "all") {
+      setSelectedCategory({
+        id: "all",
+        name: "All Transactions",
+      });
+      return;
+    }
+
+    const found = categoriesData.find(
+      (cat) => String(cat.id) === initialCategory
+    );
+
+    if (found) setSelectedCategory(found);
+  }, [categoriesData, initialCategory]);
+
+  const { data: transactionsData, isFetching } = useQuery({
+    queryKey: [
+      "transactions",
+      selectedSort.value,
+      selectedCategory.id,
+      debouncedSearch,
+    ],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+
+      params.set("sort", selectedSort.value);
+      params.set("category", String(selectedCategory.id));
+
+      if (debouncedSearch.trim()) {
+        params.set("search", debouncedSearch.trim());
+      }
+
+      const res = await fetch(`/api/transactions?${params}`);
+      return res.json();
+    },
+  });
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    params.set("sort", selectedSort.value);
+    params.set("category", String(selectedCategory.id));
+
+    if (debouncedSearch.trim()) {
+      params.set("search", debouncedSearch.trim());
+    }
+
+    router.replace(`/transactions?${params.toString()}`);
+  }, [selectedSort, selectedCategory, debouncedSearch, router]);
+
   return (
-    <div id="transactions" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
+    <div
+      id="transactions"
+      className="px-4 pt-8 pb-28 md:px-10 lg:py-8"
+    >
       <PageHeader title="Transactions" />
 
       <main className="card my-8">
@@ -63,14 +112,14 @@ export default function Transactions() {
           <Search
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
-            placeholder={"Search transactions"}
+            placeholder="Search transactions"
           />
 
           <div className="flex items-center gap-6">
             {/* Sort */}
             <Dropdown
               label="Sort by"
-              value={selectedSort.name}
+              value={selectedSort}
               setValue={setSelectedSort}
               options={SORT_OPTIONS}
               type="sort"
@@ -79,13 +128,19 @@ export default function Transactions() {
             {/* Category */}
             <Dropdown
               label="Category"
-              value={selectedCategory.name}
+              value={selectedCategory}
               setValue={setSelectedCategory}
               options={categoryOptions}
               type="filter"
             />
           </div>
         </div>
+
+        {isFetching && (
+          <div className="text-sm text-grey-500 mt-4">
+            Updating results...
+          </div>
+        )}
 
         <table id="transactions-table" className="w-full">
           <thead className="max-md:hidden text-grey-500 text-left text-xs">
@@ -116,7 +171,9 @@ export default function Transactions() {
                         className="rounded-full"
                       />
                       <div>
-                        <div className="text-sm font-bold">{item.name}</div>
+                        <div className="text-sm font-bold">
+                          {item.name}
+                        </div>
 
                         <div className="mt-1 text-xs text-grey-500 md:hidden">
                           {item.categoryName || "General"}
@@ -135,11 +192,14 @@ export default function Transactions() {
                       </div>
 
                       <span className="mt-1 text-xs text-grey-500">
-                        {new Date(item.date).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })}
+                        {new Date(item.date).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          }
+                        )}
                       </span>
                     </div>
                   </td>
@@ -149,11 +209,14 @@ export default function Transactions() {
                   </td>
 
                   <td className="hidden md:table-cell text-sm text-grey-500">
-                    {new Date(item.date).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
+                    {new Date(item.date).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      }
+                    )}
                   </td>
 
                   <td

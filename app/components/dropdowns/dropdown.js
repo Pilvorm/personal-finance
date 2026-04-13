@@ -15,7 +15,7 @@ export default function Dropdown({ label, value, setValue, options, type }) {
           <>
             <MenuButton>
               <div className="btn-basic cursor-pointer px-5 py-3 hidden md:flex items-center gap-4 text-sm outline-none">
-                {value}
+                {value.name}
                 <CaretDown />
               </div>
 
@@ -44,7 +44,7 @@ export default function Dropdown({ label, value, setValue, options, type }) {
                       <button
                         onClick={() => setValue(option)}
                         className={`hover-option cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 ${
-                          option.name === value ? "font-bold" : ""
+                          option.name === value.name ? "font-bold" : ""
                         }`}
                       >
                         {option.name}

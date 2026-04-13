@@ -46,6 +46,8 @@ export const THEMES = [
   { id: "orange", name: "Orange", color: "#be6c49" },
 ];
 
+export const EXCLUDED_THEMES = new Set(["beige"]);
+
 export const SORT_OPTIONS = [
   { name: "Latest", value: "latest" },
   { name: "Oldest", value: "oldest" },

@@ -4,9 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Modal from "./modal";
 import DropdownInput from "../dropdowns/dropdownInput";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { THEMES } from "@/app/data";
-
-const EXCLUDED_THEMES = new Set(["beige"]);
+import { THEMES, EXCLUDED_THEMES } from "@/app/data";
 
 export default function BudgetModal({
   setIsOpen,
@@ -61,7 +59,6 @@ export default function BudgetModal({
   //  Prefill for editing
   useEffect(() => {
     if (editData && categoriesData.length) {
-
       const foundCategory = categoriesData.find(
         (c) => c.name === editData.categoryName,
       );
@@ -95,7 +92,7 @@ export default function BudgetModal({
       await queryClient.cancelQueries({ queryKey: ["budgets"] });
       const previous = queryClient.getQueryData(["budgets"]);
 
-       // Optimistic data must match server response shape 1:1
+      // Optimistic data must match server response shape 1:1
       queryClient.setQueryData(["budgets"], (old = []) => {
         if (isEdit) {
           return old.map((b) =>
@@ -141,7 +138,11 @@ export default function BudgetModal({
   return (
     <Modal
       title={isEdit ? "Edit Budget" : "Add New Budget"}
-      description="Choose a category to set a spending budget."
+      description={
+        isEdit
+          ? "As your budgets change, feel free to update your spending limits."
+          : "Choose a category to set a spending budget. These categories can help you monitor spending."
+      }
       setIsOpen={setIsOpen}
     >
       <div className="flex flex-col gap-4">
@@ -182,7 +183,7 @@ export default function BudgetModal({
 
       <button
         type="submit"
-        disabled={!selectedCategory || !selectedTheme || !budget}
+        disabled={!selectedCategory || !budget || !selectedTheme}
         onClick={() =>
           saveBudget.mutate({
             categoryId: selectedCategory.id,
