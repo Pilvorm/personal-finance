@@ -7,17 +7,36 @@ import Search from "../../components/search";
 import Pagination from "../../components/pagination";
 import Dropdown from "../../components/dropdowns/dropdown";
 import { SORT_OPTIONS } from "../../data";
+import { useDebounce } from "../../lib/helper";
 
 import { useQuery } from "@tanstack/react-query";
 
 export default function Transactions() {
-  const [sort, setSort] = useState(SORT_OPTIONS[0]);
-  const [selectedCategory, setSelectedCategory] = useState("All Transactions");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
+
+  const debouncedSearch = useDebounce(searchTerm, 400);
+
+  const [selectedCategory, setSelectedCategory] = useState({
+    id: "all",
+    name: "All Transactions",
+  });
 
   const { data: transactionsData } = useQuery({
-    queryKey: ["transactions"],
+    queryKey: [
+      "transactions",
+      selectedSort.value,
+      selectedCategory.id,
+      debouncedSearch,
+    ],
     queryFn: async () => {
-      const res = await fetch("/api/transactions");
+      const params = new URLSearchParams({
+        sort: selectedSort.value,
+        category: String(selectedCategory.id),
+        search: debouncedSearch,
+      });
+
+      const res = await fetch(`/api/transactions?${params}`);
       return res.json();
     },
   });
@@ -41,25 +60,29 @@ export default function Transactions() {
 
       <main className="card my-8">
         <div className="flex max-md:flex-wrap items-center justify-between gap-6">
-          <Search placeholder={"Search transactions"} />
+          <Search
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder={"Search transactions"}
+          />
 
           <div className="flex items-center gap-6">
             {/* Sort */}
             <Dropdown
-              label={"Sort by"}
-              value={sort}
-              setValue={setSort}
+              label="Sort by"
+              value={selectedSort.name}
+              setValue={setSelectedSort}
               options={SORT_OPTIONS}
-              type={"sort"}
+              type="sort"
             />
 
             {/* Category */}
             <Dropdown
-              label={"Category"}
-              value={selectedCategory}
+              label="Category"
+              value={selectedCategory.name}
               setValue={setSelectedCategory}
-              options={categoryOptions.map((option) => option.name)}
-              type={"filter"}
+              options={categoryOptions}
+              type="filter"
             />
           </div>
         </div>
@@ -74,7 +97,7 @@ export default function Transactions() {
             </tr>
           </thead>
 
-          <tbody className="">
+          <tbody>
             {transactionsData?.map((item) => {
               const isPositive = Number(item.amount) > 0;
 
@@ -83,7 +106,6 @@ export default function Transactions() {
                   key={item.id}
                   className="block md:table-row border-b border-grey-100"
                 >
-                  {/* Recipient */}
                   <td className="flex items-center justify-between md:table-cell">
                     <div className="flex items-center gap-4">
                       <Image
@@ -96,14 +118,12 @@ export default function Transactions() {
                       <div>
                         <div className="text-sm font-bold">{item.name}</div>
 
-                        {/* Mobile category */}
                         <div className="mt-1 text-xs text-grey-500 md:hidden">
                           {item.categoryName || "General"}
                         </div>
                       </div>
                     </div>
 
-                    {/* Mobile amount + date */}
                     <div className="flex flex-col items-end md:hidden">
                       <div
                         className={`text-sm font-bold ${
@@ -124,12 +144,10 @@ export default function Transactions() {
                     </div>
                   </td>
 
-                  {/* Desktop category */}
                   <td className="hidden md:table-cell text-sm text-grey-500">
                     {item.categoryName || "General"}
                   </td>
 
-                  {/* Desktop date */}
                   <td className="hidden md:table-cell text-sm text-grey-500">
                     {new Date(item.date).toLocaleDateString("en-GB", {
                       day: "2-digit",
@@ -138,7 +156,6 @@ export default function Transactions() {
                     })}
                   </td>
 
-                  {/* Desktop amount */}
                   <td
                     className={`hidden md:table-cell text-sm font-bold text-right ${
                       isPositive && "text-green"
@@ -152,6 +169,7 @@ export default function Transactions() {
             })}
           </tbody>
         </table>
+
         <Pagination />
       </main>
     </div>

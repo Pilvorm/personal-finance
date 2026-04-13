@@ -40,12 +40,14 @@ export default function Dropdown({ label, value, setValue, options, type }) {
                   className="menu-items w-(--button-width) px-1 py-3 text-sm origin-top-right rounded-lg bg-white focus:outline-none"
                 >
                   {options.map((option) => (
-                    <MenuItem key={option}>
+                    <MenuItem key={option.value}>
                       <button
                         onClick={() => setValue(option)}
-                        className={`hover-option cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 ${option === value ? "font-bold" : ""}`}
+                        className={`hover-option cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 ${
+                          option.name === value ? "font-bold" : ""
+                        }`}
                       >
-                        {option}
+                        {option.name}
                       </button>
                     </MenuItem>
                   ))}

@@ -47,12 +47,12 @@ export const THEMES = [
 ];
 
 export const SORT_OPTIONS = [
-  "Latest",
-  "Oldest",
-  "A to Z",
-  "Z to A",
-  "Highest",
-  "Lowest",
+  { name: "Latest", value: "latest" },
+  { name: "Oldest", value: "oldest" },
+  { name: "A to Z", value: "a-z" },
+  { name: "Z to A", value: "z-a" },
+  { name: "Highest", value: "highest" },
+  { name: "Lowest", value: "lowest" },
 ];
 
 export const POTS_DATA = [
