@@ -4,7 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import Modal from "./modal";
 import DropdownInput from "../dropdowns/dropdownInput";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { THEMES, EXCLUDED_THEMES } from "@/app/data";
+import { THEMES, THEMES_MAP, EXCLUDED_THEMES } from "@/app/data";
+import { useCreatePotMutation } from "@/app/lib/mutations/usePotMutation";
 
 export default function PotModal({
   setIsOpen,
@@ -33,70 +34,11 @@ export default function PotModal({
     }
   }, [availableThemes, selectedTheme, isEdit]);
 
-  const queryClient = useQueryClient();
+  const createPot = useCreatePotMutation({
+    setIsOpen,
+  });
 
-  //   const savePot = useMutation({
-  //     mutationFn: async (payload) => {
-  //       const res = await fetch(
-  //         isEdit ? `/api/pots/${editData.id}` : "/api/pots",
-  //         {
-  //           method: isEdit ? "PATCH" : "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify(payload),
-  //         },
-  //       );
-
-  //       return res.json();
-  //     },
-
-  //     onMutate: async (payload) => {
-  //       await queryClient.cancelQueries({ queryKey: ["pots"] });
-  //       const previous = queryClient.getQueryData(["pots"]);
-
-  //       // Optimistic data must match server response shape 1:1
-  //       queryClient.setQueryData(["pots"], (old = []) => {
-  //         if (isEdit) {
-  //           return old.map((b) =>
-  //             b.id === editData.id
-  //               ? {
-  //                   ...b,
-  //                   categoryId: payload.categoryId,
-  //                   categoryName: selectedCategory.name,
-  //                   max: payload.max,
-  //                   theme: payload.theme,
-  //                 }
-  //               : b,
-  //           );
-  //         }
-
-  //         // Create
-  //         const optimisticBudget = {
-  //           id: Date.now(),
-  //           categoryId: payload.categoryId,
-  //           categoryName: selectedCategory.name,
-  //           max: payload.max,
-  //           theme: payload.theme,
-  //           spending: 0,
-  //           transactions: [],
-  //         };
-
-  //         return [...old, optimisticBudget];
-  //       });
-
-  //       return { previous };
-  //     },
-
-  //     onError: (err, payload, context) => {
-  //       queryClient.setQueryData(["pots"], context.previous);
-  //     },
-
-  //     onSettled: () => {
-  //       queryClient.invalidateQueries({ queryKey: ["pots"] });
-  //       setIsOpen(); // close modal
-  //     },
-  //   });
+  const savePot = isEdit ? updateBudget : createPot;
 
   return (
     <Modal
@@ -118,7 +60,7 @@ export default function PotModal({
               name="name"
               type="text"
               value={potName}
-              onChange={(e) => setPotName(e.target.value)}      
+              onChange={(e) => setPotName(e.target.value)}
               className="w-full outline-none"
             />
           </div>
@@ -144,7 +86,7 @@ export default function PotModal({
         <DropdownInput
           type="theme"
           label="Theme"
-          value={selectedTheme?.name}
+          value={selectedTheme}
           setValue={setSelectedTheme}
           options={availableThemes}
         />
@@ -153,13 +95,13 @@ export default function PotModal({
       <button
         type="submit"
         disabled={!potName || !potTarget || !selectedTheme}
-        // onClick={() =>
-        //   savePot.mutate({
-        //     categoryId: selectedCategory.id,
-        //     max: budget,
-        //     theme: selectedTheme.id,
-        //   })
-        // }
+        onClick={() =>
+          savePot.mutate({
+            name: potName,
+            target: potTarget,
+            theme: selectedTheme.id,
+          })
+        }
         className="submit-btn"
       >
         {isEdit ? "Save Changes" : "Add Pot"}

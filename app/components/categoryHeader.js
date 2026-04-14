@@ -2,12 +2,19 @@ import { Ellipsis } from "./icons";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { DROPDOWN_ANIMATION } from "../data";
+import { getColor } from "../lib/helper";
 
 export default function CategoryHeader({ theme, name, type, edit, del }) {
+
+  const color = getColor(theme);
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <div className={`w-4 h-4 rounded-full bg-${theme}`}></div>
+        <div
+          style={{ backgroundColor: color }}
+          className={`w-4 h-4 rounded-full`}
+        ></div>
         <span className="text-xl font-bold">{name}</span>
       </div>
 

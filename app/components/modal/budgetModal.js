@@ -4,7 +4,11 @@ import { useState, useEffect, useMemo } from "react";
 import Modal from "./modal";
 import DropdownInput from "../dropdowns/dropdownInput";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { THEMES, EXCLUDED_THEMES } from "@/app/data";
+import { THEMES, THEMES_MAP, EXCLUDED_THEMES } from "@/app/data";
+import {
+  useCreateBudgetMutation,
+  useUpdateBudgetMutation,
+} from "@/app/lib/mutations/useBudgetMutation";
 
 export default function BudgetModal({
   setIsOpen,
@@ -56,13 +60,19 @@ export default function BudgetModal({
     }
   }, [availableThemes, selectedTheme, isEdit]);
 
-  //  Prefill for editing
+  // Prefill form fields when editing
   useEffect(() => {
     if (editData && categoriesData.length) {
       const foundCategory = categoriesData.find(
         (c) => c.name === editData.categoryName,
       );
-      const foundTheme = THEMES.find((t) => t.id === editData.theme);
+
+      const foundTheme = editData.theme
+        ? {
+            id: editData.theme,
+            ...THEMES_MAP[editData.theme],
+          }
+        : null;
 
       setSelectedCategory(foundCategory || null);
       setSelectedTheme(foundTheme || null);
@@ -70,70 +80,18 @@ export default function BudgetModal({
     }
   }, [editData, categoriesData]);
 
-  const queryClient = useQueryClient();
-
-  const saveBudget = useMutation({
-    mutationFn: async (payload) => {
-      const res = await fetch(
-        isEdit ? `/api/budgets/${editData.id}` : "/api/budgets",
-        {
-          method: isEdit ? "PATCH" : "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        },
-      );
-
-      return res.json();
-    },
-
-    onMutate: async (payload) => {
-      await queryClient.cancelQueries({ queryKey: ["budgets"] });
-      const previous = queryClient.getQueryData(["budgets"]);
-
-      // Optimistic data must match server response shape 1:1
-      queryClient.setQueryData(["budgets"], (old = []) => {
-        if (isEdit) {
-          return old.map((b) =>
-            b.id === editData.id
-              ? {
-                  ...b,
-                  categoryId: payload.categoryId,
-                  categoryName: selectedCategory.name,
-                  max: payload.max,
-                  theme: payload.theme,
-                }
-              : b,
-          );
-        }
-
-        // Create
-        const optimisticBudget = {
-          id: Date.now(),
-          categoryId: payload.categoryId,
-          categoryName: selectedCategory.name,
-          max: payload.max,
-          theme: payload.theme,
-          spending: 0,
-          transactions: [],
-        };
-
-        return [...old, optimisticBudget];
-      });
-
-      return { previous };
-    },
-
-    onError: (err, payload, context) => {
-      queryClient.setQueryData(["budgets"], context.previous);
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["budgets"] });
-      setIsOpen(); // close modal
-    },
+  const createBudget = useCreateBudgetMutation({
+    selectedCategory,
+    setIsOpen,
   });
+
+  const updateBudget = useUpdateBudgetMutation({
+    editData,
+    selectedCategory,
+    setIsOpen,
+  });
+
+  const saveBudget = isEdit ? updateBudget : createBudget;
 
   return (
     <Modal
@@ -141,7 +99,7 @@ export default function BudgetModal({
       description={
         isEdit
           ? "As your budgets change, feel free to update your spending limits."
-          : "Choose a category to set a spending budget. These categories can help you monitor spending."
+          : "Choose a category to set a spending budget."
       }
       setIsOpen={setIsOpen}
     >
@@ -160,11 +118,7 @@ export default function BudgetModal({
           <div className="btn-basic px-5 py-3 flex items-center gap-3">
             <span className="text-sm text-beige-500">$</span>
             <input
-              name="budget"
               type="number"
-              min="0"
-              max="1000000"
-              step="0.01"
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
               className="w-full outline-none"
@@ -175,14 +129,13 @@ export default function BudgetModal({
         <DropdownInput
           type="theme"
           label="Theme"
-          value={selectedTheme?.name}
+          value={selectedTheme}
           setValue={setSelectedTheme}
           options={availableThemes}
         />
       </div>
 
       <button
-        type="submit"
         disabled={!selectedCategory || !budget || !selectedTheme}
         onClick={() =>
           saveBudget.mutate({

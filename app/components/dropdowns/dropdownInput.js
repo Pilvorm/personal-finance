@@ -24,9 +24,10 @@ export default function DropdownInput({
                 {type == "theme" ? (
                   <div className="flex items-center gap-3">
                     <div
-                      className={`bg-${value?.toLowerCase()} w-4 h-4 rounded-full`}
+                      style={{ backgroundColor: value?.color }}
+                      className={`w-4 h-4 rounded-full`}
                     ></div>
-                    <div>{value}</div>
+                    <div>{value?.name}</div>
                   </div>
                 ) : (
                   <div>{value}</div>
@@ -57,7 +58,8 @@ export default function DropdownInput({
                         {type == "theme" ? (
                           <div className="flex items-center gap-3">
                             <div
-                              className={`bg-${option.id.toLowerCase()} w-4 h-4 rounded-full`}
+                              style={{ backgroundColor: option.color }}
+                              className={`w-4 h-4 rounded-full`}
                             ></div>
                             <div>{option.name}</div>
                           </div>

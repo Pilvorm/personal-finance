@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { THEMES } from "../data";
+import { THEMES_MAP } from "../data";
 
 export function getColor(themeId) {
-  return THEMES.find((t) => t.id === themeId)?.color || "#ccc";
-};
+  return THEMES_MAP[themeId]?.color || "#ccc";
+}
 
 export function groupBudgets(budgets, limit = 4) {
   if (budgets.length <= limit) return budgets;

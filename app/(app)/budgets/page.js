@@ -13,6 +13,7 @@ import BudgetModal from "@/app/components/modal/budgetModal";
 import { useQuery } from "@tanstack/react-query";
 import TransactionItem from "@/app/components/transactionItem";
 import ConfirmDelete from "@/app/components/modal/confirmDelete";
+import { getColor } from "@/app/lib/helper";
 
 const BudgetCard = ({
   id,
@@ -38,6 +39,8 @@ const BudgetCard = ({
     animate: { opacity: 1, y: 0, scale: 1 },
     exit: { opacity: 0, scale: 0.95 },
   };
+
+  const color = getColor(theme);
 
   return (
     <motion.div
@@ -65,8 +68,8 @@ const BudgetCard = ({
         {/* Bar */}
         <div className="p-1 w-full h-8 bg-beige-100 rounded-sm">
           <div
-            style={{ width: `${percent}%` }}
-            className={`h-full bg-${theme} rounded-sm`}
+            style={{ width: `${percent}%`, backgroundColor: color }}
+            className={`h-full rounded-sm`}
           ></div>
         </div>
 
@@ -80,7 +83,10 @@ const BudgetCard = ({
       <div className="mt-5 p-5 rounded-xl bg-beige-100">
         <div className="flex items-center justify-between">
           <h2 className="font-bold">Latest Spending</h2>
-          <Link href={`/transactions?sort=latest&category=${categoryId}`} className="card-link flex items-center gap-1">
+          <Link
+            href={`/transactions?sort=latest&category=${categoryId}`}
+            className="card-link flex items-center gap-1"
+          >
             <span>See All</span>
             <CaretRight />
           </Link>
@@ -139,6 +145,7 @@ export default function Budgets() {
       <AnimatePresence>
         {deleteTarget && (
           <ConfirmDelete
+            type={"budget"}
             id={deleteTarget.id}
             name={deleteTarget.name}
             setIsOpen={() => setDeleteTarget(null)}

@@ -1,36 +1,12 @@
 import Modal from "./modal";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDeleteBudgetMutation } from "@/app/lib/mutations/useBudgetMutation";
+import { useDeletePotMutation } from "@/app/lib/mutations/usePotMutation";
 
 export default function ConfirmDelete({ type, id, name, setIsOpen }) {
-  const queryClient = useQueryClient();
+  const deleteBudget = useDeleteBudgetMutation({ setIsOpen });
+  const deletePot = useDeletePotMutation({ setIsOpen });
 
-  const deleteItem = useMutation({
-    mutationFn: async (id) => {
-      await fetch(`/api/budgets/${id}`, {
-        method: "DELETE",
-      });
-    },
-
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["budgets"] });
-
-      const previous = queryClient.getQueryData(["budgets"]);
-
-      queryClient.setQueryData(["budgets"], (old) =>
-        old?.filter((b) => b.id !== id),
-      );
-
-      return { previous };
-    },
-
-    onError: (err, id, context) => {
-      queryClient.setQueryData(["budgets"], context.previous);
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["budgets"] });
-    },
-  });
+  const deleteItem = type == "budget" ? deleteBudget : deletePot;
 
   return (
     <Modal
@@ -42,7 +18,6 @@ export default function ConfirmDelete({ type, id, name, setIsOpen }) {
         type="submit"
         onClick={() => {
           deleteItem.mutate(id);
-          setIsOpen(false);
         }}
         className="delete-btn"
       >

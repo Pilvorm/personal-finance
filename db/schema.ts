@@ -60,7 +60,7 @@ export const potsTable = pgTable("pots", {
   name: varchar({ length: 255 }).notNull(),
 
   target: numeric({ precision: 10, scale: 2 }).notNull(),
-  currentAmount: numeric({ precision: 10, scale: 2 }).default("0"),
+  totalSaved: numeric("total_saved", { precision: 10, scale: 2 }).default("0"),
 
   theme: varchar({ length: 50 }),
 });

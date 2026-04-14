@@ -24,27 +24,34 @@ export const SIDEBAR_MENU = [
   },
 ];
 
-export const THEMES = [
-  {id: "beige", name: "Beige", color: "#f8f4f0"},
-  { id: "green", name: "Green", color: "#277c78" },
-  { id: "yellow", name: "Yellow", color: "#f2cdac" },
-  { id: "cyan", name: "Cyan", color: "#82c9d7" },
+export const THEMES_MAP = {
+  beige: { name: "Beige", color: "#f8f4f0" },
+  green: { name: "Green", color: "#277c78" },
+  yellow: { name: "Yellow", color: "#f2cdac" },
+  cyan: { name: "Cyan", color: "#82c9d7" },
 
-  { id: "navy", name: "Navy", color: "#626070" },
-  { id: "red", name: "Red", color: "#c94736" },
-  { id: "purple", name: "Purple", color: "#826cb0" },
+  navy: { name: "Navy", color: "#626070" },
+  red: { name: "Red", color: "#c94736" },
+  purple: { name: "Purple", color: "#826cb0" },
 
-  { id: "turquoise", name: "Turquoise", color: "#597c7c" },
-  { id: "brown", name: "Brown", color: "#93674f" },
+  turquoise: { name: "Turquoise", color: "#597c7c" },
+  brown: { name: "Brown", color: "#93674f" },
 
-  { id: "magenta", name: "Magenta", color: "#934f6f" },
-  { id: "blue", name: "Blue", color: "#3f82b2" },
-  { id: "navy-grey", name: "Navy Grey", color: "#97a0ac" },
+  magenta: { name: "Magenta", color: "#934f6f" },
+  blue: { name: "Blue", color: "#3f82b2" },
+  "navy-grey": { name: "Navy Grey", color: "#97a0ac" },
 
-  { id: "army", name: "Army", color: "#7f9161" },
-  { id: "gold", name: "Gold", color: "#cab361" },
-  { id: "orange", name: "Orange", color: "#be6c49" },
-];
+  army: { name: "Army", color: "#7f9161" },
+  gold: { name: "Gold", color: "#cab361" },
+  orange: { name: "Orange", color: "#be6c49" },
+};
+
+export const THEMES = Object.entries(THEMES_MAP).map(
+  ([id, value]) => ({
+    id,
+    ...value,
+  })
+);
 
 export const EXCLUDED_THEMES = new Set(["beige"]);
 

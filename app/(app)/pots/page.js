@@ -6,10 +6,13 @@ import PageHeader from "../../components/pageHeader";
 import CategoryHeader from "../../components/categoryHeader";
 import PotModal from "@/app/components/modal/potModal";
 import { POTS_DATA } from "../../data";
+import { getColor } from "@/app/lib/helper";
+import { useQuery } from "@tanstack/react-query";
+import ConfirmDelete from "@/app/components/modal/confirmDelete";
 
-const PotsCard = ({ theme, name, totalSaved, target }) => {
+const PotsCard = ({ theme, name, totalSaved, target, onDelete }) => {
   const percent = Math.min((totalSaved / target) * 100, 100);
-  const savedVal = totalSaved.toFixed(2);
+  const savedVal = Number(totalSaved).toFixed(2);
   const targetVal = target.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
@@ -17,14 +20,28 @@ const PotsCard = ({ theme, name, totalSaved, target }) => {
     maximumFractionDigits: 0,
   });
 
+  const color = getColor(theme);
+
+  const potCardAnimation = {
+    initial: { opacity: 0, y: -10, scale: 1 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, scale: 0.95 },
+  };
+
   return (
-    <div className="card flex flex-col gap-6">
+    <motion.div
+      variants={potCardAnimation}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="card flex flex-col gap-6"
+    >
       <CategoryHeader
         type={"Pot"}
         theme={theme}
         name={name}
         // edit={onEdit}
-        // del={onDelete}
+        del={onDelete}
       />
 
       <div className="">
@@ -37,8 +54,8 @@ const PotsCard = ({ theme, name, totalSaved, target }) => {
           {/* Bar */}
           <div className="w-full h-2 bg-beige-100 rounded-sm">
             <div
-              style={{ width: `${percent}%` }}
-              className={`h-full bg-${theme} rounded-sm`}
+              style={{ width: `${percent}%`, backgroundColor: color }}
+              className={`h-full rounded-sm`}
             ></div>
           </div>
 
@@ -57,7 +74,7 @@ const PotsCard = ({ theme, name, totalSaved, target }) => {
           Withdraw
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -65,6 +82,20 @@ export default function Pots() {
   const [isOpen, setIsOpen] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+
+  const {
+    status,
+    data = [],
+    error,
+  } = useQuery({
+    queryKey: ["pots"],
+    queryFn: async () => {
+      const res = await fetch("/api/pots");
+      return res.json();
+    },
+  });
+
+  const usedThemes = new Set(data?.map((t) => t.theme));
 
   return (
     <div id="pots" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -76,6 +107,19 @@ export default function Pots() {
               setEditTarget(null);
             }}
             editData={editTarget}
+            usedThemes={usedThemes}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Delete Budget */}
+      <AnimatePresence>
+        {deleteTarget && (
+          <ConfirmDelete
+            type={"pot"}
+            id={deleteTarget.id}
+            name={deleteTarget.name}
+            setIsOpen={() => setDeleteTarget(null)}
           />
         )}
       </AnimatePresence>
@@ -87,15 +131,23 @@ export default function Pots() {
       />
 
       <main className="my-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {POTS_DATA.map((pot) => (
-          <PotsCard
-            key={pot.name}
-            theme={pot.theme}
-            name={pot.name}
-            totalSaved={pot.totalSaved}
-            target={pot.target}
-          />
-        ))}
+        <AnimatePresence mode="popLayout">
+          {data?.map((pot) => (
+            <PotsCard
+              key={pot.id}
+              theme={pot.theme}
+              name={pot.name}
+              totalSaved={pot.totalSaved}
+              target={pot.target}
+              onDelete={() =>
+                setDeleteTarget({
+                  id: pot.id,
+                  name: pot.name,
+                })
+              }
+            />
+          ))}
+        </AnimatePresence>
       </main>
     </div>
   );
