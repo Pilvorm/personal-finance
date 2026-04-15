@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { formatUSD } from "../lib/helper";
 
 export default function TransactionItem({
   avatar,
@@ -7,7 +8,6 @@ export default function TransactionItem({
   date,
   className,
 }) {
-  const isPositive = Number(amount) > 0;
 
   return (
     <div className={`flex items-center justify-between ${className}`}>
@@ -22,7 +22,9 @@ export default function TransactionItem({
         <span className="text-sm font-bold">{name}</span>
       </div>
       <div className="flex flex-col items-end">
-        <div className={`text-sm font-bold`}>{amount}</div>
+        <div className={`text-sm font-bold`}>
+          {formatUSD(amount)}
+        </div>
         <span className="mt-1 text-xs text-grey-500">
           {new Date(date).toLocaleDateString("en-GB", {
             day: "2-digit",

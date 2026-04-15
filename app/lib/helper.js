@@ -3,6 +3,15 @@
 import { useEffect, useState } from "react";
 import { THEMES_MAP } from "../data";
 
+export function formatUSD(amount, fraction = 2) {
+  return Number(amount).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: fraction,
+    maximumFractionDigits: fraction,
+  });
+}
+
 export function getColor(themeId) {
   return THEMES_MAP[themeId]?.color || "#ccc";
 }

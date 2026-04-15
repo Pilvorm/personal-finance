@@ -1,6 +1,7 @@
 "use client";
 
 import { getColor } from "../lib/helper";
+import { formatUSD } from "../lib/helper";
 
 export default function Category({
   theme,
@@ -11,9 +12,6 @@ export default function Category({
   spending,
   className,
 }) {
-  const spendingVal = spending?.toFixed(2);
-  const maxVal = Number(max)?.toFixed(2);
-  const customVal = Number(customValue)?.toFixed(2);
   const color = getColor(theme);
 
   return (
@@ -29,11 +27,11 @@ export default function Category({
         <h3 className="text-grey-500">{name}</h3>
         {spending ? (
           <div className="flex items-center gap-2">
-            <div className="font-bold">${spendingVal}</div>
-            <div className="text-xs text-grey-500">of ${maxVal}</div>
+            <div className="font-bold">{formatUSD(spending)}</div>
+            <div className="text-xs text-grey-500">of {formatUSD(max)}</div>
           </div>
         ) : (
-          <div className="text-sm font-bold">${customVal}</div>
+          <div className="text-sm font-bold">{formatUSD(customValue)}</div>
         )}
       </div>
     </div>

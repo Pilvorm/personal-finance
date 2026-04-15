@@ -1,19 +1,20 @@
 "use client";
 
 import { useState } from "react";
-
 import Link from "next/link";
 import { CaretRight } from "@/app/components/icons";
 import PageHeader from "@/app/components/pageHeader";
 import DonutChart from "@/app/components/donutChart";
 import Category from "@/app/components/category";
 import CategoryHeader from "@/app/components/categoryHeader";
-import { AnimatePresence, motion } from "motion/react";
-import BudgetModal from "@/app/components/modal/budgetModal";
-import { useQuery } from "@tanstack/react-query";
 import TransactionItem from "@/app/components/transactionItem";
+import BudgetModal from "@/app/components/modal/budgetModal";
 import ConfirmDelete from "@/app/components/modal/confirmDelete";
+
 import { getColor } from "@/app/lib/helper";
+import { formatUSD } from "@/app/lib/helper";
+import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "motion/react";
 
 const BudgetCard = ({
   id,
@@ -30,9 +31,7 @@ const BudgetCard = ({
   const safeMax = Number(max ?? 0);
 
   const percent = Math.min((safeSpending / safeMax) * 100, 100);
-  const spendingVal = safeSpending.toFixed(2);
-  const maxVal = safeMax.toFixed(2);
-  const remaining = Math.max(safeMax - safeSpending, 0).toFixed(2);
+  const remaining = Math.max(safeMax - safeSpending, 0);
 
   const budgetCardAnimation = {
     initial: { opacity: 0, y: -10, scale: 1 },
@@ -63,7 +62,7 @@ const BudgetCard = ({
 
       {/* Spending and Remaining */}
       <div className="mt-5 flex flex-col gap-4">
-        <div className="text-sm text-grey-500">Maximum of ${maxVal}</div>
+        <div className="text-sm text-grey-500">Maximum of {formatUSD(max)}</div>
 
         {/* Bar */}
         <div className="p-1 w-full h-8 bg-beige-100 rounded-sm">
@@ -74,7 +73,7 @@ const BudgetCard = ({
         </div>
 
         <div className="grid grid-cols-2">
-          <Category theme={theme} name="Spent" customValue={spendingVal} />
+          <Category theme={theme} name="Spent" customValue={spending} />
           <Category theme="beige" name="Remaining" customValue={remaining} />
         </div>
       </div>

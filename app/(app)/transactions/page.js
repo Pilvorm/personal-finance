@@ -9,6 +9,7 @@ import Pagination from "@/app/components/pagination";
 import Dropdown from "@/app/components/dropdowns/dropdown";
 import { SORT_OPTIONS } from "@/app/data";
 import { useDebounce } from "@/app/lib/helper";
+import { formatUSD } from "@/app/lib/helper";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -23,8 +24,7 @@ export default function Transactions() {
   const [searchTerm, setSearchTerm] = useState(initialSearch);
 
   const [selectedSort, setSelectedSort] = useState(
-    SORT_OPTIONS.find((opt) => opt.value === initialSort) ||
-      SORT_OPTIONS[0]
+    SORT_OPTIONS.find((opt) => opt.value === initialSort) || SORT_OPTIONS[0],
   );
 
   const [selectedCategory, setSelectedCategory] = useState({
@@ -59,7 +59,7 @@ export default function Transactions() {
     }
 
     const found = categoriesData.find(
-      (cat) => String(cat.id) === initialCategory
+      (cat) => String(cat.id) === initialCategory,
     );
 
     if (found) setSelectedCategory(found);
@@ -101,10 +101,7 @@ export default function Transactions() {
   }, [selectedSort, selectedCategory, debouncedSearch, router]);
 
   return (
-    <div
-      id="transactions"
-      className="px-4 pt-8 pb-28 md:px-10 lg:py-8"
-    >
+    <div id="transactions" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
       <PageHeader title="Transactions" />
 
       <main className="card my-8">
@@ -137,9 +134,7 @@ export default function Transactions() {
         </div>
 
         {isFetching && (
-          <div className="text-sm text-grey-500 mt-4">
-            Updating results...
-          </div>
+          <div className="text-sm text-grey-500 mt-4">Updating results...</div>
         )}
 
         <table id="transactions-table" className="w-full">
@@ -171,9 +166,7 @@ export default function Transactions() {
                         className="rounded-full"
                       />
                       <div>
-                        <div className="text-sm font-bold">
-                          {item.name}
-                        </div>
+                        <div className="text-sm font-bold">{item.name}</div>
 
                         <div className="mt-1 text-xs text-grey-500 md:hidden">
                           {item.categoryName || "General"}
@@ -187,19 +180,15 @@ export default function Transactions() {
                           isPositive && "text-green"
                         }`}
                       >
-                        {isPositive ? "+" : "-"}$
-                        {Math.abs(Number(item.amount)).toFixed(2)}
+                        {formatUSD(item.amount)}
                       </div>
 
                       <span className="mt-1 text-xs text-grey-500">
-                        {new Date(item.date).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          }
-                        )}
+                        {new Date(item.date).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </span>
                     </div>
                   </td>
@@ -209,14 +198,11 @@ export default function Transactions() {
                   </td>
 
                   <td className="hidden md:table-cell text-sm text-grey-500">
-                    {new Date(item.date).toLocaleDateString(
-                      "en-GB",
-                      {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      }
-                    )}
+                    {new Date(item.date).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
                   </td>
 
                   <td
@@ -224,8 +210,7 @@ export default function Transactions() {
                       isPositive && "text-green"
                     }`}
                   >
-                    {isPositive ? "+" : "-"}$
-                    {Math.abs(Number(item.amount)).toFixed(2)}
+                    {formatUSD(item.amount)}
                   </td>
                 </tr>
               );

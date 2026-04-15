@@ -9,16 +9,19 @@ import { POTS_DATA } from "../../data";
 import { getColor } from "@/app/lib/helper";
 import { useQuery } from "@tanstack/react-query";
 import ConfirmDelete from "@/app/components/modal/confirmDelete";
+import PotTransaction from "@/app/components/modal/potTransaction";
+import { formatUSD } from "@/app/lib/helper";
 
-const PotsCard = ({ theme, name, totalSaved, target, onDelete }) => {
-  const percent = Math.min((totalSaved / target) * 100, 100);
-  const savedVal = Number(totalSaved).toFixed(2);
-  const targetVal = target.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+const PotsCard = ({
+  id,
+  name,
+  totalSaved,
+  theme,
+  target,
+  setTransaction,
+  onDelete,
+}) => {
+  const percent = Math.min((totalSaved / target) * 100, 100).toFixed(2);
 
   const color = getColor(theme);
 
@@ -27,6 +30,17 @@ const PotsCard = ({ theme, name, totalSaved, target, onDelete }) => {
     animate: { opacity: 1, y: 0, scale: 1 },
     exit: { opacity: 0, scale: 0.95 },
   };
+
+  const potData = {
+    id,
+    name,
+    totalSaved,
+    theme: color,
+    percent,
+    target,
+  };
+
+  console.log(potData);
 
   return (
     <motion.div
@@ -47,7 +61,7 @@ const PotsCard = ({ theme, name, totalSaved, target, onDelete }) => {
       <div className="">
         <div className="flex items-center justify-between">
           <div className="text-sm text-grey-500">Total Saved</div>
-          <div className="text-[32px] font-bold">${savedVal}</div>
+          <div className="text-[32px] font-bold">{formatUSD(totalSaved)}</div>
         </div>
 
         <div className="mt-4">
@@ -60,17 +74,33 @@ const PotsCard = ({ theme, name, totalSaved, target, onDelete }) => {
           </div>
 
           <div className="mt-3 flex items-center justify-between text-xs text-grey-500">
-            <div className="font-bold">{percent.toFixed(1)}%</div>
-            <div className="">Target of {targetVal}</div>
+            <div className="font-bold">{percent}%</div>
+            <div className="">Target of {formatUSD(target, 0)}</div>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <button className="hover-basic cursor-pointer p-4 text-sm font-bold bg-beige-100 rounded-lg">
+        <button
+          onClick={() =>
+            setTransaction({
+              type: "add",
+              ...potData,
+            })
+          }
+          className="hover-basic cursor-pointer p-4 text-sm font-bold bg-beige-100 rounded-lg"
+        >
           + Add Money
         </button>
-        <button className="hover-basic cursor-pointer p-4 text-sm font-bold bg-beige-100 rounded-lg">
+        <button
+          onClick={() =>
+            setTransaction({
+              type: "withdraw",
+              ...potData,
+            })
+          }
+          className="hover-basic cursor-pointer p-4 text-sm font-bold bg-beige-100 rounded-lg"
+        >
           Withdraw
         </button>
       </div>
@@ -80,6 +110,7 @@ const PotsCard = ({ theme, name, totalSaved, target, onDelete }) => {
 
 export default function Pots() {
   const [isOpen, setIsOpen] = useState(false);
+  const [transaction, setTransaction] = useState(null);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -112,6 +143,18 @@ export default function Pots() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {transaction && (
+          <PotTransaction
+            type={transaction.type}
+            pot={transaction}
+            setIsOpen={() => {
+              setTransaction(null);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Delete Budget */}
       <AnimatePresence>
         {deleteTarget && (
@@ -135,10 +178,12 @@ export default function Pots() {
           {data?.map((pot) => (
             <PotsCard
               key={pot.id}
+              id={pot.id}
               theme={pot.theme}
               name={pot.name}
               totalSaved={pot.totalSaved}
               target={pot.target}
+              setTransaction={setTransaction}
               onDelete={() =>
                 setDeleteTarget({
                   id: pot.id,
