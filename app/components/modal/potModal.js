@@ -3,9 +3,8 @@
 import { useState, useEffect, useMemo } from "react";
 import Modal from "./modal";
 import DropdownInput from "../dropdowns/dropdownInput";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { THEMES, THEMES_MAP, EXCLUDED_THEMES } from "@/app/data";
-import { useCreatePotMutation } from "@/app/lib/mutations/usePotMutation";
+import { useCreatePotMutation, useUpdatePotMutation } from "@/app/lib/mutations/usePotMutation";
 
 export default function PotModal({
   setIsOpen,
@@ -34,11 +33,32 @@ export default function PotModal({
     }
   }, [availableThemes, selectedTheme, isEdit]);
 
+  // Prefill form fields when editing
+  useEffect(() => {
+    if (editData) {
+      const foundTheme = editData.theme
+        ? {
+            id: editData.theme,
+            ...THEMES_MAP[editData.theme],
+          }
+        : null;
+
+      setPotName(editData.name);
+      setSelectedTheme(foundTheme || null);
+      setPotTarget(editData.target);
+    }
+  }, [editData]);
+
   const createPot = useCreatePotMutation({
     setIsOpen,
   });
 
-  const savePot = isEdit ? updateBudget : createPot;
+  const updatePot = useUpdatePotMutation({
+    editData,
+    setIsOpen,
+  });
+
+  const savePot = isEdit ? updatePot : createPot;
 
   return (
     <Modal

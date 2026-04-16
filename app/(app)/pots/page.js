@@ -19,6 +19,7 @@ const PotsCard = ({
   theme,
   target,
   setTransaction,
+  onEdit,
   onDelete,
 }) => {
   const percent = Math.min((totalSaved / target) * 100, 100).toFixed(2);
@@ -40,8 +41,6 @@ const PotsCard = ({
     target,
   };
 
-  console.log(potData);
-
   return (
     <motion.div
       variants={potCardAnimation}
@@ -54,7 +53,7 @@ const PotsCard = ({
         type={"Pot"}
         theme={theme}
         name={name}
-        // edit={onEdit}
+        edit={onEdit}
         del={onDelete}
       />
 
@@ -184,6 +183,7 @@ export default function Pots() {
               totalSaved={pot.totalSaved}
               target={pot.target}
               setTransaction={setTransaction}
+              onEdit={() => setEditTarget(pot)}
               onDelete={() =>
                 setDeleteTarget({
                   id: pot.id,

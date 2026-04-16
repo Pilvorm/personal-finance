@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Modal from "./modal";
 import DropdownInput from "../dropdowns/dropdownInput";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { THEMES, THEMES_MAP, EXCLUDED_THEMES } from "@/app/data";
 import {
   useCreateBudgetMutation,

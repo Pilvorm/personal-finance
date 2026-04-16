@@ -30,10 +30,7 @@ export function useCreatePotMutation({ setIsOpen }) {
         totalSaved: payload.totalSaved,
       };
 
-      queryClient.setQueryData(["pots"], (old = []) => [
-        ...old,
-        optimistic,
-      ]);
+      queryClient.setQueryData(["pots"], (old = []) => [...old, optimistic]);
 
       return { previous };
     },
@@ -50,58 +47,103 @@ export function useCreatePotMutation({ setIsOpen }) {
 }
 
 // UPDATE
-// export function useUpdateBudgetMutation({
-//   editData,
-//   selectedCategory,
-//   setIsOpen,
-// }) {
-//   const queryClient = useQueryClient();
+export function useUpdatePotMutation({ editData, setIsOpen }) {
+  const queryClient = useQueryClient();
 
-//   return useMutation({
-//     mutationFn: async (payload) => {
-//       const res = await fetch(`/api/budgets/${editData.id}`, {
-//         method: "PATCH",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(payload),
-//       });
+  return useMutation({
+    mutationFn: async (payload) => {
+      const res = await fetch(`/api/pots/${editData.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-//       return res.json();
-//     },
+      return res.json();
+    },
 
-//     onMutate: async (payload) => {
-//       await queryClient.cancelQueries({ queryKey: ["budgets"] });
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({ queryKey: ["pots"] });
 
-//       const previous = queryClient.getQueryData(["budgets"]);
+      const previous = queryClient.getQueryData(["pots"]);
 
-//       queryClient.setQueryData(["budgets"], (old = []) =>
-//         old.map((b) =>
-//           b.id === editData.id
-//             ? {
-//                 ...b,
-//                 categoryId: payload.categoryId,
-//                 categoryName: selectedCategory.name,
-//                 max: payload.max,
-//                 theme: payload.theme,
-//               }
-//             : b,
-//         ),
-//       );
+      queryClient.setQueryData(["pots"], (old = []) =>
+        old.map((p) =>
+          p.id === editData.id
+            ? {
+                ...p,
+                name: payload.name,
+                target: payload.target,
+                theme: payload.theme,
+              }
+            : p,
+        ),
+      );
 
-//       return { previous };
-//     },
+      return { previous };
+    },
 
-//     onError: (err, payload, context) => {
-//       queryClient.setQueryData(["budgets"], context.previous);
-//     },
+    onError: (err, payload, context) => {
+      queryClient.setQueryData(["pots"], context.previous);
+    },
 
-//     onSettled: () => {
-//       queryClient.invalidateQueries({ queryKey: ["budgets"] });
-//       setIsOpen(false);
-//     },
-//   });
-// }
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["pots"] });
+      setIsOpen(false);
+    },
+  });
+}
+
+// POT TRANSACTION
+export function usePotTransactionMutation({ editData, setIsOpen }) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload) => {
+      const res = await fetch(`/api/pots/${editData.id}/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      return res.json();
+    },
+
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({ queryKey: ["pots"] });
+
+      const previous = queryClient.getQueryData(["pots"]);
+
+      queryClient.setQueryData(["pots"], (old = []) =>
+        old.map((p) =>
+          p.id === editData.id
+            ? {
+                ...p,
+                totalSaved:
+                  payload.type === "add"
+                    ? Number(p.totalSaved) + Number(payload.amount)
+                    : Number(p.totalSaved) - Number(payload.amount),
+              }
+            : p,
+        ),
+      );
+
+      return { previous };
+    },
+
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(["pots"], context.previous);
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["pots"] });
+      setIsOpen(false);
+    },
+  });
+}
 
 // DELETE
 export function useDeletePotMutation({ setIsOpen }) {
@@ -120,7 +162,7 @@ export function useDeletePotMutation({ setIsOpen }) {
       const previous = queryClient.getQueryData(["pots"]);
 
       queryClient.setQueryData(["pots"], (old = []) =>
-        old.filter((b) => b.id !== id),
+        old.filter((p) => p.id !== id),
       );
 
       return { previous };

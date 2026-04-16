@@ -133,9 +133,9 @@ export default function Budgets() {
               setIsOpen(false);
               setEditTarget(null);
             }}
+            editData={editTarget}
             usedCategories={usedCategories}
             usedThemes={usedThemes}
-            editData={editTarget}
           />
         )}
       </AnimatePresence>

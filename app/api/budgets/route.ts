@@ -17,7 +17,7 @@ export async function GET() {
         categoriesTable,
         eq(budgetsTable.categoryId, categoriesTable.id),
       )
-      .orderBy(asc(budgetsTable.id));;
+      .orderBy(asc(budgetsTable.id));
 
     const transactions = await db
       .select({

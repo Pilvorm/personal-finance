@@ -31,7 +31,7 @@ export default function Category({
             <div className="text-xs text-grey-500">of {formatUSD(max)}</div>
           </div>
         ) : (
-          <div className="text-sm font-bold">{formatUSD(customValue)}</div>
+          <div className="text-sm font-bold">{formatUSD(customValue, 0)}</div>
         )}
       </div>
     </div>

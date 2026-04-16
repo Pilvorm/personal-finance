@@ -10,7 +10,7 @@ export default function Summary() {
         <div className="text-[32px] text-grey-900 font-bold">$3,814.25</div>
       </div>
       <div className="flex-1 p-6 flex flex-col gap-3 bg-white rounded-xl">
-        <h2 className="text-sm text-grey-500">Income</h2>
+        <h2 className="text-sm text-grey-500">Expenses</h2>
         <div className="text-[32px] text-grey-900 font-bold">$1,700.50</div>
       </div>
     </div>

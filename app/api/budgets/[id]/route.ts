@@ -15,7 +15,6 @@ export async function PATCH(
     }
 
     const body = await req.json();
-
     const { categoryId, max, theme } = body;
 
     const updated = await db

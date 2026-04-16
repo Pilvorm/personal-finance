@@ -4,18 +4,32 @@ import { useState } from "react";
 
 import Modal from "./modal";
 import { formatUSD } from "@/app/lib/helper";
+import { getColor } from "@/app/lib/helper";
+import { usePotTransactionMutation } from "@/app/lib/mutations/usePotMutation";
 
 export default function PotTransaction({ type, pot, setIsOpen }) {
   const [amount, setAmount] = useState("");
 
-  const totalSaved = Number(pot.totalSaved);
+  const totalSaved = pot.totalSaved;
   const numericAmount = Number(amount);
+
+  console.log({totalSaved, numericAmount})
 
   const rawTotal =
     type === "add" ? totalSaved + numericAmount : totalSaved - numericAmount;
 
-  const newTotal = Math.round(rawTotal * 100) / 100;
-  const newPercent = Math.min((newTotal / pot.target) * 100, 100).toFixed(2);
+  const newTotal = Math.max(0, Math.round(rawTotal * 100) / 100);
+  const newPercent = Math.min((newTotal / pot.target) * 100, 100);
+
+  const baseWidth = type === "add" ? pot.percent : newPercent;
+
+  const diffWidth =
+    type === "add" ? newPercent - pot.percent : pot.percent - newPercent;
+
+  const savePot = usePotTransactionMutation({
+    editData: pot,
+    setIsOpen
+  });
 
   return (
     <Modal
@@ -37,23 +51,28 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
           {/* Bar */}
           <div className="w-full h-2 flex gap-[2px] bg-beige-100 rounded-sm">
             <div
-              style={{ width: `${pot.percent}%` }}
+              style={{ width: `${baseWidth}%` }}
               className={`h-full bg-grey-900 ${amount ? "rounded-l-sm" : "rounded-sm"}`}
             ></div>
-            <div
-              style={{
-                width: `${newPercent - pot.percent}%`,
-                backgroundColor: pot.theme,
-              }}
-              className={`h-full rounded-r-sm`}
-            ></div>
+            {amount && (
+              <div
+                style={{
+                  width: `${diffWidth}%`,
+                  backgroundColor:
+                    type == "add" ? getColor("green") : getColor("red"),
+                }}
+                className={`h-full bg-red transition-all duration-300 ${
+                  numericAmount >= totalSaved ? "rounded-sm" : "rounded-r-sm"
+                }`}
+              ></div>
+            )}
           </div>
 
           <div className="mt-3 flex items-center justify-between text-xs text-grey-500">
             <div
               className={`font-bold ${amount ? (type == "add" ? "text-green" : "text-red") : ""}`}
             >
-              {newPercent}%
+              {newPercent.toFixed(2)}%
             </div>
             <div className="">Target of {formatUSD(pot.target, 0)}</div>
           </div>
@@ -70,9 +89,15 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
             type="number"
             value={amount}
             min="0.01"
-            max="1000000"
+            max={type == "add" ? "1000000" : totalSaved} // LIMIT BY USER'S BALANCE LATER
             step="0.01"
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => {
+              const val = Number(e.target.value);
+              if (type == "withdraw") {
+                if (val > totalSaved) return;
+              }
+              setAmount(e.target.value);
+            }}
             className="w-full outline-none"
           />
         </div>
@@ -80,13 +105,12 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
 
       <button
         disabled={!amount}
-        // onClick={() =>
-        //   saveBudget.mutate({
-        //     categoryId: selectedCategory.id,
-        //     max: budget,
-        //     theme: selectedTheme.id,
-        //   })
-        // }
+        onClick={() =>
+          savePot.mutate({
+            type,
+            amount
+          })
+        }
         className="submit-btn"
       >
         {type == "add" ? "Confirm Addition" : "Confirm Withdrawal"}

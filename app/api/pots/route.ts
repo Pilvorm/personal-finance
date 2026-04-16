@@ -4,9 +4,15 @@ import { potsTable } from "@/db/schema";
 
 export async function GET() {
   try {
-    const data = await db.select().from(potsTable);
+    const data = await db.select().from(potsTable).orderBy(asc(potsTable.id));;
 
-    return Response.json(data);
+    const normalized = data.map((p) => ({
+      ...p,
+      target: Number(p.target),
+      totalSaved: Number(p.totalSaved),
+    }));
+
+    return Response.json(normalized);
   } catch (err: any) {
     return Response.json({ error: err.message }, { status: 500 });
   }

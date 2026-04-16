@@ -2,43 +2,62 @@ import { db } from "@/db";
 import { potsTable } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
-// export async function PATCH(
-//   req: Request,
-//   context: { params: Promise<{ id: string }> },
-// ) {
-//   try {
-//     const { id } = await context.params;
-//     const parsedId = Number(id);
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await context.params;
+    const parsedId = Number(id);
 
-//     if (!parsedId) {
-//       return Response.json({ error: "Invalid ID" }, { status: 400 });
-//     }
+    if (!parsedId) {
+      return Response.json({ error: "Invalid ID" }, { status: 400 });
+    }
 
-//     const body = await req.json();
+    const body = await req.json();
+    const { name, target, theme, amount, type } = body;
 
-//     const { categoryId, max, theme } = body;
+    // TRANSACTION
+    if (amount && type) {
+      const pot = await db
+        .select()
+        .from(potsTable)
+        .where(eq(potsTable.id, parsedId))
+        .then((res) => res[0]);
 
-//     const updated = await db
-//       .update(potsTable)
-//       .set({
-//         categoryId,
-//         max,
-//         theme,
-//       })
-//       .where(
-//         and(
-//           eq(potsTable.userId, 1),
-//           eq(potsTable.id, parsedId),
-//         ),
-//       )
-//       .returning();
+      const newTotal =
+        type === "add"
+          ? Number(pot.totalSaved) + Number(amount)
+          : Number(pot.totalSaved) - Number(amount);
 
-//     return Response.json(updated[0]);
-//   } catch (err: any) {
-//     console.error("PATCH ERROR:", err);
-//     return Response.json({ error: err.message }, { status: 500 });
-//   }
-// }
+      const updated = await db
+        .update(potsTable)
+        .set({
+          totalSaved: String(newTotal),
+        })
+        .where(eq(potsTable.id, parsedId))
+        .returning();
+
+      return Response.json(updated[0]);
+    }
+
+    // EDIT POT
+    const updated = await db
+      .update(potsTable)
+      .set({
+        ...(name !== undefined && { name }),
+        ...(target !== undefined && { target }),
+        ...(theme !== undefined && { theme }),
+      })
+      .where(eq(potsTable.id, parsedId))
+      .returning();
+
+    return Response.json(updated[0]);
+  } catch (err: any) {
+    console.error("PATCH ERROR:", err);
+    return Response.json({ error: err.message }, { status: 500 });
+  }
+}
 
 export async function DELETE(
   req: Request,
@@ -46,7 +65,6 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
-
     const parsedId = Number(id);
 
     if (!parsedId) {
