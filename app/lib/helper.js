@@ -12,6 +12,21 @@ export function formatUSD(amount, fraction = 2) {
   });
 }
 
+export function getOrdinal(day) {
+  if (day > 3 && day < 21) return `${day}th`;
+
+  switch (day % 10) {
+    case 1:
+      return `${day}st`;
+    case 2:
+      return `${day}nd`;
+    case 3:
+      return `${day}rd`;
+    default:
+      return `${day}th`;
+  }
+}
+
 export function getColor(themeId) {
   return THEMES_MAP[themeId]?.color || "#ccc";
 }
@@ -42,4 +57,20 @@ export function useDebounce(value, delay = 400) {
   }, [value, delay]);
 
   return debounced;
+}
+
+export function buildQueryParams({ sort, search, category }) {
+  const params = new URLSearchParams();
+
+  params.set("sort", sort);
+
+  if (category && category !== "all") {
+    params.set("category", category);
+  }
+
+  if (search?.trim()) {
+    params.set("search", search.trim());
+  }
+
+  return params;
 }

@@ -72,6 +72,7 @@ export const recurringBillsTable = pgTable("recurring_bills", {
   userId: integer("user_id").notNull(),
 
   title: varchar({ length: 255 }).notNull(),
+  avatar: varchar({ length: 255 }).notNull(),
   amount: numeric({ precision: 10, scale: 2 }).notNull(),
 
   dueDate: integer("due_date").notNull(), // day of month (1–31)

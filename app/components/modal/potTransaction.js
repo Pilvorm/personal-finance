@@ -52,7 +52,7 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
           <div className="w-full h-2 flex gap-[2px] bg-beige-100 rounded-sm">
             <div
               style={{ width: `${baseWidth}%` }}
-              className={`h-full bg-grey-900 ${amount ? "rounded-l-sm" : "rounded-sm"}`}
+              className={`h-full bg-grey-900 transition-all duration-300 ${amount ? "rounded-l-sm" : "rounded-sm"}`}
             ></div>
             {amount && (
               <div
