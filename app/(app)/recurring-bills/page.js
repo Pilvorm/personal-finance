@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import { BillPaid, BillDue } from "@/app/components/icons";
@@ -65,6 +65,48 @@ export default function RecurringBills() {
     router.replace(`/recurring-bills?${params}`);
   }, [selectedSort, debouncedSearch, router]);
 
+  const summary = useMemo(() => {
+    if (!billsData) {
+      return {
+        paid: { count: 0, total: 0 },
+        due: { count: 0, total: 0 },
+        upcoming: { count: 0, total: 0 },
+        grandTotal: { count: 0, total: 0 },
+      };
+    }
+
+    return billsData.reduce(
+      (acc, bill) => {
+        const status = getBillStatus(bill.dueDate);
+        const amount = Number(bill.amount);
+
+        if (status === "paid") {
+          acc.paid.count++;
+          acc.paid.total += amount;
+        } else if (status === "due") {
+          acc.due.count++;
+          acc.due.total += amount;
+          acc.upcoming.count++;
+          acc.upcoming.total += amount;
+        } else {
+          acc.upcoming.count++;
+          acc.upcoming.total += amount;
+        }
+
+        acc.grandTotal.count++;
+        acc.grandTotal.total += amount;
+
+        return acc;
+      },
+      {
+        paid: { count: 0, total: 0 },
+        due: { count: 0, total: 0 },
+        upcoming: { count: 0, total: 0 },
+        grandTotal: { count: 0, total: 0 },
+      },
+    );
+  }, [billsData]);
+
   return (
     <div id="recurringBills" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
       <PageHeader title="Recurring Bills" />
@@ -76,16 +118,36 @@ export default function RecurringBills() {
             <RecurringBillsOutline />
             <div>
               <div>Total Bills</div>
-              <div className="mt-3 text-[32px] font-bold">$384.98</div>
+              <div className="mt-3 text-[32px] font-bold">{formatUSD(summary.grandTotal.total)}</div>
             </div>
           </div>
 
           <div className="card mt-6">
             <h2 className="card-title">Summary</h2>
             <div className="mt-5">
-              <div className="pb-4 flex items-center justify-between border-b border-grey-100">
+              <div
+                className={`pb-4 flex items-center justify-between border-b border-grey-100`}
+              >
                 <div className="text-grey-500">Paid Bills</div>
-                <div className="font-bold">4 ($190.00)</div>
+                <div className="font-bold">
+                  {summary.paid.count} ({formatUSD(summary.paid.total)})
+                </div>
+              </div>
+              <div
+                className={`py-4 flex items-center justify-between border-b border-grey-100`}
+              >
+                <div className="text-grey-500">Total Upcoming</div>
+                <div className="font-bold">
+                  {summary.upcoming.count} ({formatUSD(summary.upcoming.total)})
+                </div>
+              </div>
+              <div
+                className={`pt-4 flex items-center justify-between text-red`}
+              >
+                <div>Due Soon</div>
+                <div className="font-bold">
+                  {summary.due.count} ({formatUSD(summary.due.total)})
+                </div>
               </div>
             </div>
           </div>
@@ -113,7 +175,7 @@ export default function RecurringBills() {
           </div>
 
           <table id="transactions-table" className="w-full">
-            <thead className="max-md:hidden text-grey-500 text-left text-xs">
+            <thead className="max-md:hidden text-grey-500 text-left text-xs border-b border-grey-100">
               <tr>
                 <th>Bill Title</th>
                 <th>Due Date</th>
@@ -122,7 +184,7 @@ export default function RecurringBills() {
             </thead>
 
             <tbody className="">
-              {billsData?.map((item) => {
+              {billsData?.map((item, index) => {
                 const status = getBillStatus(item.dueDate);
                 const dateColor =
                   status == "paid"
@@ -134,7 +196,7 @@ export default function RecurringBills() {
                 return (
                   <tr
                     key={item.id}
-                    className="block md:table-row border-b border-grey-100"
+                    className={`block md:table-row ${index !== billsData.length - 1 && "border-b border-grey-100"}`}
                   >
                     {/* Recipient */}
                     <td className="flex items-end md:items-center justify-between md:table-cell">

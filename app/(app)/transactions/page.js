@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/app/components/pageHeader";
 import Search from "@/app/components/search";
 import Pagination from "@/app/components/pagination";
@@ -126,7 +127,7 @@ export default function Transactions() {
           id="transactions-table"
           className="w-full"
         >
-          <thead className="max-md:hidden text-grey-500 text-left text-xs">
+          <thead className="max-md:hidden text-grey-500 text-left text-xs border-b border-grey-100">
             <tr>
               <th>Recipient / Sender</th>
               <th>Category</th>
