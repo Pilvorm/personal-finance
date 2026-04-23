@@ -47,8 +47,8 @@ export default function RecurringBills() {
     ],
     queryFn: async () => {
       const params = buildQueryParams({
-        sort: selectedSort.value,
         search: debouncedSearch,
+        sort: selectedSort.value,
       });
 
       const res = await fetch(`/api/recurring-bills?${params}`);
@@ -58,8 +58,8 @@ export default function RecurringBills() {
 
   useEffect(() => {
     const params = buildQueryParams({
-      sort: selectedSort.value,
       search: debouncedSearch,
+      sort: selectedSort.value,
     });
 
     router.replace(`/recurring-bills?${params}`);

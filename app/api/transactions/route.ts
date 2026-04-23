@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { ilike, and, eq, desc, asc } from "drizzle-orm";
+import { ilike, and, eq, desc, asc, count } from "drizzle-orm";
 import { transactionsTable, categoriesTable } from "@/db/schema";
 
 export async function GET(req: Request) {
@@ -9,19 +9,18 @@ export async function GET(req: Request) {
     const sort = searchParams.get("sort");
     const category = searchParams.get("category");
     const search = searchParams.get("search");
+    const page = Number(searchParams.get("page") || 1);
+    const pageSize = 10;
+    const offset = (page - 1) * pageSize;
 
     const conditions = [];
 
     if (category && category !== "all") {
-      conditions.push(
-        eq(transactionsTable.categoryId, Number(category))
-      );
+      conditions.push(eq(transactionsTable.categoryId, Number(category)));
     }
 
     if (search) {
-      conditions.push(
-        ilike(transactionsTable.name, `%${search}%`)
-      );
+      conditions.push(ilike(transactionsTable.name, `%${search}%`));
     }
 
     let orderBy;
@@ -59,12 +58,23 @@ export async function GET(req: Request) {
       .from(transactionsTable)
       .leftJoin(
         categoriesTable,
-        eq(transactionsTable.categoryId, categoriesTable.id)
+        eq(transactionsTable.categoryId, categoriesTable.id),
       )
       .where(conditions.length ? and(...conditions) : undefined)
-      .orderBy(orderBy);
+      .orderBy(orderBy)
+      .limit(pageSize)
+      .offset(offset);
 
-    return Response.json(data);
+    const [{ count: totalCount }] = await db
+      .select({ count: count() })
+      .from(transactionsTable)
+      .where(conditions.length ? and(...conditions) : undefined);
+
+    const totalPages = Math.ceil(Number(totalCount) / pageSize);
+
+    const safePage = Math.min(page, totalPages || 1);
+
+    return Response.json({ data, currentPage: safePage, totalPages });
   } catch (err: any) {
     return Response.json({ error: err.message }, { status: 500 });
   }

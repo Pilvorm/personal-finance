@@ -19,16 +19,16 @@ export default function Transactions() {
   const initialSort = searchParams.get("sort") || "latest";
   const initialCategory = searchParams.get("category") || "all";
   const initialSearch = searchParams.get("search") || "";
+  const initialPage = Number(searchParams.get("page") || 1);
+  const [page, setPage] = useState(initialPage);
 
   const [searchTerm, setSearchTerm] = useState(initialSearch);
 
   const [selectedSort, setSelectedSort] = useState(
-    SORT_OPTIONS.find((opt) => opt.value === initialSort) ||
-      SORT_OPTIONS[0],
+    SORT_OPTIONS.find((opt) => opt.value === initialSort) || SORT_OPTIONS[0],
   );
 
-  const [selectedCategoryId, setSelectedCategoryId] =
-    useState(initialCategory);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(initialCategory);
 
   const debouncedSearch = useDebounce(searchTerm, 400);
 
@@ -39,13 +39,11 @@ export default function Transactions() {
       return res.json();
     },
     staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 
   const categoryOptions = useMemo(() => {
-    return [
-      { id: "all", name: "All Transactions" },
-      ...(categoriesData ?? []),
-    ];
+    return [{ id: "all", name: "All Transactions" }, ...(categoriesData ?? [])];
   }, [categoriesData]);
 
   const selectedCategory =
@@ -53,36 +51,47 @@ export default function Transactions() {
       (cat) => String(cat.id) === String(selectedCategoryId),
     ) || categoryOptions[0];
 
-  const { data: transactionsData, isFetching } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: [
       "transactions",
       {
         sort: selectedSort.value,
         category: selectedCategoryId,
         search: debouncedSearch,
+        page,
       },
     ],
     queryFn: async () => {
       const params = buildQueryParams({
+        search: debouncedSearch,
         sort: selectedSort.value,
         category: String(selectedCategoryId),
-        search: debouncedSearch,
+        page,
       });
 
       const res = await fetch(`/api/transactions?${params}`);
       return res.json();
     },
+    staleTime: 1000 * 60,
   });
+
+  const transactionsData = data?.data;
+  const totalPages = data?.totalPages || 1;
 
   useEffect(() => {
     const params = buildQueryParams({
+      search: debouncedSearch,
       sort: selectedSort.value,
       category: String(selectedCategoryId),
-      search: debouncedSearch,
+      page,
     });
 
     router.replace(`/transactions?${params}`);
-  }, [selectedSort, selectedCategoryId, debouncedSearch, router]);
+  }, [selectedSort, selectedCategoryId, debouncedSearch, page, router]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [selectedSort, selectedCategoryId, debouncedSearch]);
 
   return (
     <div id="transactions" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -118,15 +127,10 @@ export default function Transactions() {
         </div>
 
         {isFetching && (
-          <div className="text-sm text-grey-500 mt-4">
-            Updating results...
-          </div>
+          <div className="text-sm text-grey-500 mt-4">Updating results...</div>
         )}
 
-        <table
-          id="transactions-table"
-          className="w-full"
-        >
+        <table id="transactions-table" className="w-full">
           <thead className="max-md:hidden text-grey-500 text-left text-xs border-b border-grey-100">
             <tr>
               <th>Recipient / Sender</th>
@@ -155,9 +159,7 @@ export default function Transactions() {
                         className="rounded-full"
                       />
                       <div>
-                        <div className="text-sm font-bold">
-                          {item.name}
-                        </div>
+                        <div className="text-sm font-bold">{item.name}</div>
 
                         <div className="mt-1 text-xs text-grey-500 md:hidden">
                           {item.categoryName || "General"}
@@ -175,14 +177,11 @@ export default function Transactions() {
                       </div>
 
                       <span className="mt-1 text-xs text-grey-500">
-                        {new Date(item.date).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          },
-                        )}
+                        {new Date(item.date).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </span>
                     </div>
                   </td>
@@ -212,7 +211,7 @@ export default function Transactions() {
           </tbody>
         </table>
 
-        <Pagination />
+        <Pagination page={page} setPage={setPage} totalPages={totalPages} />
       </main>
     </div>
   );

@@ -59,10 +59,11 @@ export function useDebounce(value, delay = 400) {
   return debounced;
 }
 
-export function buildQueryParams({ sort, search, category }) {
+export function buildQueryParams({ search, sort, category, page }) {
   const params = new URLSearchParams();
 
   params.set("sort", sort);
+  params.set("page", page);
 
   if (category && category !== "all") {
     params.set("category", category);
