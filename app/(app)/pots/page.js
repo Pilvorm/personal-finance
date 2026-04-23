@@ -113,11 +113,7 @@ export default function Pots() {
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const {
-    status,
-    data = [],
-    error,
-  } = useQuery({
+  const { data } = useQuery({
     queryKey: ["pots"],
     queryFn: async () => {
       const res = await fetch("/api/pots");
@@ -125,7 +121,10 @@ export default function Pots() {
     },
   });
 
-  const usedThemes = new Set(data?.map((t) => t.theme));
+  const potsData = data?.data;
+  const usedThemes = new Set(potsData?.map((t) => t.theme));
+
+  console.log(data);
 
   return (
     <div id="pots" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -174,7 +173,7 @@ export default function Pots() {
 
       <main className="my-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AnimatePresence mode="popLayout">
-          {data?.map((pot) => (
+          {potsData?.map((pot) => (
             <PotsCard
               key={pot.id}
               id={pot.id}

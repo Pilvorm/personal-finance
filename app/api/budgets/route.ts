@@ -38,7 +38,7 @@ export async function GET() {
 
       const spending = txs
         .filter((t) => Number(t.amount) < 0)
-        .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
+        .reduce((acc, t) => acc + Math.abs(Number(t.amount)), 0);
 
       return {
         ...budget,

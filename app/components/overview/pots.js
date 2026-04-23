@@ -1,15 +1,30 @@
+"use client";
+
 import { CaretRight, PotsIconGreen } from "../icons";
 import Link from "next/link";
 import Category from "../category";
 import { POTS_DATA } from "../../data";
+import { useQuery } from "@tanstack/react-query";
+import { formatUSD } from "@/app/lib/helper";
 
 export default function Pots() {
+  const { data } = useQuery({
+    queryKey: ["pots"],
+    queryFn: async () => {
+      const res = await fetch("/api/pots");
+      return res.json();
+    },
+  });
+
+  const potsData = data?.data;
+  const grandTotalSaved = data?.grandTotalSaved;
+
   return (
     <div id="pots-card" className="card">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="card-title">Pots</h2>
-        <Link href="/" className="card-link">
+        <Link href="/pots" className="card-link">
           <span>See Details</span>
           <CaretRight />
         </Link>
@@ -23,13 +38,13 @@ export default function Pots() {
           </div>
           <div>
             <h3 className="text-grey-500">Total Saved</h3>
-            <div className="mt-2 text-[32px] text-grey-900 font-bold">$850</div>
+            <div className="mt-2 text-[32px] text-grey-900 font-bold">{formatUSD(grandTotalSaved, 0)}</div>
           </div>
         </div>
 
         {/* Right */}
         <div className="flex-1 grid grid-cols-2 gap-4">
-          {POTS_DATA.slice(0, 4).map((pot) => (
+          {potsData?.slice(0, 4).map((pot) => (
             <Category
               key={pot.name}
               theme={pot.theme}

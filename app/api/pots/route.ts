@@ -4,15 +4,20 @@ import { potsTable } from "@/db/schema";
 
 export async function GET() {
   try {
-    const data = await db.select().from(potsTable).orderBy(asc(potsTable.id));;
+    const rawData = await db.select().from(potsTable).orderBy(asc(potsTable.id));
 
-    const normalized = data.map((p) => ({
+    const data = rawData.map((p) => ({
       ...p,
       target: Number(p.target),
       totalSaved: Number(p.totalSaved),
     }));
 
-    return Response.json(normalized);
+    const grandTotalSaved = data.reduce(
+      (acc, item) => acc + item.totalSaved,
+      0,
+    );
+
+    return Response.json({ data, grandTotalSaved });
   } catch (err: any) {
     return Response.json({ error: err.message }, { status: 500 });
   }
