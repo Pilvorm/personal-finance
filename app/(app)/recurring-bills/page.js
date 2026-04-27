@@ -10,17 +10,9 @@ import { RecurringBillsOutline } from "@/app/components/icons";
 import Dropdown from "@/app/components/dropdowns/dropdown";
 import { SORT_OPTIONS } from "@/app/data";
 import { useDebounce, formatUSD, buildQueryParams } from "@/app/lib/helper";
-import { getOrdinal } from "@/app/lib/helper";
+import { getOrdinal, getBillStatus, getBillsSummary } from "@/app/lib/helper";
 
 import { useQuery } from "@tanstack/react-query";
-
-function getBillStatus(dueDay) {
-  const today = new Date().getDate();
-
-  if (today > dueDay) return "paid";
-  if (dueDay - today <= 3) return "due";
-  return "upcoming";
-}
 
 export default function RecurringBills() {
   const searchParams = useSearchParams();
@@ -65,47 +57,7 @@ export default function RecurringBills() {
     router.replace(`/recurring-bills?${params}`);
   }, [selectedSort, debouncedSearch, router]);
 
-  const summary = useMemo(() => {
-    if (!billsData) {
-      return {
-        paid: { count: 0, total: 0 },
-        due: { count: 0, total: 0 },
-        upcoming: { count: 0, total: 0 },
-        grandTotal: { count: 0, total: 0 },
-      };
-    }
-
-    return billsData.reduce(
-      (acc, bill) => {
-        const status = getBillStatus(bill.dueDate);
-        const amount = Number(bill.amount);
-
-        if (status === "paid") {
-          acc.paid.count++;
-          acc.paid.total += amount;
-        } else if (status === "due") {
-          acc.due.count++;
-          acc.due.total += amount;
-          acc.upcoming.count++;
-          acc.upcoming.total += amount;
-        } else {
-          acc.upcoming.count++;
-          acc.upcoming.total += amount;
-        }
-
-        acc.grandTotal.count++;
-        acc.grandTotal.total += amount;
-
-        return acc;
-      },
-      {
-        paid: { count: 0, total: 0 },
-        due: { count: 0, total: 0 },
-        upcoming: { count: 0, total: 0 },
-        grandTotal: { count: 0, total: 0 },
-      },
-    );
-  }, [billsData]);
+  const summary = useMemo(() => getBillsSummary(billsData), [billsData]);
 
   return (
     <div id="recurringBills" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -118,7 +70,9 @@ export default function RecurringBills() {
             <RecurringBillsOutline />
             <div>
               <div>Total Bills</div>
-              <div className="mt-3 text-[32px] font-bold">{formatUSD(summary.grandTotal.total)}</div>
+              <div className="mt-3 text-[32px] font-bold">
+                {formatUSD(summary.grandTotal.total)}
+              </div>
             </div>
           </div>
 

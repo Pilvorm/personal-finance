@@ -99,7 +99,7 @@ const BudgetCard = ({
               name={spending.name}
               amount={spending.amount}
               date={spending.date}
-              className={`${index !== spendingList.length - 1 && "pb-5 border-b-1 border-grey-500/15"}`}
+              className={`${index !== spendingList.length - 1 && "pb-5 border-b-1 border-grey-100"}`}
             />
           ))}
         </div>

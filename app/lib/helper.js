@@ -31,23 +31,6 @@ export function getColor(themeId) {
   return THEMES_MAP[themeId]?.color || "#ccc";
 }
 
-export function groupBudgets(budgets, limit = 4) {
-  if (budgets.length <= limit) return budgets;
-
-  const visible = budgets.slice(0, limit - 1);
-  const rest = budgets.slice(limit - 1);
-
-  const others = {
-    id: "others",
-    categoryName: "Others",
-    theme: "beige",
-    max: rest.reduce((acc, item) => acc + Number(item.max), 0),
-    spending: rest.reduce((acc, item) => acc + item.spending, 0),
-  };
-
-  return [...visible, others];
-}
-
 export function useDebounce(value, delay = 400) {
   const [debounced, setDebounced] = useState(value);
 
@@ -74,4 +57,71 @@ export function buildQueryParams({ search, sort, category, page }) {
   }
 
   return params;
+}
+
+export function groupBudgets(budgets, limit = 4) {
+  if (budgets.length <= limit) return budgets;
+
+  const visible = budgets.slice(0, limit - 1);
+  const rest = budgets.slice(limit - 1);
+
+  const others = {
+    id: "others",
+    categoryName: "Others",
+    theme: "beige",
+    max: rest.reduce((acc, item) => acc + Number(item.max), 0),
+    spending: rest.reduce((acc, item) => acc + item.spending, 0),
+  };
+
+  return [...visible, others];
+}
+
+export function getBillStatus(dueDay) {
+  const today = new Date().getDate();
+
+  if (today > dueDay) return "paid";
+  if (dueDay - today <= 3) return "due";
+  return "upcoming";
+}
+
+export function getBillsSummary(billsData) {
+  if (!billsData) {
+    return {
+      paid: { count: 0, total: 0 },
+      due: { count: 0, total: 0 },
+      upcoming: { count: 0, total: 0 },
+      grandTotal: { count: 0, total: 0 },
+    };
+  }
+
+  return billsData.reduce(
+    (acc, bill) => {
+      const status = getBillStatus(bill.dueDate);
+      const amount = Number(bill.amount || 0);
+
+      if (status === "paid") {
+        acc.paid.count++;
+        acc.paid.total += amount;
+      } else if (status === "due") {
+        acc.due.count++;
+        acc.due.total += amount;
+        acc.upcoming.count++;
+        acc.upcoming.total += amount;
+      } else {
+        acc.upcoming.count++;
+        acc.upcoming.total += amount;
+      }
+
+      acc.grandTotal.count++;
+      acc.grandTotal.total += amount;
+
+      return acc;
+    },
+    {
+      paid: { count: 0, total: 0 },
+      due: { count: 0, total: 0 },
+      upcoming: { count: 0, total: 0 },
+      grandTotal: { count: 0, total: 0 },
+    },
+  );
 }
