@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const inserted = await db
       .insert(potsTable)
       .values({
-        userId: 1,
+        userId: "1",
         name,
         target,
         theme,

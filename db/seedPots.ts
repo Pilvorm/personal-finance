@@ -10,35 +10,35 @@ async function main() {
 
   const potsData: typeof potsTable.$inferInsert[] = [
     {
-      userId: 1,
+      userId: "1",
       name: "Savings",
       target: "2000.00",
       totalSaved: "159.00",
       theme: "green",
     },
     {
-      userId: 1,
+      userId: "1",
       name: "Gift",
       target: "60.00",
       totalSaved: "40.00",
       theme: "cyan",
     },
     {
-      userId: 1,
+      userId: "1",
       name: "Concert Ticket",
       target: "150.00",
       totalSaved: "110.00",
       theme: "navy",
     },
     {
-      userId: 1,
+      userId: "1",
       name: "New Laptop",
       target: "1000.00",
       totalSaved: "10.00",
       theme: "yellow",
     },
     {
-      userId: 1,
+      userId: "1",
       name: "Holiday",
       target: "1440.00",
       totalSaved: "531.00",
