@@ -1,44 +1,44 @@
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/neon-http";
+import { db } from "@/db";
 
 import { potsTable } from "./schema";
 
-const db = drizzle(process.env.DATABASE_URL!);
+const userId = "dev-user";
 
 async function main() {
   console.log("Seeding pots...");
 
   const potsData: typeof potsTable.$inferInsert[] = [
     {
-      userId: "1",
+      userId: userId,
       name: "Savings",
       target: "2000.00",
       totalSaved: "159.00",
       theme: "green",
     },
     {
-      userId: "1",
+      userId: userId,
       name: "Gift",
       target: "60.00",
       totalSaved: "40.00",
       theme: "cyan",
     },
     {
-      userId: "1",
+      userId: userId,
       name: "Concert Ticket",
       target: "150.00",
       totalSaved: "110.00",
       theme: "navy",
     },
     {
-      userId: "1",
+      userId: userId,
       name: "New Laptop",
       target: "1000.00",
       totalSaved: "10.00",
       theme: "yellow",
     },
     {
-      userId: "1",
+      userId: userId,
       name: "Holiday",
       target: "1440.00",
       totalSaved: "531.00",

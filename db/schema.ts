@@ -107,9 +107,6 @@ export const categoriesTable = pgTable("categories", {
 export const transactionsTable = pgTable("transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
 
-  userId: text("user_id")
-    .notNull()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
   categoryId: integer("category_id")
     .notNull()
     .references(() => categoriesTable.id),

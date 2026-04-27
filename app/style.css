@@ -37,24 +37,39 @@ input[type=number] {
   text-decoration: underline;
 }
 
-.submit-btn, .delete-btn {
+.submit-btn, .delete-btn, .auth-btn {
   cursor: pointer;
   padding: 16px;
   width: 100%;
-  background-color: #201f24;
-  color: white;
   font-weight: 700;
   border-radius: 8px;
   transition: background-color 0.125s ease-in-out;
 }
-.submit-btn:hover, .delete-btn:hover {
+.submit-btn:hover, .delete-btn:hover, .auth-btn:hover {
   background-color: #f8f4f0;
   color: black;
   transition: background-color 0.125s ease-in-out;
 }
 
+.submit-btn {
+  color: white;
+  background-color: #201f24;
+}
+
 .delete-btn {
+  color: white;
   background-color: #c94736;
+}
+
+.auth-btn {
+  background-color: transparent;
+  outline: 1px solid #201f24;
+}
+.auth-btn:hover {
+  color: white;
+  background-color: #201f24;
+  color: black;
+  transition: background-color 0.125s ease-in-out;
 }
 
 .menu-items {

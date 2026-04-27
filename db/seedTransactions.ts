@@ -1,16 +1,13 @@
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/neon-http";
+import { db } from "@/db";
 
 import { transactionsTable } from "./schema";
-
-const db = drizzle(process.env.DATABASE_URL!);
 
 async function main() {
   console.log("Seeding transactions...");
 
   const transactionsData: typeof transactionsTable.$inferInsert[] = [
     {
-      userId: "1",
       categoryId: 10,
       name: "Emma Richardson",
       avatar: "emma-richardson.jpg",
@@ -18,7 +15,6 @@ async function main() {
       date: new Date("2024-08-19"),
     },
     {
-      userId: "1",
       categoryId: 4,
       name: "Savory Bites Bistro",
       avatar: "savory-bites-bistro.jpg",
@@ -26,7 +22,6 @@ async function main() {
       date: new Date("2024-08-19"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Daniel Carter",
       avatar: "daniel-carter.jpg",
@@ -34,7 +29,6 @@ async function main() {
       date: new Date("2024-08-18"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Sun Park",
       avatar: "sun-park.jpg",
@@ -42,7 +36,6 @@ async function main() {
       date: new Date("2024-08-17"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Urban Services Hub",
       avatar: "urban-services-hub.jpg",
@@ -50,7 +43,6 @@ async function main() {
       date: new Date("2024-08-17"),
     },
     {
-      userId: "1",
       categoryId: 3,
       name: "Liam Hughes",
       avatar: "liam-hughes.jpg",
@@ -58,7 +50,6 @@ async function main() {
       date: new Date("2024-08-15"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Lily Ramirez",
       avatar: "lily-ramirez.jpg",
@@ -66,7 +57,6 @@ async function main() {
       date: new Date("2024-08-14"),
     },
     {
-      userId: "1",
       categoryId: 4,
       name: "Ethan Clark",
       avatar: "ethan-clark.jpg",
@@ -74,7 +64,6 @@ async function main() {
       date: new Date("2024-08-13"),
     },
     {
-      userId: "1",
       categoryId: 1,
       name: "James Thompson",
       avatar: "james-thompson.jpg",
@@ -82,7 +71,6 @@ async function main() {
       date: new Date("2024-08-11"),
     },
     {
-      userId: "1",
       categoryId: 1,
       name: "Pixel Playground",
       avatar: "pixel-playground.jpg",
@@ -92,7 +80,6 @@ async function main() {
 
     // Remaining 10 (continuing same style for full 20)
     {
-      userId: "1",
       categoryId: 6,
       name: "Bravo Zen Spa",
       avatar: "serenity-spa-and-wellness.jpg",
@@ -100,7 +87,6 @@ async function main() {
       date: new Date("2024-08-10"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Alpha Analytics",
       avatar: "nimbus-data-storage.jpg",
@@ -108,7 +94,6 @@ async function main() {
       date: new Date("2024-08-09"),
     },
     {
-      userId: "1",
       categoryId: 8,
       name: "Echo Game Store",
       avatar: "pixel-playground.jpg",
@@ -116,7 +101,6 @@ async function main() {
       date: new Date("2024-08-08"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Emma Richardson",
       avatar: "emma-richardson.jpg",
@@ -124,7 +108,6 @@ async function main() {
       date: new Date("2024-08-07"),
     },
     {
-      userId: "1",
       categoryId: 5,
       name: "Delta Taxi",
       avatar: "swift-ride-share.jpg",
@@ -132,7 +115,6 @@ async function main() {
       date: new Date("2024-08-06"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Sun Park",
       avatar: "sun-park.jpg",
@@ -140,7 +122,6 @@ async function main() {
       date: new Date("2024-08-05"),
     },
     {
-      userId: "1",
       categoryId: 6,
       name: "Bravo Zen Spa",
       avatar: "serenity-spa-and-wellness.jpg",
@@ -148,7 +129,6 @@ async function main() {
       date: new Date("2024-08-04"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Liam Hughes",
       avatar: "liam-hughes.jpg",
@@ -156,7 +136,6 @@ async function main() {
       date: new Date("2024-08-03"),
     },
     {
-      userId: "1",
       categoryId: 10,
       name: "Alpha Analytics",
       avatar: "nimbus-data-storage.jpg",
@@ -164,7 +143,6 @@ async function main() {
       date: new Date("2024-08-02"),
     },
     {
-      userId: "1",
       categoryId: 2,
       name: "Charlie Electric Company",
       avatar: "spark-electric-solutions.jpg",

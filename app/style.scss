@@ -72,12 +72,10 @@ input[type="number"] {
   text-decoration: underline;
 }
 
-.submit-btn, .delete-btn {
+.submit-btn, .delete-btn, .auth-btn {
   cursor: pointer;
   padding: 16px;
   width: 100%;
-  background-color: $grey-900;
-  color: white;
   font-weight: 700;
   border-radius: 8px;
   transition: background-color 0.125s ease-in-out;
@@ -89,8 +87,26 @@ input[type="number"] {
   }
 }
 
+.submit-btn {
+  color: white;
+  background-color: $grey-900;
+}
+
 .delete-btn {
+  color: white;
   background-color: $red;
+}
+
+.auth-btn {
+  background-color: transparent;
+  outline: 1px solid $grey-900;
+
+  &:hover {
+    color: white !important;
+    background-color: $grey-900;
+    color: black;
+    transition: background-color 0.125s ease-in-out;
+  }
 }
 
 .menu-items {

@@ -1,9 +1,7 @@
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/neon-http";
+import { db } from "@/db";
 
 import { categoriesTable } from "./schema";
-
-const db = drizzle(process.env.DATABASE_URL!);
 
 async function main() {
   console.log("Seeding categories...");

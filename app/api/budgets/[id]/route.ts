@@ -26,7 +26,7 @@ export async function PATCH(
       })
       .where(
         and(
-          eq(budgetsTable.userId, "1"),
+          eq(budgetsTable.userId, "dev-user"),
           eq(budgetsTable.id, parsedId),
         ),
       )

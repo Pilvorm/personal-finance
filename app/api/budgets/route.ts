@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     const inserted = await db
       .insert(budgetsTable)
       .values({
-        userId: "1",
+        userId: "dev-user",
         categoryId,
         max: String(max),
         theme,

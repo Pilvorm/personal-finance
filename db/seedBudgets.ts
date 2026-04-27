@@ -1,40 +1,40 @@
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/neon-http";
+import { db } from "@/db";
 
 import { budgetsTable } from "./schema";
 
-const db = drizzle(process.env.DATABASE_URL!);
+const userId = "dev-user";
 
 async function main() {
   console.log("Seeding budgets...");
 
   const budgetsData: typeof budgetsTable.$inferInsert[] = [
     {
-      userId: "1",
+      userId: userId,
       categoryId: 1,
       max: "50.00",
       theme: "green",
     },
     {
-      userId: "1",
+      userId: userId,
       categoryId: 2,
       max: "750.00",
       theme: "cyan",
     },
     {
-      userId: "1",
+      userId: userId,
       categoryId: 4,
       max: "75.00",
       theme: "yellow",
     },
     {
-      userId: "1",
+      userId: userId,
       categoryId: 6,
       max: "100.00",
       theme: "navy",
     },
     {
-      userId: "1",
+      userId: userId,
       categoryId: 8,
       max: "150.00",
       theme: "blue",

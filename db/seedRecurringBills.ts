@@ -1,65 +1,64 @@
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/neon-http";
-
+import { db } from "@/db";
 import { recurringBillsTable } from "./schema";
 
-const db = drizzle(process.env.DATABASE_URL!);
+const userId = "dev-user";
 
 async function main() {
   console.log("Seeding recurring bills...");
 
   const billsData: (typeof recurringBillsTable.$inferInsert)[] = [
     {
-      userId: "1",
+      userId: userId,
       title: "Spark Electric Solutions",
       avatar: "spark-electric-solutions.jpg",
       amount: "100.00",
       dueDate: 2,
     },
     {
-      userId: "1",
+      userId: userId,
       title: "Serenity Spa & Wellness",
       avatar: "serenity-spa-and-wellness.jpg",
       amount: "30.00",
       dueDate: 3,
     },
     {
-      userId: "1",
+      userId: userId,
       title: "Elevate Education",
       avatar: "elevate-education.jpg",
       amount: "50.00",
       dueDate: 4,
     },
     {
-      userId: "1",
+      userId: userId,
       title: "Pixel Playground",
       avatar: "pixel-playground.jpg",
       amount: "10.00",
       dueDate: 11,
     },
     {
-      userId: "1",
+      userId: userId,
       title: "Nimbus Data Storage",
       avatar: "nimbus-data-storage.jpg",
       amount: "9.99",
       dueDate: 21,
     },
     {
-      userId: "1",
+      userId: userId,
       title: "ByteWise",
       avatar: "bytewise.jpg",
       amount: "49.99",
       dueDate: 23,
     },
     {
-      userId: "1",
+      userId: userId,
       title: "EcoFuel Energy",
       avatar: "ecofuel-energy.jpg",
       amount: "35.00",
       dueDate: 29,
     },
     {
-      userId: "1",
+      userId: userId,
       title: "Aqua Flow Utilities",
       avatar: "aqua-flow-utilities.jpg",
       amount: "100.00",
