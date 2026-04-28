@@ -66,7 +66,7 @@ input[type=number] {
   outline: 1px solid #201f24;
 }
 .auth-btn:hover {
-  color: white;
+  color: white !important;
   background-color: #201f24;
   color: black;
   transition: background-color 0.125s ease-in-out;

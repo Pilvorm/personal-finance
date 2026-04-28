@@ -13,8 +13,6 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
   const totalSaved = pot.totalSaved;
   const numericAmount = Number(amount);
 
-  console.log({totalSaved, numericAmount})
-
   const rawTotal =
     type === "add" ? totalSaved + numericAmount : totalSaved - numericAmount;
 

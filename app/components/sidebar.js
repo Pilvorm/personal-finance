@@ -1,10 +1,11 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { MinimizeMenuIcon } from "./icons";
 import { SIDEBAR_MENU } from "../data";
+import { signOut, useSession } from "next-auth/react";
+import { FaUserLarge } from "react-icons/fa6";
+import { formatName } from "../lib/helper";
 
 const visibility = {
   initial: { opacity: 0 },
@@ -13,7 +14,9 @@ const visibility = {
 };
 
 const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
+  const router = useRouter();
   const pathname = usePathname();
+  const { data: session, status } = useSession();
 
   return (
     <nav
@@ -72,25 +75,63 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
           );
         })}
       </div>
-      <button
-        onClick={() => setIsMenuOpen((prev) => !prev)}
-        className="cursor-pointer hidden lg:flex mt-auto px-8 py-4 items-center gap-4"
-      >
-        <MinimizeMenuIcon className="shrink-0 w-6 h-6" />
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.span
-              variants={visibility}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="text-nowrap"
-            >
-              Minimize Menu
-            </motion.span>
+      <div className="mt-auto">
+        <button
+          onClick={() => {
+            if (session) {
+              signOut({ redirectTo: "/login" });
+            } else {
+              router.push("/login");
+            }
+          }}
+          className="cursor-pointer hidden lg:flex px-8 py-4 items-center gap-4"
+        >
+          {status === "loading" ? (
+            <div className="w-6 h-6 rounded-full bg-grey-500 animate-pulse" />
+          ) : session ? (
+            <img
+              src={session?.user?.image ?? "https://i.pravatar.cc/300"}
+              alt="User Avatar"
+              className="w-6 h-6 object-cover rounded-full"
+            />
+          ) : (
+            <FaUserLarge />
           )}
-        </AnimatePresence>
-      </button>
+
+          <AnimatePresence>
+            {isMenuOpen && status !== "loading" && (
+              <motion.span
+                variants={visibility}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="text-nowrap"
+              >
+                {formatName(session?.user?.name) || "Log In"}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+        <button
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          className="cursor-pointer hidden lg:flex px-8 py-4 items-center gap-4"
+        >
+          <MinimizeMenuIcon className="shrink-0 w-6 h-6" />
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.span
+                variants={visibility}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="text-nowrap"
+              >
+                Minimize Menu
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+      </div>
     </nav>
   );
 };

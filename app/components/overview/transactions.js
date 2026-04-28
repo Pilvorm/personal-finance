@@ -6,19 +6,7 @@ import Image from "next/image";
 import TransactionItem from "../transactionItem";
 import { useQuery } from "@tanstack/react-query";
 
-export default function Transactions() {
-  const { data } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: async () => {
-      const res = await fetch(`/api/transactions`);
-      return res.json();
-    },
-    staleTime: 1000 * 60,
-  });
-
-  const transactionsData = data?.data;
-  console.log(transactionsData);
-
+export default function Transactions({ transactionsData = [] }) {
   return (
     <div id="transactions-card" className="card">
       {/* Header */}
@@ -36,6 +24,7 @@ export default function Transactions() {
             key={item.id}
             avatar={item.avatar}
             name={item.name}
+            type={item.type}
             amount={item.amount}
             date={item.date}
             className={`${index !== 3 && "pb-5 border-b-1 border-grey-100"}`}

@@ -1,8 +1,17 @@
 import { db } from "@/db";
 import { eq, asc, desc } from "drizzle-orm";
 import { transactionsTable, budgetsTable, categoriesTable } from "@/db/schema";
+import { auth } from "@/auth";
 
 export async function GET() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
   try {
     const budgets = await db
       .select({
@@ -17,12 +26,14 @@ export async function GET() {
         categoriesTable,
         eq(budgetsTable.categoryId, categoriesTable.id),
       )
+      .where(eq(budgetsTable.userId, userId))
       .orderBy(asc(budgetsTable.id));
 
     const transactions = await db
       .select({
         id: transactionsTable.id,
         name: transactionsTable.name,
+        type: transactionsTable.type,
         amount: transactionsTable.amount,
         date: transactionsTable.date,
         avatar: transactionsTable.avatar,
@@ -37,8 +48,8 @@ export async function GET() {
       );
 
       const spending = txs
-        .filter((t) => Number(t.amount) < 0)
-        .reduce((acc, t) => acc + Math.abs(Number(t.amount)), 0);
+        .filter((t) => t.type === "expense")
+        .reduce((acc, t) => acc + Number(t.amount), 0);
 
       return {
         ...budget,
@@ -54,6 +65,14 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
   try {
     const body = await req.json();
 
@@ -62,7 +81,7 @@ export async function POST(req: Request) {
     const inserted = await db
       .insert(budgetsTable)
       .values({
-        userId: "dev-user",
+        userId: userId,
         categoryId,
         max: String(max),
         theme,

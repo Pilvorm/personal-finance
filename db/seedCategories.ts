@@ -6,17 +6,17 @@ import { categoriesTable } from "./schema";
 async function main() {
   console.log("Seeding categories...");
 
-  const categoryData: typeof categoriesTable.$inferInsert[] = [
-    { name: "Entertainment", type: "expense" },
-    { name: "Bills", type: "expense" },
-    { name: "Groceries", type: "expense" },
-    { name: "Dining Out", type: "expense" },
-    { name: "Transportation", type: "expense" },
-    { name: "Personal Care", type: "expense" },
-    { name: "Education", type: "expense" },
-    { name: "Lifestyle", type: "expense" },
-    { name: "Shopping", type: "expense" },
-    { name: "General", type: "expense" },
+  const categoryData: (typeof categoriesTable.$inferInsert)[] = [
+    { name: "Entertainment" },
+    { name: "Bills" },
+    { name: "Groceries" },
+    { name: "Dining Out" },
+    { name: "Transportation" },
+    { name: "Personal Care" },
+    { name: "Education" },
+    { name: "Lifestyle" },
+    { name: "Shopping" },
+    { name: "General" },
   ];
 
   await db.insert(categoriesTable).values(categoryData).onConflictDoNothing();

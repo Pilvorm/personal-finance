@@ -11,13 +11,15 @@ import {
 import type { AdapterAccountType } from "@auth/core/adapters";
 
 // USERS
-export const usersTable = pgTable("users", {
+export const usersTable = pgTable("user", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
 
   name: varchar({ length: 255 }),
   email: varchar({ length: 255 }).notNull().unique(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
 
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -45,17 +47,17 @@ export const accountsTable = pgTable(
         columns: [account.provider, account.providerAccountId],
       }),
     },
-  ]
-)
- 
+  ],
+);
+
 export const sessionsTable = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
- 
+});
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
@@ -69,9 +71,9 @@ export const verificationTokens = pgTable(
         columns: [verificationToken.identifier, verificationToken.token],
       }),
     },
-  ]
-)
- 
+  ],
+);
+
 export const authenticators = pgTable(
   "authenticator",
   {
@@ -92,15 +94,15 @@ export const authenticators = pgTable(
         columns: [authenticator.userId, authenticator.credentialID],
       }),
     },
-  ]
-)
+  ],
+);
 
 // CATEGORIES
 export const categoriesTable = pgTable("categories", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
 
   name: varchar({ length: 100 }).notNull(), // Food, Bills, etc
-  type: varchar({ length: 50 }).notNull(), // "income" | "expense"
+  // type: varchar({ length: 50 }).notNull(), // "income" | "expense"
 });
 
 // TRANSACTIONS
@@ -113,6 +115,7 @@ export const transactionsTable = pgTable("transactions", {
 
   name: varchar({ length: 255 }).notNull(), // sender/recipient
   avatar: varchar({ length: 255 }).notNull(),
+  type: varchar({ length: 50 }).notNull(), // "income" | "expense"
   amount: numeric({ precision: 10, scale: 2 }).notNull(), // supports decimals
 
   date: timestamp("date").notNull(),

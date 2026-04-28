@@ -6,11 +6,12 @@ import { formatUSD } from "../lib/helper";
 export default function TransactionItem({
   avatar,
   name,
+  type,
   amount,
   date,
   className,
 }) {
-  const isPositive = Number(amount) > 0;
+  const isPositive = type === "income";
   
   return (
     <div className={`flex items-center justify-between ${className}`}>
@@ -26,7 +27,7 @@ export default function TransactionItem({
       </div>
       <div className="flex flex-col items-end">
         <div className={`text-sm font-bold ${isPositive && "text-green"}`}>
-          {formatUSD(amount)}
+          {isPositive ? "+" : "-"}{formatUSD(amount)}
         </div>
         <span className="mt-1 text-xs text-grey-500">
           {new Date(date).toLocaleDateString("en-GB", {

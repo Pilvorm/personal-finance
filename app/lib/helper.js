@@ -3,6 +3,18 @@
 import { useEffect, useState } from "react";
 import { THEMES_MAP } from "../data";
 
+export function formatName(name) {
+  if (!name) return "";
+
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0];
+
+  const first = parts[0];
+  const lastInitial = parts[parts.length - 1][0];
+
+  return `${first} ${lastInitial}.`;
+}
+
 export function formatUSD(amount, fraction = 2) {
   return Number(amount).toLocaleString("en-US", {
     style: "currency",
@@ -94,7 +106,7 @@ export function getBillsSummary(billsData) {
     };
   }
 
-  return billsData.reduce(
+  return billsData?.reduce(
     (acc, bill) => {
       const status = getBillStatus(bill.dueDate);
       const amount = Number(bill.amount || 0);

@@ -142,7 +142,7 @@ export default function Transactions() {
 
           <tbody>
             {transactionsData?.map((item) => {
-              const isPositive = Number(item.amount) > 0;
+              const isPositive = item.type === "income";
 
               return (
                 <tr
@@ -173,7 +173,7 @@ export default function Transactions() {
                           isPositive && "text-green"
                         }`}
                       >
-                        {formatUSD(item.amount)}
+                        {isPositive ? "+" : "-"}{formatUSD(item.amount)}
                       </div>
 
                       <span className="mt-1 text-xs text-grey-500">
@@ -203,7 +203,7 @@ export default function Transactions() {
                       isPositive && "text-green"
                     }`}
                   >
-                    {formatUSD(item.amount)}
+                    {isPositive ? "+" : "-"}{formatUSD(item.amount)}
                   </td>
                 </tr>
               );

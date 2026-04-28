@@ -124,8 +124,6 @@ export default function Pots() {
   const potsData = data?.data;
   const usedThemes = new Set(potsData?.map((t) => t.theme));
 
-  console.log(data);
-
   return (
     <div id="pots" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
       <AnimatePresence>

@@ -2,8 +2,12 @@ import Link from "next/link";
 import { ShowPassword, HidePassword } from "@/app/components/icons";
 import { signIn, auth, providerMap } from "@/auth";
 import { FaGithub } from "react-icons/fa";
+import { AuthError } from "next-auth";
 
-export default function Login() {
+export default async function Login({ searchParams }) {
+
+  const params = await searchParams;
+
   return (
     <main className="px-4 py-8 w-full min-h-[740px] sm:min-h-[950px] lg:min-h-fit flex-1 flex items-center justify-center">
       <div
@@ -60,7 +64,7 @@ export default function Login() {
                 "use server";
                 try {
                   await signIn(provider.id, {
-                    redirectTo: props.searchParams?.callbackUrl ?? "",
+                    redirectTo: params?.callbackUrl ?? "",
                   });
                 } catch (error) {
                   if (error instanceof AuthError) {
@@ -72,7 +76,8 @@ export default function Login() {
             >
               <button type="submit" className="auth-btn w-full">
                 <div className="flex items-center justify-center gap-4">
-                  {provider.name == "GitHub" && <FaGithub size={22}/>} Sign in with {provider.name}
+                  {provider.name == "GitHub" && <FaGithub size={22} />} Log in
+                  with {provider.name}
                 </div>
               </button>
             </form>

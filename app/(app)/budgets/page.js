@@ -97,6 +97,7 @@ const BudgetCard = ({
               key={spending.id}
               avatar={spending.avatar}
               name={spending.name}
+              type={spending.type}
               amount={spending.amount}
               date={spending.date}
               className={`${index !== spendingList.length - 1 && "pb-5 border-b-1 border-grey-100"}`}
@@ -117,12 +118,20 @@ export default function Budgets() {
     queryKey: ["budgets"],
     queryFn: async () => {
       const res = await fetch("/api/budgets");
-      return res.json();
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch budgets");
+      }
+
+      const json = await res.json();
+      return Array.isArray(json) ? json : [];
     },
   });
 
-  const usedCategories = new Set(data?.map((c) => c.categoryName));
-  const usedThemes = new Set(data?.map((t) => t.theme));
+  const budgets = Array.isArray(data) ? data : [];
+
+  const usedCategories = new Set(budgets.map((c) => c.categoryName));
+  const usedThemes = new Set(budgets.map((t) => t.theme));
 
   return (
     <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -162,14 +171,14 @@ export default function Budgets() {
         {/* Left */}
         <div className="card lg:sticky lg:top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 lg:flex items-center justify-center gap-12">
           <div className="flex justify-center">
-            <DonutChart budgetsData={data} />
+            <DonutChart budgetsData={budgets} />
           </div>
 
           {/* Categories */}
           <div className="w-full">
             <h2 className="card-title">Spending Summary</h2>
             <div className="mt-6 w-full grid gap-4 grid-cols-1">
-              {data?.map((budget, index) => (
+              {budgets?.map((budget, index) => (
                 <Category
                   key={budget.id}
                   theme={budget.theme}
@@ -190,7 +199,7 @@ export default function Budgets() {
         {/* Right */}
         <div className="col-span-7 flex flex-col gap-6">
           <AnimatePresence mode="popLayout">
-            {data?.map((budget, index) => (
+            {budgets?.map((budget, index) => (
               <BudgetCard
                 key={budget.id}
                 id={budget.id}

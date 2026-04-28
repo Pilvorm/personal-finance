@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { ilike, and, eq, desc, asc, count } from "drizzle-orm";
+import { ilike, and, eq, desc, asc, count, sql } from "drizzle-orm";
 import { transactionsTable, categoriesTable } from "@/db/schema";
 
 export async function GET(req: Request) {
@@ -49,6 +49,7 @@ export async function GET(req: Request) {
       .select({
         id: transactionsTable.id,
         name: transactionsTable.name,
+        type: transactionsTable.type,
         amount: transactionsTable.amount,
         date: transactionsTable.date,
         avatar: transactionsTable.avatar,
@@ -70,11 +71,27 @@ export async function GET(req: Request) {
       .from(transactionsTable)
       .where(conditions.length ? and(...conditions) : undefined);
 
+    const [summary] = await db
+      .select({
+        income: sql`COALESCE(SUM(CASE WHEN ${transactionsTable.type} = 'income' THEN ${transactionsTable.amount} ELSE 0 END), 0)`,
+        expense: sql`COALESCE(SUM(CASE WHEN ${transactionsTable.type} = 'expense' THEN ${transactionsTable.amount} ELSE 0 END), 0)`,
+      })
+      .from(transactionsTable)
+      .where(conditions.length ? and(...conditions) : undefined);
+
     const totalPages = Math.ceil(Number(totalCount) / pageSize);
 
     const safePage = Math.min(page, totalPages || 1);
 
-    return Response.json({ data, currentPage: safePage, totalPages });
+    return Response.json({
+      data,
+      summary: {
+        income: Number(summary.income),
+        expense: Number(summary.expense),
+      },
+      currentPage: safePage,
+      totalPages,
+    });
   } catch (err: any) {
     return Response.json({ error: err.message }, { status: 500 });
   }
