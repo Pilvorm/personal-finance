@@ -1,11 +1,20 @@
 import { db } from "@/db";
 import { budgetsTable } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
+import { auth } from "@/auth";
 
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> },
 ) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
   try {
     const { id } = await context.params;
     const parsedId = Number(id);
@@ -25,10 +34,7 @@ export async function PATCH(
         theme,
       })
       .where(
-        and(
-          eq(budgetsTable.userId, "dev-user"),
-          eq(budgetsTable.id, parsedId),
-        ),
+        and(eq(budgetsTable.userId, userId), eq(budgetsTable.id, parsedId)),
       )
       .returning();
 

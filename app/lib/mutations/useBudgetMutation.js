@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // CREATE
-export function useCreateBudgetMutation({ selectedCategory, setIsOpen }) {
+export function useCreateBudgetMutation({ setIsOpen }) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -17,26 +17,6 @@ export function useCreateBudgetMutation({ selectedCategory, setIsOpen }) {
       return res.json();
     },
 
-    onMutate: async (payload) => {
-      await queryClient.cancelQueries({ queryKey: ["budgets"] });
-
-      const previous = queryClient.getQueryData(["budgets"]);
-
-      const optimistic = {
-        id: Date.now(),
-        categoryId: payload.categoryId,
-        categoryName: selectedCategory.name,
-        max: payload.max,
-        theme: payload.theme,
-        spending: 0,
-        transactions: [],
-      };
-
-      queryClient.setQueryData(["budgets"], (old = []) => [...old, optimistic]);
-
-      return { previous };
-    },
-
     onError: (err, payload, context) => {
       queryClient.setQueryData(["budgets"], context.previous);
     },
@@ -49,11 +29,7 @@ export function useCreateBudgetMutation({ selectedCategory, setIsOpen }) {
 }
 
 // UPDATE
-export function useUpdateBudgetMutation({
-  editData,
-  selectedCategory,
-  setIsOpen,
-}) {
+export function useUpdateBudgetMutation({ editData, setIsOpen }) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -67,28 +43,6 @@ export function useUpdateBudgetMutation({
       });
 
       return res.json();
-    },
-
-    onMutate: async (payload) => {
-      await queryClient.cancelQueries({ queryKey: ["budgets"] });
-
-      const previous = queryClient.getQueryData(["budgets"]);
-
-      queryClient.setQueryData(["budgets"], (old = []) =>
-        old.map((b) =>
-          b.id === editData.id
-            ? {
-                ...b,
-                categoryId: payload.categoryId,
-                categoryName: selectedCategory.name,
-                max: payload.max,
-                theme: payload.theme,
-              }
-            : b,
-        ),
-      );
-
-      return { previous };
     },
 
     onError: (err, payload, context) => {
@@ -111,18 +65,6 @@ export function useDeleteBudgetMutation({ setIsOpen }) {
       await fetch(`/api/budgets/${id}`, {
         method: "DELETE",
       });
-    },
-
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["budgets"] });
-
-      const previous = queryClient.getQueryData(["budgets"]);
-
-      queryClient.setQueryData(["budgets"], (old = []) =>
-        old.filter((b) => b.id !== id),
-      );
-
-      return { previous };
     },
 
     onError: (err, id, context) => {

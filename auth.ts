@@ -23,6 +23,12 @@ export const config = {
   pages: {
     signIn: "/login",
   },
+  callbacks: {
+    session({ session, user }) {
+      session.user.id = user.id
+      return session
+    },
+  }
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

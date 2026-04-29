@@ -15,6 +15,7 @@ import { getColor } from "@/app/lib/helper";
 import { formatUSD } from "@/app/lib/helper";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
+import { useSession } from "next-auth/react";
 
 const BudgetCard = ({
   id,
@@ -114,24 +115,18 @@ export default function Budgets() {
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const { status, data, error } = useQuery({
+  const { data: session, status: sessionStatus } = useSession();
+
+  const { status, data = [], error } = useQuery({
     queryKey: ["budgets"],
     queryFn: async () => {
       const res = await fetch("/api/budgets");
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch budgets");
-      }
-
-      const json = await res.json();
-      return Array.isArray(json) ? json : [];
+      return res.json();
     },
   });
 
-  const budgets = Array.isArray(data) ? data : [];
-
-  const usedCategories = new Set(budgets.map((c) => c.categoryName));
-  const usedThemes = new Set(budgets.map((t) => t.theme));
+  const usedCategories = new Set(data.map((c) => c.categoryName));
+  const usedThemes = new Set(data.map((t) => t.theme));
 
   return (
     <div id="budgets" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
@@ -171,14 +166,14 @@ export default function Budgets() {
         {/* Left */}
         <div className="card lg:sticky lg:top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 lg:flex items-center justify-center gap-12">
           <div className="flex justify-center">
-            <DonutChart budgetsData={budgets} />
+            <DonutChart budgetsData={data} />
           </div>
 
           {/* Categories */}
           <div className="w-full">
             <h2 className="card-title">Spending Summary</h2>
             <div className="mt-6 w-full grid gap-4 grid-cols-1">
-              {budgets?.map((budget, index) => (
+              {data?.map((budget, index) => (
                 <Category
                   key={budget.id}
                   theme={budget.theme}
@@ -199,7 +194,7 @@ export default function Budgets() {
         {/* Right */}
         <div className="col-span-7 flex flex-col gap-6">
           <AnimatePresence mode="popLayout">
-            {budgets?.map((budget, index) => (
+            {data?.map((budget, index) => (
               <BudgetCard
                 key={budget.id}
                 id={budget.id}

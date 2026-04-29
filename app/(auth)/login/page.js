@@ -64,7 +64,7 @@ export default async function Login({ searchParams }) {
                 "use server";
                 try {
                   await signIn(provider.id, {
-                    redirectTo: params?.callbackUrl ?? "",
+                    redirectTo: "/",
                   });
                 } catch (error) {
                   if (error instanceof AuthError) {

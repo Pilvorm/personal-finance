@@ -53,7 +53,7 @@ export default function DropdownInput({
                     <MenuItem key={option.id}>
                       <button
                         onClick={() => setValue(option)}
-                        className={`hover-option cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 ${option.name == value?.name ? "font-bold" : ""}`}
+                        className={`hover-option cursor-pointer capitalize text-left flex w-full items-center gap-2 rounded-lg px-3 py-1.5 ${option.name == value?.name || option.name == value ? "font-bold" : ""}`}
                       >
                         {type == "theme" ? (
                           <div className="flex items-center gap-3">

@@ -80,17 +80,8 @@ export default function BudgetModal({
     }
   }, [editData, categoriesData]);
 
-  const createBudget = useCreateBudgetMutation({
-    selectedCategory,
-    setIsOpen,
-  });
-
-  const updateBudget = useUpdateBudgetMutation({
-    editData,
-    selectedCategory,
-    setIsOpen,
-  });
-
+  const createBudget = useCreateBudgetMutation({ setIsOpen });
+  const updateBudget = useUpdateBudgetMutation({ editData, setIsOpen });
   const saveBudget = isEdit ? updateBudget : createBudget;
 
   return (
@@ -139,7 +130,6 @@ export default function BudgetModal({
         disabled={!selectedCategory || !budget || !selectedTheme}
         onClick={() =>
           saveBudget.mutate({
-            
             categoryId: selectedCategory.id,
             max: budget,
             theme: selectedTheme.id,
