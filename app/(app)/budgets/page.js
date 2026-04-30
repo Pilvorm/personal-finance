@@ -117,7 +117,11 @@ export default function Budgets() {
 
   const { data: session, status: sessionStatus } = useSession();
 
-  const { status, data = [], error } = useQuery({
+  const {
+    status,
+    data = [],
+    error,
+  } = useQuery({
     queryKey: ["budgets"],
     queryFn: async () => {
       const res = await fetch("/api/budgets");
@@ -164,7 +168,7 @@ export default function Budgets() {
 
       <main className="my-8 flex flex-col lg:grid grid-cols-12 gap-6">
         {/* Left */}
-        <div className="card lg:sticky lg:top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 lg:flex items-center justify-center gap-12">
+        <div className="card lg:sticky lg:top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 md:grid-rows-2 lg:flex items-center justify-center gap-12">
           <div className="flex justify-center">
             <DonutChart budgetsData={data} />
           </div>

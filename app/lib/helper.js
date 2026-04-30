@@ -109,7 +109,7 @@ export function getBillsSummary(billsData) {
   return billsData?.reduce(
     (acc, bill) => {
       const status = getBillStatus(bill.dueDate);
-      const amount = Number(bill.amount || 0);
+      const amount = Number(bill.amount ?? 0);
 
       if (status === "paid") {
         acc.paid.count++;

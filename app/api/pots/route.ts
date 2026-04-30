@@ -1,10 +1,23 @@
 import { db } from "@/db";
 import { eq, asc, desc } from "drizzle-orm";
 import { potsTable } from "@/db/schema";
+import { auth } from "@/auth";
 
 export async function GET() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
   try {
-    const rawData = await db.select().from(potsTable).orderBy(asc(potsTable.id));
+    const rawData = await db
+      .select()
+      .from(potsTable)
+      .where(eq(potsTable.userId, userId))
+      .orderBy(asc(potsTable.id));
 
     const data = rawData.map((p) => ({
       ...p,
@@ -24,6 +37,14 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
   try {
     const body = await req.json();
 
@@ -32,7 +53,7 @@ export async function POST(req: Request) {
     const inserted = await db
       .insert(potsTable)
       .values({
-        userId: "dev-user",
+        userId: userId,
         name,
         target,
         theme,

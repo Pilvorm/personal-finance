@@ -17,7 +17,7 @@ export default function Pots() {
   });
 
   const potsData = data?.data;
-  const grandTotalSaved = data?.grandTotalSaved;
+  const grandTotalSaved = data?.grandTotalSaved ?? 0;
 
   return (
     <div id="pots-card" className="card">
@@ -43,7 +43,7 @@ export default function Pots() {
         </div>
 
         {/* Right */}
-        <div className="flex-1 grid grid-cols-2 gap-4">
+        <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4">
           {potsData?.slice(0, 4).map((pot) => (
             <Category
               key={pot.name}

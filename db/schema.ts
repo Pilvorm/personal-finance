@@ -158,9 +158,9 @@ export const potsTable = pgTable("pots", {
 export const recurringBillsTable = pgTable("recurring_bills", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
 
-  userId: text("user_id")
-    .notNull()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
+  // userId: text("user_id")
+  //   .notNull()
+  //   .references(() => usersTable.id, { onDelete: "cascade" }),
 
   title: varchar({ length: 255 }).notNull(),
   avatar: varchar({ length: 255 }).notNull(),

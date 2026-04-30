@@ -17,33 +17,6 @@ export function useCreatePotMutation({ setIsOpen }) {
       return res.json();
     },
 
-    onMutate: async (payload) => {
-      await queryClient.cancelQueries({ queryKey: ["pots"] });
-
-      const previous = queryClient.getQueryData(["pots"]);
-
-      const optimistic = {
-        id: Date.now(),
-        name: payload.name,
-        target: payload.target,
-        theme: payload.theme,
-        totalSaved: payload.totalSaved,
-      };
-
-      queryClient.setQueryData(["pots"], (old) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          data: [...old.data, optimistic],
-          grandTotalSaved:
-            old.grandTotalSaved + Number(optimistic.totalSaved || 0),
-        };
-      });
-
-      return { previous };
-    },
-
     onError: (err, payload, context) => {
       queryClient.setQueryData(["pots"], context.previous);
     },
@@ -70,32 +43,6 @@ export function useUpdatePotMutation({ editData, setIsOpen }) {
       });
 
       return res.json();
-    },
-
-    onMutate: async (payload) => {
-      await queryClient.cancelQueries({ queryKey: ["pots"] });
-
-      const previous = queryClient.getQueryData(["pots"]);
-
-      queryClient.setQueryData(["pots"], (old) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          data: old.data.map((p) =>
-            p.id === editData.id
-              ? {
-                  ...p,
-                  name: payload.name,
-                  target: payload.target,
-                  theme: payload.theme,
-                }
-              : p,
-          ),
-        };
-      });
-
-      return { previous };
     },
 
     onError: (err, payload, context) => {
@@ -130,33 +77,6 @@ export function usePotTransactionMutation({ editData, setIsOpen }) {
       return res.json();
     },
 
-    onMutate: async (payload) => {
-      await queryClient.cancelQueries({ queryKey: ["pots"] });
-
-      const previous = queryClient.getQueryData(["pots"]) ?? [];
-
-      queryClient.setQueryData(["pots"], (old) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          data: old.data.map((p) =>
-            p.id === editData.id
-              ? {
-                  ...p,
-                  totalSaved:
-                    payload.type === "add"
-                      ? Number(p.totalSaved) + Number(payload.amount)
-                      : Number(p.totalSaved) - Number(payload.amount),
-                }
-              : p,
-          ),
-        };
-      });
-
-      return { previous };
-    },
-
     onError: (err, variables, context) => {
       if (context?.previous) {
         queryClient.setQueryData(["pots"], context.previous);
@@ -179,26 +99,6 @@ export function useDeletePotMutation({ setIsOpen }) {
       await fetch(`/api/pots/${id}`, {
         method: "DELETE",
       });
-    },
-
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["pots"] });
-
-      const previous = queryClient.getQueryData(["pots"]);
-
-      queryClient.setQueryData(["pots"], (old) => {
-        if (!old) return old;
-
-        const deletedPot = old.data.find((p) => p.id === id);
-
-        return {
-          ...old,
-          data: old.data.filter((p) => p.id !== id),
-          grandTotalSaved: old.grandTotalSaved - (deletedPot?.totalSaved || 0),
-        };
-      });
-
-      return { previous };
     },
 
     onError: (err, id, context) => {
