@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Modal from "./modal";
+import Input from "../input";
 import DropdownInput from "../dropdowns/dropdownInput";
 import { useQuery } from "@tanstack/react-query";
 import { THEMES, THEMES_MAP, EXCLUDED_THEMES } from "@/app/data";
@@ -80,6 +81,8 @@ export default function BudgetModal({
     }
   }, [editData, categoriesData]);
 
+  const [errors, setErrors] = useState({});
+
   const createBudget = useCreateBudgetMutation({ setIsOpen });
   const updateBudget = useUpdateBudgetMutation({ editData, setIsOpen });
   const saveBudget = isEdit ? updateBudget : createBudget;
@@ -102,20 +105,16 @@ export default function BudgetModal({
           options={availableCategories}
         />
 
-        <div>
-          <label className="mb-1 text-xs text-grey-500 font-bold">
-            Maximum Spend
-          </label>
-          <div className="btn-basic px-5 py-3 flex items-center gap-3">
-            <span className="text-sm text-beige-500">$</span>
-            <input
-              type="number"
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
-              className="w-full outline-none"
-            />
-          </div>
-        </div>
+        <Input
+          label="Maximum Spend"
+          type="number"
+          value={budget}
+          onChange={(e) => {
+            setBudget(e.target.value);
+            setErrors((prev) => ({ ...prev, budget: "" }));
+          }}
+          error={errors.budget}
+        />
 
         <DropdownInput
           type="theme"
@@ -127,14 +126,25 @@ export default function BudgetModal({
       </div>
 
       <button
-        disabled={!selectedCategory || !budget || !selectedTheme}
-        onClick={() =>
+        onClick={() => {
+          const newErrors = {};
+
+          if (!budget || Number(budget) <= 0) {
+            newErrors.budget = "Maximum spend is required";
+          }
+
+          if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+          }
+
+          setErrors({});
           saveBudget.mutate({
             categoryId: selectedCategory.id,
             max: budget,
             theme: selectedTheme.id,
-          })
-        }
+          });
+        }}
         className="submit-btn"
       >
         {isEdit ? "Save Changes" : "Add Budget"}

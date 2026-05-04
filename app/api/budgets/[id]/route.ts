@@ -7,15 +7,14 @@ export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> },
 ) {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const userId = session.user.id;
-
   try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id;
     const { id } = await context.params;
     const parsedId = Number(id);
 
@@ -50,6 +49,13 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> },
 ) {
   try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id;
     const { id } = await context.params;
 
     const parsedId = Number(id);
@@ -58,7 +64,11 @@ export async function DELETE(
       return Response.json({ error: "Invalid ID" }, { status: 400 });
     }
 
-    await db.delete(budgetsTable).where(eq(budgetsTable.id, parsedId));
+    await db
+      .delete(budgetsTable)
+      .where(
+        and(eq(budgetsTable.id, parsedId), eq(budgetsTable.userId, userId)),
+      );
 
     return Response.json({ success: true });
   } catch (err: any) {

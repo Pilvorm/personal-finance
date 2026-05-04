@@ -15,7 +15,6 @@ import { getColor } from "@/app/lib/helper";
 import { formatUSD } from "@/app/lib/helper";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
-import { useSession } from "next-auth/react";
 
 const BudgetCard = ({
   id,
@@ -114,8 +113,6 @@ export default function Budgets() {
   const [isOpen, setIsOpen] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
-
-  const { data: session, status: sessionStatus } = useSession();
 
   const {
     status,

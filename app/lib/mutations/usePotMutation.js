@@ -85,6 +85,7 @@ export function usePotTransactionMutation({ editData, setIsOpen }) {
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["pots"] });
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       setIsOpen(false);
     },
   });
@@ -107,6 +108,7 @@ export function useDeletePotMutation({ setIsOpen }) {
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["pots"] });
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       setIsOpen(false);
     },
   });

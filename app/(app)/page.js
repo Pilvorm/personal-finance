@@ -9,7 +9,15 @@ import RecurringBills from "../components/overview/recurringBills";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-  const { data } = useQuery({
+  const { data: userData } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const res = await fetch("/api/user");
+      return res.json();
+    },
+  });
+
+  const { data: transactions } = useQuery({
     queryKey: ["transactions"],
     queryFn: async () => {
       const res = await fetch(`/api/transactions`);
@@ -18,19 +26,22 @@ export default function Home() {
     staleTime: 1000 * 60,
   });
 
-  const transactionsData = data?.data;
-  const transactionSummary = data?.summary;
+  const transactionsData = transactions?.data;
+  const transactionSummary = transactions?.summary;
 
   return (
     <div id="overview" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
-      <PageHeader title="Overview"/>
-      <Summary transactionSummary={transactionSummary}/>
+      <PageHeader title="Overview" />
+      <Summary
+        balance={userData?.balance}
+        transactionSummary={transactionSummary}
+      />
 
       <main className="flex flex-col md:flex-row flex-wrap lg:grid grid-cols-12 gap-6">
         {/* left */}
         <div className="w-full col-span-7 flex flex-col gap-6">
           <Pots />
-          <Transactions transactionsData={transactionsData}/>
+          <Transactions transactionsData={transactionsData} />
         </div>
 
         <div className="w-full col-span-5 flex flex-col gap-6">

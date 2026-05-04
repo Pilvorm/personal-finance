@@ -20,6 +20,7 @@ export const usersTable = pgTable("user", {
   email: varchar({ length: 255 }).notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  balance: numeric({ precision: 10, scale: 2 }).default("5000"),
 
   createdAt: timestamp("created_at").defaultNow(),
 });
