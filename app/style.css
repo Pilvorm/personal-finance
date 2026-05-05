@@ -14,6 +14,25 @@
   background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0.5, rgba(255, 255, 255, 0.2)), color-stop(0.5, transparent), to(transparent));
 }
 
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #fff;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 body {
   font-family: var(--font-public-sans);
   background-color: #f8f4f0;
@@ -37,7 +56,9 @@ input[type=number] {
   text-decoration: underline;
 }
 
-.submit-btn, .delete-btn, .auth-btn {
+.submit-btn,
+.delete-btn,
+.auth-btn {
   cursor: pointer;
   padding: 16px;
   width: 100%;
@@ -45,10 +66,17 @@ input[type=number] {
   border-radius: 8px;
   transition: background-color 0.125s ease-in-out;
 }
-.submit-btn:hover, .delete-btn:hover, .auth-btn:hover {
+.submit-btn:not(:disabled):hover,
+.delete-btn:not(:disabled):hover,
+.auth-btn:not(:disabled):hover {
   background-color: #f8f4f0;
   color: black;
-  transition: background-color 0.125s ease-in-out;
+}
+.submit-btn:disabled,
+.delete-btn:disabled,
+.auth-btn:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .submit-btn {
@@ -59,6 +87,10 @@ input[type=number] {
 .delete-btn {
   color: white;
   background-color: #c94736;
+}
+.delete-btn:not(:disabled):hover {
+  background-color: #201f24;
+  color: white;
 }
 
 .auth-btn {

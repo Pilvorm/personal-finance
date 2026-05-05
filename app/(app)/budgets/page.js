@@ -92,24 +92,30 @@ const BudgetCard = ({
         </div>
 
         <div className="mt-5 flex flex-col gap-3">
-          {spendingList.map((spending, index) => (
-            <TransactionItem
-              key={spending.id}
-              avatar={spending.avatar}
-              name={spending.name}
-              type={spending.type}
-              amount={spending.amount}
-              date={spending.date}
-              className={`${index !== spendingList.length - 1 && "pb-5 border-b-1 border-grey-100"}`}
-            />
-          ))}
+          {spendingList.length === 0 ? (
+            <div className="text-grey-500/85 text-sm">
+              No spending yet — you’re on track
+            </div>
+          ) : (
+            spendingList.map((spending, index) => (
+              <TransactionItem
+                key={spending.id}
+                avatar={spending.avatar}
+                name={spending.name}
+                type={spending.type}
+                amount={spending.amount}
+                date={spending.date}
+                className={`${index !== spendingList.length - 1 && "pb-5 border-b-1 border-grey-100"}`}
+              />
+            ))
+          )}
         </div>
       </div>
     </motion.div>
   );
 };
 
-export default function Budgets() {
+export default function Budgets({}) {
   const [isOpen, setIsOpen] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -124,7 +130,10 @@ export default function Budgets() {
       const res = await fetch("/api/budgets");
       return res.json();
     },
+    staleTime: 1000 * 60
   });
+
+  console.log("budgets data", data);
 
   const usedCategories = new Set(data.map((c) => c.categoryName));
   const usedThemes = new Set(data.map((t) => t.theme));
@@ -165,7 +174,7 @@ export default function Budgets() {
 
       <main className="my-8 flex flex-col lg:grid grid-cols-12 gap-6">
         {/* Left */}
-        <div className="card lg:sticky lg:top-6 h-fit col-span-5 flex flex-col md:grid grid-cols-2 md:grid-rows-2 lg:flex items-center justify-center gap-12">
+        <div className="col-span-5 card lg:sticky lg:top-6 h-fit flex flex-col md:grid grid-cols-2 md:grid-rows-2 lg:flex items-center justify-center gap-12">
           <div className="flex justify-center">
             <DonutChart budgetsData={data} />
           </div>

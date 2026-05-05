@@ -16,7 +16,7 @@ export function formatName(name) {
 }
 
 export function formatUSD(amount, fraction = 2) {
-  return Number(amount).toLocaleString("en-US", {
+  return Number(amount ?? 0).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: fraction,

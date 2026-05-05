@@ -21,7 +21,7 @@ export function useCreateBudgetMutation({ setIsOpen }) {
       queryClient.setQueryData(["budgets"], context.previous);
     },
 
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budgets"] });
       setIsOpen(false);
     },
@@ -49,7 +49,7 @@ export function useUpdateBudgetMutation({ editData, setIsOpen }) {
       queryClient.setQueryData(["budgets"], context.previous);
     },
 
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budgets"] });
       setIsOpen(false);
     },
@@ -71,7 +71,8 @@ export function useDeleteBudgetMutation({ setIsOpen }) {
       queryClient.setQueryData(["budgets"], context.previous);
     },
 
-    onSettled: () => {
+    onSuccess: async () => {
+      await new Promise((r) => setTimeout(r, 250));
       queryClient.invalidateQueries({ queryKey: ["budgets"] });
       setIsOpen(false);
     },

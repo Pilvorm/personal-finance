@@ -21,7 +21,7 @@ export function useCreatePotMutation({ setIsOpen }) {
       queryClient.setQueryData(["pots"], context.previous);
     },
 
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pots"] });
       setIsOpen(false);
     },
@@ -49,7 +49,7 @@ export function useUpdatePotMutation({ editData, setIsOpen }) {
       queryClient.setQueryData(["pots"], context.previous);
     },
 
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pots"] });
       setIsOpen(false);
     },
@@ -83,7 +83,7 @@ export function usePotTransactionMutation({ editData, setIsOpen }) {
       }
     },
 
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pots"] });
       queryClient.invalidateQueries({ queryKey: ["user"] });
       setIsOpen(false);
@@ -106,7 +106,7 @@ export function useDeletePotMutation({ setIsOpen }) {
       queryClient.setQueryData(["pots"], context.previous);
     },
 
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pots"] });
       queryClient.invalidateQueries({ queryKey: ["user"] });
       setIsOpen(false);

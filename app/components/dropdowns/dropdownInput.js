@@ -20,7 +20,7 @@ export default function DropdownInput({
         {({ open }) => (
           <>
             <MenuButton className="w-full">
-              <div className="btn-basic cursor-pointer px-5 py-3 flex items-center justify-between gap-4 text-sm capitalize outline-none">
+              <div className="btn-basic cursor-pointer min-h-[45.6px] px-5 py-3 flex items-center justify-between gap-4 text-sm capitalize outline-none">
                 {type == "theme" ? (
                   <div className="flex items-center gap-3">
                     <div

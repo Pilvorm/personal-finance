@@ -1,19 +1,60 @@
+"use client";
+
+import { motion, useMotionValue, animate } from "framer-motion";
+import { useEffect, useState } from "react";
 import { getColor } from "../lib/helper";
 
-export default function DonutChart({ budgetsData = [] }) {
-  const total = budgetsData.reduce((acc, item) => acc + Number(item.max), 0);
+const fallbackData = [
+  {
+    max: 1,
+    spending: 0,
+    theme: "beige",
+  },
+];
 
-  const totalSpent = budgetsData.reduce((acc, item) => acc + item.spending, 0);
+export default function DonutChart({ budgetsData = [] }) {
+  const isEmpty = budgetsData.length === 0;
+  const data = isEmpty ? fallbackData : budgetsData;
+
+  const total = budgetsData.reduce((acc, item) => acc + Number(item.max), 0);
+  const totalSpent = budgetsData.reduce(
+    (acc, item) => acc + Number(item.spending),
+    0,
+  );
+
+  const progress = useMotionValue(0);
+  const [renderProgress, setRenderProgress] = useState(0);
+
+  useEffect(() => {
+    progress.set(0);
+
+    const controls = animate(progress, 100, {
+      duration: 1.5,
+      delay: 0.2,
+      ease: [0.22, 1, 0.36, 1],
+    });
+
+    const unsubscribe = progress.on("change", (v) => {
+      setRenderProgress(v);
+    });
+
+    return () => {
+      controls.stop();
+      unsubscribe();
+    };
+  }, [budgetsData]);
 
   let current = 0;
 
-  const gradient = budgetsData
-    .map((item) => {
+  const gradient = data
+    .map((budget) => {
       const start = current;
-      const percent = (Number(item.max) / total) * 100;
+      const percent =
+        (Number(budget.max) / data.reduce((a, i) => a + Number(i.max), 0)) *
+        renderProgress;
       current += percent;
 
-      return `${getColor(item.theme)} ${start}% ${current}%`;
+      return `${getColor(budget.theme)} ${start}% ${current}%`;
     })
     .join(", ");
 
@@ -25,7 +66,7 @@ export default function DonutChart({ budgetsData = [] }) {
       <div className="z-10 text-center">
         <div className="text-[32px] font-bold">${totalSpent}</div>
         <span className="mt-2 block text-sm text-grey-500">
-          of ${total} limit
+          of ${isEmpty ? 0 : total} limit
         </span>
       </div>
     </div>

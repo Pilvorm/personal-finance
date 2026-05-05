@@ -44,12 +44,10 @@ export async function GET() {
 
     const result = budgets.map((budget) => {
       const txs = transactions.filter(
-        (t) => t.categoryId === budget.categoryId,
+        (t) => t.categoryId === budget.categoryId && t.type === "expense",
       );
 
-      const spending = txs
-        .filter((t) => t.type === "expense")
-        .reduce((acc, t) => acc + Number(t.amount), 0);
+      const spending = txs.reduce((acc, t) => acc + Number(t.amount), 0);
 
       return {
         ...budget,
