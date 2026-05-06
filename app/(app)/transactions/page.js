@@ -9,6 +9,7 @@ import Pagination from "@/app/components/pagination";
 import Dropdown from "@/app/components/dropdowns/dropdown";
 import { SORT_OPTIONS } from "@/app/data";
 import { useDebounce, formatUSD, buildQueryParams } from "@/app/lib/helper";
+import TransactionsSkeleton from "@/app/components/skeleton/transactions";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -126,89 +127,91 @@ export default function Transactions() {
           </div>
         </div>
 
-        {isFetching && (
-          <div className="text-sm text-grey-500 mt-4">Updating results...</div>
-        )}
-
-        <table id="transactions-table" className="w-full">
+        <table id="transactions-table" className="w-full table-fixed">
           <thead className="max-md:hidden text-grey-500 text-left text-xs border-b border-grey-100">
             <tr>
-              <th>Recipient / Sender</th>
+              <th className="w-[42%]">Recipient / Sender</th>
               <th>Category</th>
               <th>Transaction Date</th>
               <th className="text-right">Amount</th>
             </tr>
           </thead>
 
-          <tbody>
-            {transactionsData?.map((item) => {
-              const isPositive = item.type === "income";
+          {isFetching ? (
+            <TransactionsSkeleton />
+          ) : (
+            <tbody>
+              {transactionsData?.map((item) => {
+                const isPositive = item.type === "income";
 
-              return (
-                <tr
-                  key={item.id}
-                  className="block md:table-row border-b border-grey-100"
-                >
-                  <td className="flex items-center justify-between md:table-cell">
-                    <div className="flex items-center gap-4">
-                      <Image
-                        src={`/assets/images/avatars/${item.avatar}`}
-                        alt={item.name}
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      />
-                      <div>
-                        <div className="text-sm font-bold">{item.name}</div>
+                return (
+                  <tr
+                    key={item.id}
+                    className="block md:table-row border-b border-grey-100"
+                  >
+                    <td className="flex items-center justify-between md:table-cell">
+                      <div className="flex items-center gap-4">
+                        <Image
+                          src={`/assets/images/avatars/${item.avatar}`}
+                          alt={item.name}
+                          width={40}
+                          height={40}
+                          className="rounded-full"
+                        />
+                        <div>
+                          <div className="text-sm font-bold">{item.name}</div>
 
-                        <div className="mt-1 text-xs text-grey-500 md:hidden">
-                          {item.categoryName || "General"}
+                          <div className="mt-1 text-xs text-grey-500 md:hidden">
+                            {item.categoryName || "General"}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex flex-col items-end md:hidden">
-                      <div
-                        className={`text-sm font-bold ${
-                          isPositive && "text-green"
-                        }`}
-                      >
-                        {isPositive ? "+" : "-"}{formatUSD(item.amount)}
+                      <div className="flex flex-col items-end md:hidden">
+                        <div
+                          className={`text-sm font-bold ${
+                            isPositive && "text-green"
+                          }`}
+                        >
+                          {isPositive ? "+" : "-"}
+                          {formatUSD(item.amount)}
+                        </div>
+
+                        <span className="mt-1 text-xs text-grey-500">
+                          {new Date(item.date).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </span>
                       </div>
+                    </td>
 
-                      <span className="mt-1 text-xs text-grey-500">
-                        {new Date(item.date).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </div>
-                  </td>
+                    <td className="hidden md:table-cell text-sm text-grey-500">
+                      {item.categoryName || "General"}
+                    </td>
 
-                  <td className="hidden md:table-cell text-sm text-grey-500">
-                    {item.categoryName || "General"}
-                  </td>
+                    <td className="hidden md:table-cell text-sm text-grey-500">
+                      {new Date(item.date).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
 
-                  <td className="hidden md:table-cell text-sm text-grey-500">
-                    {new Date(item.date).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </td>
-
-                  <td
-                    className={`hidden md:table-cell text-sm font-bold text-right ${
-                      isPositive && "text-green"
-                    }`}
-                  >
-                    {isPositive ? "+" : "-"}{formatUSD(item.amount)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+                    <td
+                      className={`hidden md:table-cell text-sm font-bold text-right ${
+                        isPositive && "text-green"
+                      }`}
+                    >
+                      {isPositive ? "+" : "-"}
+                      {formatUSD(item.amount)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          )}
         </table>
 
         <Pagination page={page} setPage={setPage} totalPages={totalPages} />

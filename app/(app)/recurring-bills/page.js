@@ -13,6 +13,9 @@ import { useDebounce, formatUSD, buildQueryParams } from "@/app/lib/helper";
 import { getOrdinal, getBillStatus, getBillsSummary } from "@/app/lib/helper";
 
 import { useQuery } from "@tanstack/react-query";
+import {
+  RecurringBillsTableSkeleton,
+} from "@/app/components/skeleton/recurringBills";
 
 export default function RecurringBills() {
   const searchParams = useSearchParams();
@@ -65,7 +68,7 @@ export default function RecurringBills() {
 
       <main className="my-8 flex flex-col lg:grid grid-cols-12 gap-6">
         {/* Left */}
-        <div className="col-span-4">
+        {<div className="col-span-4">
           <div className="p-6 flex flex-col gap-8 text-white bg-grey-900 rounded-xl">
             <RecurringBillsOutline />
             <div>
@@ -105,7 +108,7 @@ export default function RecurringBills() {
               </div>
             </div>
           </div>
-        </div>
+        </div>}
 
         {/* Right */}
         <div className="col-span-8 card h-fit">
@@ -128,47 +131,72 @@ export default function RecurringBills() {
             </div>
           </div>
 
-          <table id="transactions-table" className="w-full">
+          <table id="transactions-table" className="w-full table-fixed">
             <thead className="max-md:hidden text-grey-500 text-left text-xs border-b border-grey-100">
               <tr>
-                <th>Bill Title</th>
+                <th className="w-[55%]">Bill Title</th>
                 <th>Due Date</th>
                 <th className="text-right">Amount</th>
               </tr>
             </thead>
 
-            <tbody className="">
-              {billsData?.map((item, index) => {
-                const status = getBillStatus(item.dueDate);
-                const dateColor =
-                  status == "paid"
-                    ? "text-green"
-                    : status == "due"
-                      ? "text-red"
-                      : "text-grey-500";
+            {isFetching ? (
+              <RecurringBillsTableSkeleton />
+            ) : (
+              <tbody className="">
+                {billsData?.map((item, index) => {
+                  const status = getBillStatus(item.dueDate);
+                  const dateColor =
+                    status == "paid"
+                      ? "text-green"
+                      : status == "due"
+                        ? "text-red"
+                        : "text-grey-500";
 
-                return (
-                  <tr
-                    key={item.id}
-                    className={`block md:table-row ${index !== billsData.length - 1 && "border-b border-grey-100"}`}
-                  >
-                    {/* Recipient */}
-                    <td className="flex items-end md:items-center justify-between md:table-cell">
-                      <div>
-                        <div className="flex items-center gap-4">
-                          <Image
-                            src={`/assets/images/avatars/${item.avatar}`}
-                            alt={item.title}
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                          />
+                  return (
+                    <tr
+                      key={item.id}
+                      className={`block md:table-row ${index !== billsData.length - 1 && "border-b border-grey-100"}`}
+                    >
+                      {/* Recipient */}
+                      <td className="flex items-end md:items-center justify-between md:table-cell">
+                        <div>
+                          <div className="flex items-center gap-4">
+                            <Image
+                              src={`/assets/images/avatars/${item.avatar}`}
+                              alt={item.title}
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
 
-                          <div className="text-sm font-bold">{item.title}</div>
+                            <div className="text-sm font-bold">
+                              {item.title}
+                            </div>
+                          </div>
+                          <div
+                            className={`mt-2 text-xs md:hidden flex gap-2 ${dateColor}`}
+                          >
+                            Monthly-{getOrdinal(item.dueDate)}
+                            {status == "paid" ? (
+                              <BillPaid />
+                            ) : (
+                              status == "due" && <BillDue />
+                            )}
+                          </div>
                         </div>
-                        <div
-                          className={`mt-2 text-xs md:hidden flex gap-2 ${dateColor}`}
-                        >
+
+                        {/* Amount - Mobile */}
+                        <div className="md:hidden text-sm font-bold">
+                          {formatUSD(item.amount)}
+                        </div>
+                      </td>
+
+                      {/* Desktop-only columns */}
+                      <td
+                        className={`hidden md:table-cell text-xs ${dateColor}`}
+                      >
+                        <div className="flex items-center gap-2">
                           Monthly-{getOrdinal(item.dueDate)}
                           {status == "paid" ? (
                             <BillPaid />
@@ -176,35 +204,18 @@ export default function RecurringBills() {
                             status == "due" && <BillDue />
                           )}
                         </div>
-                      </div>
+                      </td>
 
-                      {/* Amount + date (mobile) */}
-                      <div className="md:hidden text-sm font-bold">
+                      <td
+                        className={`hidden md:table-cell text-sm font-bold text-right ${status == "due" && "text-red"}`}
+                      >
                         {formatUSD(item.amount)}
-                      </div>
-                    </td>
-
-                    {/* Desktop-only columns */}
-                    <td className={`hidden md:table-cell text-xs ${dateColor}`}>
-                      <div className="flex items-center gap-2">
-                        Monthly-{getOrdinal(item.dueDate)}
-                        {status == "paid" ? (
-                          <BillPaid />
-                        ) : (
-                          status == "due" && <BillDue />
-                        )}
-                      </div>
-                    </td>
-
-                    <td
-                      className={`hidden md:table-cell text-sm font-bold text-right ${status == "due" && "text-red"}`}
-                    >
-                      {formatUSD(item.amount)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            )}
           </table>
         </div>
       </main>
