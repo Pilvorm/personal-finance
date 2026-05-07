@@ -1,6 +1,12 @@
+import { motion } from "motion/react";
+
 export function RecurringBillsTableSkeleton() {
   return (
-    <tbody className="">
+    <motion.tbody
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       {Array.from({ length: 8 }).map((_, i) => {
         return (
           <tr
@@ -39,6 +45,6 @@ export function RecurringBillsTableSkeleton() {
           </tr>
         );
       })}
-    </tbody>
+    </motion.tbody>
   );
 }

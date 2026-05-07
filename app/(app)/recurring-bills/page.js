@@ -11,6 +11,7 @@ import Dropdown from "@/app/components/dropdowns/dropdown";
 import { SORT_OPTIONS } from "@/app/data";
 import { useDebounce, formatUSD, buildQueryParams } from "@/app/lib/helper";
 import { getOrdinal, getBillStatus, getBillsSummary } from "@/app/lib/helper";
+import { AnimatePresence, motion } from "motion/react";
 
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -32,7 +33,7 @@ export default function RecurringBills() {
 
   const debouncedSearch = useDebounce(searchTerm, 400);
 
-  const { data: billsData, isFetching } = useQuery({
+  const { data: billsData, isLoading } = useQuery({
     queryKey: [
       "recurring-bills",
       {
@@ -140,7 +141,7 @@ export default function RecurringBills() {
               </tr>
             </thead>
 
-            {isFetching ? (
+            {isLoading ? (
               <RecurringBillsTableSkeleton />
             ) : (
               <tbody className="">
@@ -154,7 +155,10 @@ export default function RecurringBills() {
                         : "text-grey-500";
 
                   return (
-                    <tr
+                    <motion.tr
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.04 }}
                       key={item.id}
                       className={`block md:table-row ${index !== billsData.length - 1 && "border-b border-grey-100"}`}
                     >
@@ -211,7 +215,7 @@ export default function RecurringBills() {
                       >
                         {formatUSD(item.amount)}
                       </td>
-                    </tr>
+                    </motion.tr>
                   );
                 })}
               </tbody>

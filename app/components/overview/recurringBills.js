@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getBillsSummary, formatUSD } from "@/app/lib/helper";
 
 export default function RecurringBills() {
-  const { data: billsData, isFetching } = useQuery({
+  const { data: billsData, isLoading } = useQuery({
     queryKey: ["recurring-bills"],
     queryFn: async () => {
       const res = await fetch(`/api/recurring-bills`);

@@ -17,7 +17,7 @@ export default function Home() {
     },
   });
 
-  const { data: transactions } = useQuery({
+  const { data: transactions, isLoading: isLoadingTxs } = useQuery({
     queryKey: ["transactions"],
     queryFn: async () => {
       const res = await fetch(`/api/transactions`);
@@ -41,7 +41,7 @@ export default function Home() {
         {/* left */}
         <div className="w-full col-span-7 flex flex-col gap-6">
           <Pots />
-          <Transactions transactionsData={transactionsData} />
+          <Transactions transactionsData={transactionsData} isLoadingTxs={isLoadingTxs} />
         </div>
 
         <div className="w-full col-span-5 flex flex-col gap-6">

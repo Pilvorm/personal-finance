@@ -3,12 +3,13 @@
 import { CaretRight, PotsIconGreen } from "../icons";
 import Link from "next/link";
 import Category from "../category";
-import { POTS_DATA } from "../../data";
 import { useQuery } from "@tanstack/react-query";
 import { formatUSD } from "@/app/lib/helper";
+import CategorySkeleton from "../skeleton/category";
+import { AnimatePresence } from "motion/react";
 
 export default function Pots() {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["pots"],
     queryFn: async () => {
       const res = await fetch("/api/pots");
@@ -38,20 +39,31 @@ export default function Pots() {
           </div>
           <div>
             <h3 className="text-grey-500">Total Saved</h3>
-            <div className="mt-2 text-[32px] text-grey-900 font-bold">{formatUSD(grandTotalSaved, 0)}</div>
+            <div className="mt-2 text-[32px] text-grey-900 font-bold">
+              {formatUSD(grandTotalSaved, 0)}
+            </div>
           </div>
         </div>
 
         {/* Right */}
         <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4">
-          {potsData?.slice(0, 4).map((pot) => (
-            <Category
-              key={pot.name}
-              theme={pot.theme}
-              name={pot.name}
-              customValue={pot.totalSaved}
-            />
-          ))}
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <CategorySkeleton />
+            ) : (
+              potsData
+                ?.slice(0, 4)
+                .map((pot, index) => (
+                  <Category
+                    key={pot.name}
+                    index={index}
+                    theme={pot.theme}
+                    name={pot.name}
+                    customValue={pot.totalSaved}
+                  />
+                ))
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

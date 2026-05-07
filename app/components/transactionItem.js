@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { formatUSD } from "../lib/helper";
+import { motion } from "motion/react";
 
 export default function TransactionItem({
+  index,
   avatar,
   name,
   type,
@@ -12,9 +14,14 @@ export default function TransactionItem({
   className,
 }) {
   const isPositive = type === "income";
-  
+
   return (
-    <div className={`flex items-center justify-between ${className}`}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.04 }}
+      className={`flex items-center justify-between ${className}`}
+    >
       <div className="flex items-center gap-4">
         <Image
           src={`/assets/images/avatars/${avatar}`}
@@ -27,7 +34,8 @@ export default function TransactionItem({
       </div>
       <div className="flex flex-col items-end">
         <div className={`text-sm font-bold ${isPositive && "text-green"}`}>
-          {isPositive ? "+" : "-"}{formatUSD(amount)}
+          {isPositive ? "+" : "-"}
+          {formatUSD(amount)}
         </div>
         <span className="mt-1 text-xs text-grey-500">
           {new Date(date).toLocaleDateString("en-GB", {
@@ -37,6 +45,6 @@ export default function TransactionItem({
           })}
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 }

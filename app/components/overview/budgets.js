@@ -9,13 +9,17 @@ import { groupBudgets } from "@/app/lib/helper";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Budgets() {
-  const { status, data = [], error } = useQuery({
+  const {
+    status,
+    data = [],
+    error,
+  } = useQuery({
     queryKey: ["budgets"],
     queryFn: async () => {
       const res = await fetch("/api/budgets");
       return res.json();
     },
-    select: (data) => groupBudgets(data, 4)
+    select: (data) => groupBudgets(data, 4),
   });
 
   return (
@@ -23,7 +27,10 @@ export default function Budgets() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="card-title">Budgets</h2>
-        <Link href="/budgets" className="card-link flex items-center gap-1 hover:underline">
+        <Link
+          href="/budgets"
+          className="card-link flex items-center gap-1 hover:underline"
+        >
           <span>See Details</span>
           <CaretRight />
         </Link>
@@ -38,9 +45,10 @@ export default function Budgets() {
 
         {/* Categories */}
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-1">
-          {data?.map((budget) => (
+          {data?.map((budget, index) => (
             <Category
               key={budget.id}
+              index={index}
               theme={budget.theme}
               name={budget.categoryName}
               customValue={budget.max}

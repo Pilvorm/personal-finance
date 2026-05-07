@@ -2,8 +2,10 @@
 
 import { getColor } from "../lib/helper";
 import { formatUSD } from "../lib/helper";
+import { motion } from "motion/react";
 
 export default function Category({
+  index = 0,
   theme,
   name,
   max,
@@ -15,7 +17,12 @@ export default function Category({
   const color = getColor(theme);
 
   return (
-    <div className={`flex items-center gap-4 ${className || ""}`}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.04 }}
+      className={`flex items-center gap-4 ${className || ""}`}
+    >
       <div
         style={{ backgroundColor: color }}
         className={`min-w-1 h-full rounded-lg`}
@@ -34,6 +41,6 @@ export default function Category({
           <div className="text-sm font-bold">{formatUSD(customValue, 0)}</div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
