@@ -6,6 +6,7 @@ import Pots from "../components/overview/pots";
 import Transactions from "../components/overview/transactions";
 import Budgets from "../components/overview/budgets";
 import RecurringBills from "../components/overview/recurringBills";
+
 import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {

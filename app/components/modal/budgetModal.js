@@ -1,15 +1,18 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+
 import Modal from "./modal";
 import Input from "../input";
 import DropdownInput from "../dropdowns/dropdownInput";
-import { useQuery } from "@tanstack/react-query";
-import { THEMES, THEMES_MAP, EXCLUDED_THEMES } from "@/app/data";
+import ButtonLoader from "../buttonLoader";
+
 import {
   useCreateBudgetMutation,
   useUpdateBudgetMutation,
 } from "@/app/lib/mutations/useBudgetMutation";
+import { useQuery } from "@tanstack/react-query";
+import { THEMES, THEMES_MAP, EXCLUDED_THEMES } from "@/app/data";
 
 export default function BudgetModal({
   setIsOpen,
@@ -107,7 +110,11 @@ export default function BudgetModal({
 
         <Input
           label="Maximum Spend"
+          icon="$"
           type="number"
+          min="0.01"
+          max="1000000"
+          step="0.01"
           value={budget}
           onChange={(e) => {
             setBudget(e.target.value);
@@ -126,6 +133,7 @@ export default function BudgetModal({
       </div>
 
       <button
+        disabled={saveBudget.isPending}
         onClick={() => {
           const newErrors = {};
 
@@ -147,7 +155,10 @@ export default function BudgetModal({
         }}
         className="submit-btn"
       >
-        {isEdit ? "Save Changes" : "Add Budget"}
+        <ButtonLoader
+          isPending={saveBudget.isPending}
+          label={isEdit ? "Save Changes" : "Add Budget"}
+        />
       </button>
     </Modal>
   );

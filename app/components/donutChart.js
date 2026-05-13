@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useMotionValue, animate } from "framer-motion";
 import { useEffect, useState } from "react";
+
 import { getColor } from "../lib/helper";
+import { motion, useMotionValue, animate } from "framer-motion";
 
 const fallbackData = [
   {

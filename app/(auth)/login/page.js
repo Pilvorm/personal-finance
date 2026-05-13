@@ -10,13 +10,7 @@ export default async function Login({ searchParams }) {
 
   return (
     <main className="px-4 py-8 w-full min-h-[740px] sm:min-h-[950px] lg:min-h-fit flex-1 flex items-center justify-center">
-      <div
-        // action={async () => {
-        //   "use server";
-        //   await signIn("github");
-        // }}
-        className="card w-full max-w-[560px]"
-      >
+      <div className="card w-full max-w-[560px]">
         <h2 className="card-title">Login</h2>
 
         <div className="mt-8 flex flex-col gap-1">

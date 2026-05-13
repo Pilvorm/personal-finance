@@ -3,9 +3,10 @@
 import { CaretRight, PotsIconGreen } from "../icons";
 import Link from "next/link";
 import Category from "../category";
+import CategorySkeleton from "../skeleton/category";
+
 import { useQuery } from "@tanstack/react-query";
 import { formatUSD } from "@/app/lib/helper";
-import CategorySkeleton from "../skeleton/category";
 import { AnimatePresence } from "motion/react";
 
 export default function Pots() {
@@ -55,8 +56,8 @@ export default function Pots() {
                 ?.slice(0, 4)
                 .map((pot, index) => (
                   <Category
-                    key={pot.name}
                     index={index}
+                    key={pot.name}
                     theme={pot.theme}
                     name={pot.name}
                     customValue={pot.totalSaved}

@@ -3,20 +3,22 @@
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
+
 import { BillPaid, BillDue } from "@/app/components/icons";
 import PageHeader from "@/app/components/pageHeader";
 import Search from "@/app/components/search";
 import { RecurringBillsOutline } from "@/app/components/icons";
 import Dropdown from "@/app/components/dropdowns/dropdown";
-import { SORT_OPTIONS } from "@/app/data";
-import { useDebounce, formatUSD, buildQueryParams } from "@/app/lib/helper";
-import { getOrdinal, getBillStatus, getBillsSummary } from "@/app/lib/helper";
-import { AnimatePresence, motion } from "motion/react";
-
-import { useQuery } from "@tanstack/react-query";
 import {
   RecurringBillsTableSkeleton,
 } from "@/app/components/skeleton/recurringBills";
+
+import { useDebounce, formatUSD, buildQueryParams } from "@/app/lib/helper";
+import { getOrdinal, getBillStatus, getBillsSummary } from "@/app/lib/helper";
+import { AnimatePresence, motion } from "motion/react";
+import { useQuery } from "@tanstack/react-query";
+
+import { SORT_OPTIONS } from "@/app/data";
 
 export default function RecurringBills() {
   const searchParams = useSearchParams();

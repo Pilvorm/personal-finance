@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Modal from "./modal";
-import { AnimatePresence, motion } from "motion/react";
+import ButtonLoader from "../buttonLoader";
+
 import { useDeleteBudgetMutation } from "@/app/lib/mutations/useBudgetMutation";
 import { useDeletePotMutation } from "@/app/lib/mutations/usePotMutation";
 
@@ -26,28 +26,7 @@ export default function ConfirmDelete({ type, id, name, setIsOpen }) {
         }}
         className="delete-btn flex items-center justify-center"
       >
-        <AnimatePresence mode="wait">
-          {deleteItem.isPending ? (
-            <motion.span
-              key="loader"
-              className="loader"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-            />
-          ) : (
-            <motion.span
-              key="text"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-            >
-              Yes, Confirm Deletion
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <ButtonLoader isPending={deleteItem.isPending} label="Yes, Confirm Deletion" />
       </button>
       <button
         type="button"

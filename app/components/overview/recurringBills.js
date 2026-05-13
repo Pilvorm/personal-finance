@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo } from "react";
-import { CaretRight } from "../icons";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { CaretRight } from "../icons";
+
 import { getBillsSummary, formatUSD } from "@/app/lib/helper";
+import { useQuery } from "@tanstack/react-query";
 
 export default function RecurringBills() {
   const { data: billsData, isLoading } = useQuery({

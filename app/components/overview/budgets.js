@@ -4,16 +4,14 @@ import { CaretRight } from "../icons";
 import Link from "next/link";
 import Category from "../category";
 import DonutChart from "../donutChart";
-import { BUDGETS_DATA } from "../../data";
+import CategorySkeleton from "../skeleton/category";
+
 import { groupBudgets } from "@/app/lib/helper";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence } from "motion/react";
 
 export default function Budgets() {
-  const {
-    status,
-    data = [],
-    error,
-  } = useQuery({
+  const { data = [], isLoading } = useQuery({
     queryKey: ["budgets"],
     queryFn: async () => {
       const res = await fetch("/api/budgets");
@@ -45,15 +43,21 @@ export default function Budgets() {
 
         {/* Categories */}
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-1">
-          {data?.map((budget, index) => (
-            <Category
-              key={budget.id}
-              index={index}
-              theme={budget.theme}
-              name={budget.categoryName}
-              customValue={budget.max}
-            />
-          ))}
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <CategorySkeleton />
+            ) : (
+              data?.map((budget, index) => (
+                <Category
+                  index={index}
+                  key={budget.id}
+                  theme={budget.theme}
+                  name={budget.categoryName}
+                  customValue={budget.max}
+                />
+              ))
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

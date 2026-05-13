@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+
 import { CaretRight } from "@/app/components/icons";
 import PageHeader from "@/app/components/pageHeader";
 import DonutChart from "@/app/components/donutChart";
@@ -17,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 
 const BudgetCard = ({
+  index,
   id,
   theme,
   categoryId,
@@ -33,12 +35,6 @@ const BudgetCard = ({
   const percent = Math.min((safeSpending / safeMax) * 100, 100);
   const remaining = Math.max(safeMax - safeSpending, 0);
 
-  const budgetCardAnimation = {
-    initial: { opacity: 0, y: -10, scale: 1 },
-    animate: { opacity: 1, y: 0, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
-  };
-
   const color = getColor(theme);
 
   return (
@@ -46,10 +42,9 @@ const BudgetCard = ({
       layout
       layoutId={id}
       key={id}
-      variants={budgetCardAnimation}
-      initial="initial"
-      animate="animate"
-      exit="exit"
+      initial={{ opacity: 0, y: -10, }}
+      animate={{ opacity: 1, y: 0, }}
+      exit={{ opacity: 0, scale: 0.95 }}
       className="card"
     >
       <CategoryHeader
@@ -130,7 +125,7 @@ export default function Budgets({}) {
       const res = await fetch("/api/budgets");
       return res.json();
     },
-    staleTime: 1000 * 60
+    staleTime: 1000 * 60,
   });
 
   console.log("budgets data", data);
@@ -206,6 +201,7 @@ export default function Budgets({}) {
           <AnimatePresence mode="popLayout">
             {data?.map((budget, index) => (
               <BudgetCard
+                index={index}
                 key={budget.id}
                 id={budget.id}
                 theme={budget.theme}

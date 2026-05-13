@@ -2,17 +2,19 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+
 import PageHeader from "../../components/pageHeader";
 import CategoryHeader from "../../components/categoryHeader";
 import PotModal from "@/app/components/modal/potModal";
-import { POTS_DATA } from "../../data";
-import { getColor } from "@/app/lib/helper";
-import { useQuery } from "@tanstack/react-query";
 import ConfirmDelete from "@/app/components/modal/confirmDelete";
 import PotTransaction from "@/app/components/modal/potTransaction";
+
+import { getColor } from "@/app/lib/helper";
 import { formatUSD } from "@/app/lib/helper";
+import { useQuery } from "@tanstack/react-query";
 
 const PotsCard = ({
+  index,
   id,
   name,
   totalSaved,
@@ -26,12 +28,6 @@ const PotsCard = ({
 
   const color = getColor(theme);
 
-  const potCardAnimation = {
-    initial: { opacity: 0, y: -10, scale: 1 },
-    animate: { opacity: 1, y: 0, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
-  };
-
   const potData = {
     id,
     name,
@@ -43,10 +39,9 @@ const PotsCard = ({
 
   return (
     <motion.div
-      variants={potCardAnimation}
-      initial="initial"
-      animate="animate"
-      exit="exit"
+      initial={{ opacity: 0, x: -10, }}
+      animate={{ opacity: 1, x: 0, }}
+      exit={{ opacity: 0, scale: 0.95 }}
       className="card flex flex-col gap-6"
     >
       <CategoryHeader
@@ -171,8 +166,9 @@ export default function Pots() {
 
       <main className="my-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AnimatePresence mode="popLayout">
-          {potsData?.map((pot) => (
+          {potsData?.map((pot, index) => (
             <PotsCard
+              index={index}
               key={pot.id}
               id={pot.id}
               theme={pot.theme}

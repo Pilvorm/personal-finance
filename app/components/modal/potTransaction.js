@@ -3,11 +3,23 @@
 import { useState } from "react";
 
 import Modal from "./modal";
+import Input from "../input";
+import ButtonLoader from "../buttonLoader";
+
 import { formatUSD } from "@/app/lib/helper";
 import { getColor } from "@/app/lib/helper";
+import { useQuery } from "@tanstack/react-query";
 import { usePotTransactionMutation } from "@/app/lib/mutations/usePotMutation";
 
 export default function PotTransaction({ type, pot, setIsOpen }) {
+  const { data: userData } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const res = await fetch("/api/user");
+      return res.json();
+    },
+  });
+
   const [amount, setAmount] = useState("");
 
   const totalSaved = pot.totalSaved;
@@ -24,9 +36,11 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
   const diffWidth =
     type === "add" ? newPercent - pot.percent : pot.percent - newPercent;
 
+  const [errors, setErrors] = useState({});
+
   const savePot = usePotTransactionMutation({
     editData: pot,
-    setIsOpen
+    setIsOpen,
   });
 
   return (
@@ -48,10 +62,12 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
         <div className="mt-4">
           {/* Bar */}
           <div className="w-full h-2 flex gap-[2px] bg-beige-100 rounded-sm">
-            <div
-              style={{ width: `${baseWidth}%` }}
-              className={`h-full bg-grey-900 transition-all duration-300 ${amount ? "rounded-l-sm" : "rounded-sm"}`}
-            ></div>
+            {totalSaved > 0 && (
+              <div
+                style={{ width: `${baseWidth}%` }}
+                className={`h-full bg-grey-900 transition-all duration-300 ${amount ? "rounded-l-sm" : "rounded-sm"}`}
+              ></div>
+            )}
             {amount && (
               <div
                 style={{
@@ -59,8 +75,11 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
                   backgroundColor:
                     type == "add" ? getColor("green") : getColor("red"),
                 }}
-                className={`h-full bg-red transition-all duration-300 ${
-                  numericAmount >= totalSaved ? "rounded-sm" : "rounded-r-sm"
+                className={`h-full transition-all duration-300 ${
+                  (type === "withdraw" && numericAmount >= totalSaved) ||
+                  totalSaved == 0
+                    ? "rounded-sm"
+                    : "rounded-r-sm"
                 }`}
               ></div>
             )}
@@ -77,41 +96,60 @@ export default function PotTransaction({ type, pot, setIsOpen }) {
         </div>
       </div>
 
-      <div>
-        <label className="mb-1 text-xs text-grey-500 font-bold">
-          {`Amount to ${type == "add" ? "Add" : "Withdraw"}`}
-        </label>
-        <div className="btn-basic px-5 py-3 flex items-center gap-3">
-          <span className="text-sm text-beige-500">$</span>
-          <input
-            type="number"
-            value={amount}
-            min="0.01"
-            max={type == "add" ? "1000000" : totalSaved} // LIMIT BY USER'S BALANCE LATER
-            step="0.01"
-            onChange={(e) => {
-              const val = Number(e.target.value);
-              if (type == "withdraw") {
-                if (val > totalSaved) return;
-              }
-              setAmount(e.target.value);
-            }}
-            className="w-full outline-none"
-          />
-        </div>
-      </div>
+      <Input
+        label={`Amount to ${type == "add" ? "Add" : "Withdraw"}`}
+        icon="$"
+        type="number"
+        min="0.01"
+        max={type === "add" ? userData?.balance : totalSaved}
+        step="0.01"
+        value={amount}
+        onChange={(e) => {
+          const val = Number(e.target.value);
+
+          if (type === "withdraw" && val > totalSaved) return;
+          if (type === "add" && val > Number(userData?.balance)) return;
+
+          setAmount(e.target.value);
+        }}
+        error={errors.amount}
+      />
 
       <button
-        disabled={!amount}
-        onClick={() =>
+        type="submit"
+        disabled={savePot.isPending}
+        onClick={() => {
+          const newErrors = {};
+
+          if (!amount || Number(amount) <= 0) {
+            newErrors.amount = "Amount is required";
+          }
+
+          if (type === "add" && Number(amount) > Number(userData?.balance)) {
+            newErrors.amount = "Amount exceeds current balance";
+          }
+
+          if (type === "withdraw" && Number(amount) > totalSaved) {
+            newErrors.amount = "Amount exceeds pot balance";
+          }
+
+          if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+          }
+
+          setErrors({});
           savePot.mutate({
             type,
-            amount
-          })
-        }
+            amount,
+          });
+        }}
         className="submit-btn"
       >
-        {type == "add" ? "Confirm Addition" : "Confirm Withdrawal"}
+        <ButtonLoader
+          isPending={savePot.isPending}
+          label={type == "add" ? "Confirm Addition" : "Confirm Withdrawal"}
+        />
       </button>
     </Modal>
   );

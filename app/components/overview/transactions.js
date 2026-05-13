@@ -1,9 +1,10 @@
 "use client";
 
-import { CaretRight } from "../icons";
 import Link from "next/link";
+import { CaretRight } from "../icons";
 import TransactionItem from "../transactionItem";
 import { TransactionsOverviewSkeleton } from "../skeleton/transactions";
+
 import { AnimatePresence, motion } from "motion/react";
 
 export default function Transactions({ transactionsData = [], isLoadingTxs }) {
@@ -28,8 +29,8 @@ export default function Transactions({ transactionsData = [], isLoadingTxs }) {
               ?.slice(0, 4)
               .map((item, index) => (
                 <TransactionItem
-                  key={item.id}
                   index={index}
+                  key={item.id}
                   avatar={item.avatar}
                   name={item.name}
                   type={item.type}

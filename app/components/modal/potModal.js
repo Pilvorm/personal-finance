@@ -2,9 +2,15 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Modal from "./modal";
+import Input from "../input";
+import ButtonLoader from "../buttonLoader";
 import DropdownInput from "../dropdowns/dropdownInput";
+
+import {
+  useCreatePotMutation,
+  useUpdatePotMutation,
+} from "@/app/lib/mutations/usePotMutation";
 import { THEMES, THEMES_MAP, EXCLUDED_THEMES } from "@/app/data";
-import { useCreatePotMutation, useUpdatePotMutation } from "@/app/lib/mutations/usePotMutation";
 
 export default function PotModal({
   setIsOpen,
@@ -49,15 +55,10 @@ export default function PotModal({
     }
   }, [editData]);
 
-  const createPot = useCreatePotMutation({
-    setIsOpen,
-  });
+  const [errors, setErrors] = useState({});
 
-  const updatePot = useUpdatePotMutation({
-    editData,
-    setIsOpen,
-  });
-
+  const createPot = useCreatePotMutation({ setIsOpen });
+  const updatePot = useUpdatePotMutation({ editData, setIsOpen });
   const savePot = isEdit ? updatePot : createPot;
 
   return (
@@ -71,37 +72,31 @@ export default function PotModal({
       setIsOpen={setIsOpen}
     >
       <div className="flex flex-col gap-4">
-        <div>
-          <label className="mb-1 text-xs text-grey-500 font-bold">
-            Pot Name
-          </label>
-          <div className="btn-basic px-5 py-3 flex items-center gap-3">
-            <input
-              name="name"
-              type="text"
-              value={potName}
-              onChange={(e) => setPotName(e.target.value)}
-              className="w-full outline-none"
-            />
-          </div>
-        </div>
+        <Input
+          label="Pot Name"
+          type="text"
+          value={potName}
+          onChange={(e) => {
+            setPotName(e.target.value);
+            setErrors((prev) => ({ ...prev, potName: "" }));
+          }}
+          error={errors.potName}
+        />
 
-        <div>
-          <label className="mb-1 text-xs text-grey-500 font-bold">Target</label>
-          <div className="btn-basic px-5 py-3 flex items-center gap-3">
-            <span className="text-sm text-beige-500">$</span>
-            <input
-              name="budget"
-              type="number"
-              min="0"
-              max="1000000"
-              step="0.01"
-              value={potTarget}
-              onChange={(e) => setPotTarget(e.target.value)}
-              className="w-full outline-none"
-            />
-          </div>
-        </div>
+        <Input
+          label="Target"
+          icon="$"
+          type="number"
+          value={potTarget}
+          min="0.01"
+          max="1000000"
+          step="0.01"
+          onChange={(e) => {
+            setPotTarget(e.target.value);
+            setErrors((prev) => ({ ...prev, budget: "" }));
+          }}
+          error={errors.potTarget}
+        />
 
         <DropdownInput
           type="theme"
@@ -113,18 +108,36 @@ export default function PotModal({
       </div>
 
       <button
-        type="submit"
-        disabled={!potName || !potTarget || !selectedTheme}
-        onClick={() =>
+        disabled={savePot.isPending}
+        onClick={() => {
+          const newErrors = {};
+
+          if (!potName || potName.trim() === "") {
+            newErrors.potName = "Pot name is required";
+          }
+
+          if (!potTarget || Number(potTarget) <= 0) {
+            newErrors.potTarget = "Pot target is required";
+          }
+
+          if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+          }
+
+          setErrors({});
           savePot.mutate({
             name: potName,
             target: potTarget,
             theme: selectedTheme.id,
-          })
-        }
+          });
+        }}
         className="submit-btn"
       >
-        {isEdit ? "Save Changes" : "Add Pot"}
+        <ButtonLoader
+          isPending={savePot.isPending}
+          label={isEdit ? "Save Changes" : "Add Pot"}
+        />
       </button>
     </Modal>
   );

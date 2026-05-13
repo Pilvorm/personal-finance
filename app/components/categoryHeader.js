@@ -1,8 +1,9 @@
 import { Ellipsis } from "./icons";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { DROPDOWN_ANIMATION } from "../data";
 import { getColor } from "../lib/helper";
+
+import { DROPDOWN_ANIMATION } from "../data";
 
 export default function CategoryHeader({ theme, name, type, edit, del }) {
 

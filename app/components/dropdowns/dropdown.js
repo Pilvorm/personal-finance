@@ -3,6 +3,7 @@
 import { CaretDown, Sort, Filter } from "../icons";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
+
 import { DROPDOWN_ANIMATION } from "@/app/data";
 
 export default function Dropdown({ label, value, setValue, options, type }) {
