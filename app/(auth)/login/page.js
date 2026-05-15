@@ -2,10 +2,10 @@ import Link from "next/link";
 import { ShowPassword, HidePassword } from "@/app/components/icons";
 import { signIn, auth, providerMap } from "@/auth";
 import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { AuthError } from "next-auth";
 
 export default async function Login({ searchParams }) {
-
   const params = await searchParams;
 
   return (
@@ -50,7 +50,13 @@ export default async function Login({ searchParams }) {
           Login
         </button>
 
-        <div className="mt-4 pt-4 border-t-1 border-grey-100">
+        <div className="my-4 flex items-center justify-center gap-2">
+          <div className="w-full h-[1px] bg-grey-100 "></div>
+          <span className="text-sm text-grey-500">or</span>
+          <div className="w-full h-[1px] bg-grey-100 "></div>
+        </div>
+
+        <div className="flex flex-col justify-center gap-4">
           {Object.values(providerMap).map((provider) => (
             <form
               key={provider.id}
@@ -70,7 +76,9 @@ export default async function Login({ searchParams }) {
             >
               <button type="submit" className="auth-btn w-full">
                 <div className="flex items-center justify-center gap-4">
-                  {provider.name == "GitHub" && <FaGithub size={22} />} Log in
+                  {provider.name == "GitHub" && <FaGithub size={22} />}
+                  {provider.name == "Google" && <FcGoogle size={22} />}
+                   Log in
                   with {provider.name}
                 </div>
               </button>

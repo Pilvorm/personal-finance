@@ -1,10 +1,11 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/db";
 import type { Provider } from "next-auth/providers";
 
-const providers: Provider[] = [GitHub];
+const providers: Provider[] = [GitHub, Google];
 
 export const providerMap = providers
   .map((provider) => {

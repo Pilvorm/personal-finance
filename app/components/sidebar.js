@@ -17,6 +17,8 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { data: session, status } = useSession();
+  
+  console.log("Session data:", session);
 
   return (
     <nav

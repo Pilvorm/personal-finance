@@ -96,7 +96,7 @@ export function getBillStatus(dueDay) {
   return "upcoming";
 }
 
-export function getBillsSummary(billsData) {
+export function getBillsSummary(billsData = []) {
   if (!billsData) {
     return {
       paid: { count: 0, total: 0 },

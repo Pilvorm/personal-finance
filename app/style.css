@@ -66,15 +66,14 @@ input[type=number] {
   border-radius: 8px;
   transition: background-color 0.125s ease-in-out;
 }
+
 .submit-btn:not(:disabled):hover,
-.delete-btn:not(:disabled):hover,
-.auth-btn:not(:disabled):hover {
+.delete-btn:not(:disabled):hover {
   background-color: #f8f4f0;
   color: black;
 }
 .submit-btn:disabled,
-.delete-btn:disabled,
-.auth-btn:disabled {
+.delete-btn:disabled {
   cursor: not-allowed;
   pointer-events: none;
 }

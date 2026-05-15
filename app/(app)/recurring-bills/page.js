@@ -9,9 +9,7 @@ import PageHeader from "@/app/components/pageHeader";
 import Search from "@/app/components/search";
 import { RecurringBillsOutline } from "@/app/components/icons";
 import Dropdown from "@/app/components/dropdowns/dropdown";
-import {
-  RecurringBillsTableSkeleton,
-} from "@/app/components/skeleton/recurringBills";
+import { RecurringBillsTableSkeleton } from "@/app/components/skeleton/recurringBills";
 
 import { useDebounce, formatUSD, buildQueryParams } from "@/app/lib/helper";
 import { getOrdinal, getBillStatus, getBillsSummary } from "@/app/lib/helper";
@@ -71,47 +69,50 @@ export default function RecurringBills() {
 
       <main className="my-8 flex flex-col lg:grid grid-cols-12 gap-6">
         {/* Left */}
-        {<div className="col-span-4">
-          <div className="p-6 flex flex-col gap-8 text-white bg-grey-900 rounded-xl">
-            <RecurringBillsOutline />
-            <div>
-              <div>Total Bills</div>
-              <div className="mt-3 text-[32px] font-bold">
-                {formatUSD(summary.grandTotal.total)}
+        {
+          <div className="col-span-4">
+            <div className="p-6 flex flex-col gap-8 text-white bg-grey-900 rounded-xl">
+              <RecurringBillsOutline />
+              <div>
+                <div>Total Bills</div>
+                <div className="mt-3 text-[32px] font-bold">
+                  {formatUSD(summary.grandTotal.total)}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="card mt-6">
-            <h2 className="card-title">Summary</h2>
-            <div className="mt-5">
-              <div
-                className={`pb-4 flex items-center justify-between border-b border-grey-100`}
-              >
-                <div className="text-grey-500">Paid Bills</div>
-                <div className="font-bold">
-                  {summary.paid.count} ({formatUSD(summary.paid.total)})
+            <div className="card mt-6">
+              <h2 className="card-title">Summary</h2>
+              <div className="mt-5">
+                <div
+                  className={`pb-4 flex items-center justify-between border-b border-grey-100`}
+                >
+                  <div className="text-grey-500">Paid Bills</div>
+                  <div className="font-bold">
+                    {summary.paid.count} ({formatUSD(summary.paid.total)})
+                  </div>
                 </div>
-              </div>
-              <div
-                className={`py-4 flex items-center justify-between border-b border-grey-100`}
-              >
-                <div className="text-grey-500">Total Upcoming</div>
-                <div className="font-bold">
-                  {summary.upcoming.count} ({formatUSD(summary.upcoming.total)})
+                <div
+                  className={`py-4 flex items-center justify-between border-b border-grey-100`}
+                >
+                  <div className="text-grey-500">Total Upcoming</div>
+                  <div className="font-bold">
+                    {summary.upcoming.count} (
+                    {formatUSD(summary.upcoming.total)})
+                  </div>
                 </div>
-              </div>
-              <div
-                className={`pt-4 flex items-center justify-between text-red`}
-              >
-                <div>Due Soon</div>
-                <div className="font-bold">
-                  {summary.due.count} ({formatUSD(summary.due.total)})
+                <div
+                  className={`pt-4 flex items-center justify-between text-red`}
+                >
+                  <div>Due Soon</div>
+                  <div className="font-bold">
+                    {summary.due.count} ({formatUSD(summary.due.total)})
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>}
+        }
 
         {/* Right */}
         <div className="col-span-8 card h-fit">
@@ -143,85 +144,105 @@ export default function RecurringBills() {
               </tr>
             </thead>
 
-            {isLoading ? (
-              <RecurringBillsTableSkeleton />
-            ) : (
-              <tbody className="">
-                {billsData?.map((item, index) => {
-                  const status = getBillStatus(item.dueDate);
-                  const dateColor =
-                    status == "paid"
-                      ? "text-green"
-                      : status == "due"
-                        ? "text-red"
-                        : "text-grey-500";
+            <AnimatePresence mode="wait">
+              {isLoading ? (
+                <RecurringBillsTableSkeleton />
+              ) : (
+                <tbody>
+                  {billsData?.length ? (
+                    billsData.map((item, index) => {
+                      const status = getBillStatus(item.dueDate);
 
-                  return (
-                    <motion.tr
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: index * 0.04 }}
-                      key={item.id}
-                      className={`block md:table-row ${index !== billsData.length - 1 && "border-b border-grey-100"}`}
-                    >
-                      {/* Recipient */}
-                      <td className="flex items-end md:items-center justify-between md:table-cell">
-                        <div>
-                          <div className="flex items-center gap-4">
-                            <Image
-                              src={`/assets/images/avatars/${item.avatar}`}
-                              alt={item.title}
-                              width={40}
-                              height={40}
-                              className="rounded-full"
-                            />
+                      const dateColor =
+                        status == "paid"
+                          ? "text-green"
+                          : status == "due"
+                            ? "text-red"
+                            : "text-grey-500";
 
-                            <div className="text-sm font-bold">
-                              {item.title}
+                      return (
+                        <motion.tr
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: index * 0.04 }}
+                          key={item.id}
+                          className={`block md:table-row ${
+                            index !== billsData.length - 1 &&
+                            "border-b border-grey-100"
+                          }`}
+                        >
+                          {/* Recipient */}
+                          <td className="flex items-end md:items-center justify-between md:table-cell">
+                            <div>
+                              <div className="flex items-center gap-4">
+                                <Image
+                                  src={`/assets/images/avatars/${item.avatar}`}
+                                  alt={item.title}
+                                  width={40}
+                                  height={40}
+                                  className="rounded-full"
+                                />
+
+                                <div className="text-sm font-bold">
+                                  {item.title}
+                                </div>
+                              </div>
+
+                              <div
+                                className={`mt-2 text-xs md:hidden flex gap-2 ${dateColor}`}
+                              >
+                                Monthly-{getOrdinal(item.dueDate)}
+                                {status == "paid" ? (
+                                  <BillPaid />
+                                ) : (
+                                  status == "due" && <BillDue />
+                                )}
+                              </div>
                             </div>
-                          </div>
-                          <div
-                            className={`mt-2 text-xs md:hidden flex gap-2 ${dateColor}`}
+
+                            {/* Amount - Mobile */}
+                            <div className="md:hidden text-sm font-bold">
+                              {formatUSD(item.amount)}
+                            </div>
+                          </td>
+
+                          {/* Desktop-only columns */}
+                          <td
+                            className={`hidden md:table-cell text-xs ${dateColor}`}
                           >
-                            Monthly-{getOrdinal(item.dueDate)}
-                            {status == "paid" ? (
-                              <BillPaid />
-                            ) : (
-                              status == "due" && <BillDue />
-                            )}
-                          </div>
-                        </div>
+                            <div className="flex items-center gap-2">
+                              Monthly-{getOrdinal(item.dueDate)}
+                              {status == "paid" ? (
+                                <BillPaid />
+                              ) : (
+                                status == "due" && <BillDue />
+                              )}
+                            </div>
+                          </td>
 
-                        {/* Amount - Mobile */}
-                        <div className="md:hidden text-sm font-bold">
-                          {formatUSD(item.amount)}
-                        </div>
-                      </td>
-
-                      {/* Desktop-only columns */}
+                          <td
+                            className={`hidden md:table-cell text-sm font-bold text-right ${
+                              status == "due" && "text-red"
+                            }`}
+                          >
+                            {formatUSD(item.amount)}
+                          </td>
+                        </motion.tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
                       <td
-                        className={`hidden md:table-cell text-xs ${dateColor}`}
+                        colSpan={3}
+                        className="py-10 text-center text-sm text-grey-500"
                       >
-                        <div className="flex items-center gap-2">
-                          Monthly-{getOrdinal(item.dueDate)}
-                          {status == "paid" ? (
-                            <BillPaid />
-                          ) : (
-                            status == "due" && <BillDue />
-                          )}
-                        </div>
+                        No recurring bills found.
                       </td>
-
-                      <td
-                        className={`hidden md:table-cell text-sm font-bold text-right ${status == "due" && "text-red"}`}
-                      >
-                        {formatUSD(item.amount)}
-                      </td>
-                    </motion.tr>
-                  );
-                })}
-              </tbody>
-            )}
+                    </tr>
+                  )}
+                </tbody>
+              )}
+            </AnimatePresence>
           </table>
         </div>
       </main>

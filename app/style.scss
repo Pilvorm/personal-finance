@@ -100,7 +100,10 @@ input[type="number"] {
   font-weight: 700;
   border-radius: 8px;
   transition: background-color 0.125s ease-in-out;
+}
 
+.submit-btn,
+.delete-btn {
   &:not(:disabled):hover {
     background-color: $beige-100;
     color: black;

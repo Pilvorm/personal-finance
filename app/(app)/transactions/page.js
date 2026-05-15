@@ -144,78 +144,92 @@ export default function Transactions() {
               <TransactionsSkeleton />
             ) : (
               <tbody>
-                {transactionsData?.map((item, index) => {
-                  const isPositive = item.type === "income";
+                {transactionsData?.length ? (
+                  transactionsData.map((item, index) => {
+                    const isPositive = item.type === "income";
 
-                  return (
-                    <motion.tr
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: index * 0.04 }}
-                      key={item.id}
-                      className="block md:table-row border-b border-grey-100"
-                    >
-                      <td className="flex items-center justify-between md:table-cell">
-                        <div className="flex items-center gap-4">
-                          <Image
-                            src={`/assets/images/avatars/${item.avatar}`}
-                            alt={item.name}
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                          />
-                          <div>
-                            <div className="text-sm font-bold">{item.name}</div>
+                    return (
+                      <motion.tr
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: index * 0.04 }}
+                        key={item.id}
+                        className="block md:table-row border-b border-grey-100"
+                      >
+                        <td className="flex items-center justify-between md:table-cell">
+                          <div className="flex items-center gap-4">
+                            <Image
+                              src={`/assets/images/avatars/${item.avatar}`}
+                              alt={item.name}
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
 
-                            <div className="mt-1 text-xs text-grey-500 md:hidden">
-                              {item.categoryName || "General"}
+                            <div>
+                              <div className="text-sm font-bold">
+                                {item.name}
+                              </div>
+
+                              <div className="mt-1 text-xs text-grey-500 md:hidden">
+                                {item.categoryName || "General"}
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="flex flex-col items-end md:hidden">
-                          <div
-                            className={`text-sm font-bold ${
-                              isPositive && "text-green"
-                            }`}
-                          >
-                            {isPositive ? "+" : "-"}
-                            {formatUSD(item.amount)}
+                          <div className="flex flex-col items-end md:hidden">
+                            <div
+                              className={`text-sm font-bold ${
+                                isPositive && "text-green"
+                              }`}
+                            >
+                              {isPositive ? "+" : "-"}
+                              {formatUSD(item.amount)}
+                            </div>
+
+                            <span className="mt-1 text-xs text-grey-500">
+                              {new Date(item.date).toLocaleDateString("en-GB", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              })}
+                            </span>
                           </div>
+                        </td>
 
-                          <span className="mt-1 text-xs text-grey-500">
-                            {new Date(item.date).toLocaleDateString("en-GB", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })}
-                          </span>
-                        </div>
-                      </td>
+                        <td className="hidden md:table-cell text-sm text-grey-500">
+                          {item.categoryName || "General"}
+                        </td>
 
-                      <td className="hidden md:table-cell text-sm text-grey-500">
-                        {item.categoryName || "General"}
-                      </td>
+                        <td className="hidden md:table-cell text-sm text-grey-500">
+                          {new Date(item.date).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </td>
 
-                      <td className="hidden md:table-cell text-sm text-grey-500">
-                        {new Date(item.date).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </td>
-
-                      <td
-                        className={`hidden md:table-cell text-sm font-bold text-right ${
-                          isPositive && "text-green"
-                        }`}
-                      >
-                        {isPositive ? "+" : "-"}
-                        {formatUSD(item.amount)}
-                      </td>
-                    </motion.tr>
-                  );
-                })}
+                        <td
+                          className={`hidden md:table-cell text-sm font-bold text-right ${
+                            isPositive && "text-green"
+                          }`}
+                        >
+                          {isPositive ? "+" : "-"}
+                          {formatUSD(item.amount)}
+                        </td>
+                      </motion.tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="py-10 text-center text-sm text-grey-500"
+                    >
+                      No transactions found.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             )}
           </AnimatePresence>
