@@ -51,9 +51,9 @@ export default function Pots() {
           <AnimatePresence mode="wait">
             {isLoading ? (
               <CategorySkeleton />
-            ) : (
+            ) : potsData?.length > 0 ? (
               potsData
-                ?.slice(0, 4)
+                .slice(0, 4)
                 .map((pot, index) => (
                   <Category
                     index={index}
@@ -63,6 +63,16 @@ export default function Pots() {
                     customValue={pot.totalSaved}
                   />
                 ))
+            ) : (
+              <div className={`flex items-center gap-4`}>
+                <div className={`min-w-1 h-full bg-beige-100 rounded-lg`} />
+
+                <div
+                  className={`flex gap-1 w-full flex-col items-start xl:flex-row xl:items-center justify-between`}
+                >
+                  <h3 className="text-sm text-grey-500">Create a pot to start saving</h3>
+                </div>
+              </div>
             )}
           </AnimatePresence>
         </div>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { CaretRight } from "@/app/components/icons";
+import { CaretRight, BudgetsIcon } from "@/app/components/icons";
 import PageHeader from "@/app/components/pageHeader";
 import DonutChart from "@/app/components/donutChart";
 import Category from "@/app/components/category";
@@ -42,8 +42,8 @@ const BudgetCard = ({
       layout
       layoutId={id}
       key={id}
-      initial={{ opacity: 0, y: -10, }}
-      animate={{ opacity: 1, y: 0, }}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       className="card"
     >
@@ -199,26 +199,37 @@ export default function Budgets({}) {
         {/* Right */}
         <div className="col-span-7 flex flex-col gap-6">
           <AnimatePresence mode="popLayout">
-            {data?.map((budget, index) => (
-              <BudgetCard
-                index={index}
-                key={budget.id}
-                id={budget.id}
-                theme={budget.theme}
-                categoryId={budget.categoryId}
-                name={budget.categoryName}
-                spending={budget.spending}
-                max={budget.max}
-                spendingList={budget.transactions}
-                onEdit={() => setEditTarget(budget)}
-                onDelete={() =>
-                  setDeleteTarget({
-                    id: budget.id,
-                    name: budget.categoryName,
-                  })
-                }
-              />
-            ))}
+            {data?.length > 0 ? (
+              data.map((budget, index) => (
+                <BudgetCard
+                  index={index}
+                  key={budget.id}
+                  id={budget.id}
+                  theme={budget.theme}
+                  categoryId={budget.categoryId}
+                  name={budget.categoryName}
+                  spending={budget.spending}
+                  max={budget.max}
+                  spendingList={budget.transactions}
+                  onEdit={() => setEditTarget(budget)}
+                  onDelete={() =>
+                    setDeleteTarget({
+                      id: budget.id,
+                      name: budget.categoryName,
+                    })
+                  }
+                />
+              ))
+            ) : (
+              <div className="py-16 h-[300px] flex flex-col items-center justify-center text-center">
+                <BudgetsIcon className="mb-4 size-10 text-grey-300" />
+
+                <div className="text-grey-500">
+                  No budgets yet. Create your first budget to start tracking
+                  spending.
+                </div>
+              </div>
+            )}
           </AnimatePresence>
         </div>
       </main>

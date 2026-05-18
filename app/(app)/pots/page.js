@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
+import { PotsIcon } from "@/app/components/icons";
 import PageHeader from "../../components/pageHeader";
 import CategoryHeader from "../../components/categoryHeader";
 import PotModal from "@/app/components/modal/potModal";
@@ -39,8 +40,8 @@ const PotsCard = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -10, }}
-      animate={{ opacity: 1, x: 0, }}
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       className="card flex flex-col gap-6"
     >
@@ -166,25 +167,35 @@ export default function Pots() {
 
       <main className="my-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AnimatePresence mode="popLayout">
-          {potsData?.map((pot, index) => (
-            <PotsCard
-              index={index}
-              key={pot.id}
-              id={pot.id}
-              theme={pot.theme}
-              name={pot.name}
-              totalSaved={pot.totalSaved}
-              target={pot.target}
-              setTransaction={setTransaction}
-              onEdit={() => setEditTarget(pot)}
-              onDelete={() =>
-                setDeleteTarget({
-                  id: pot.id,
-                  name: pot.name,
-                })
-              }
-            />
-          ))}
+          {potsData?.length > 0 ? (
+            potsData.map((pot, index) => (
+              <PotsCard
+                index={index}
+                key={pot.id}
+                id={pot.id}
+                theme={pot.theme}
+                name={pot.name}
+                totalSaved={pot.totalSaved}
+                target={pot.target}
+                setTransaction={setTransaction}
+                onEdit={() => setEditTarget(pot)}
+                onDelete={() =>
+                  setDeleteTarget({
+                    id: pot.id,
+                    name: pot.name,
+                  })
+                }
+              />
+            ))
+          ) : (
+            <div className="py-16 col-span-full h-[300px] flex flex-col items-center justify-center text-center">
+              <PotsIcon className="mb-4 size-10 text-grey-300" />
+
+              <div className="text-grey-500">
+                No pots yet. Create your first pot to start saving.
+              </div>
+            </div>
+          )}
         </AnimatePresence>
       </main>
     </div>

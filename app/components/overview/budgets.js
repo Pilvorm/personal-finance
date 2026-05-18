@@ -46,8 +46,8 @@ export default function Budgets() {
           <AnimatePresence mode="wait">
             {isLoading ? (
               <CategorySkeleton />
-            ) : (
-              data?.map((budget, index) => (
+            ) : data?.length > 0 ? (
+              data.map((budget, index) => (
                 <Category
                   index={index}
                   key={budget.id}
@@ -56,6 +56,18 @@ export default function Budgets() {
                   customValue={budget.max}
                 />
               ))
+            ) : (
+              <div className={`flex items-center gap-4`}>
+                <div className={`min-w-1 h-full bg-beige-100 rounded-lg`} />
+
+                <div
+                  className={`flex gap-1 w-full flex-col items-start xl:flex-row xl:items-center justify-between`}
+                >
+                  <h3 className="text-sm text-grey-500">
+                    Create a budget to start tracking
+                  </h3>
+                </div>
+              </div>
             )}
           </AnimatePresence>
         </div>
