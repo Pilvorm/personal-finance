@@ -169,7 +169,14 @@ export default function Pots() {
       <main className="my-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AnimatePresence mode="popLayout">
           {isLoading ? (
-            <PotCardSkeleton />
+            <motion.div
+              layout={false}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <PotCardSkeleton />
+            </motion.div>
           ) : potsData?.length > 0 ? (
             potsData.map((pot, index) => (
               <PotsCard
