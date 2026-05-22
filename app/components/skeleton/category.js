@@ -1,9 +1,9 @@
 import { motion } from "motion/react";
 
-export default function CategorySkeleton({ spending, row, className }) {
+export default function CategorySkeleton({ spending, row, className, itemAmount = 4 }) {
   return (
     <>
-      {Array.from({ length: 4 }).map((_, i) => (
+      {Array.from({ length: itemAmount }).map((_, i) => (
         <motion.div
           key={i}
           initial={{ opacity: 0 }}
@@ -20,7 +20,7 @@ export default function CategorySkeleton({ spending, row, className }) {
                 : "flex-col"
             }`}
           >
-            <div className="w-15 h-5 bg-grey-100 rounded-sm"></div>
+            <div className="w-16 h-6 bg-grey-100 rounded-sm"></div>
 
             {spending ? (
               <div className="flex items-center gap-2">

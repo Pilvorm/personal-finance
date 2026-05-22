@@ -9,6 +9,7 @@ import CategoryHeader from "../../components/categoryHeader";
 import PotModal from "@/app/components/modal/potModal";
 import ConfirmDelete from "@/app/components/modal/confirmDelete";
 import PotTransaction from "@/app/components/modal/potTransaction";
+import PotCardSkeleton from "@/app/components/skeleton/potCard";
 
 import { getColor } from "@/app/lib/helper";
 import { formatUSD } from "@/app/lib/helper";
@@ -109,7 +110,7 @@ export default function Pots() {
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["pots"],
     queryFn: async () => {
       const res = await fetch("/api/pots");
@@ -167,7 +168,9 @@ export default function Pots() {
 
       <main className="my-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AnimatePresence mode="popLayout">
-          {potsData?.length > 0 ? (
+          {isLoading ? (
+            <PotCardSkeleton />
+          ) : potsData?.length > 0 ? (
             potsData.map((pot, index) => (
               <PotsCard
                 index={index}

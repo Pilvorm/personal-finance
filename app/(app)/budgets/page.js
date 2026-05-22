@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import CategorySkeleton from "@/app/components/skeleton/category";
 
 import { CaretRight, BudgetsIcon } from "@/app/components/icons";
 import PageHeader from "@/app/components/pageHeader";
@@ -11,6 +12,7 @@ import CategoryHeader from "@/app/components/categoryHeader";
 import TransactionItem from "@/app/components/transactionItem";
 import BudgetModal from "@/app/components/modal/budgetModal";
 import ConfirmDelete from "@/app/components/modal/confirmDelete";
+import BudgetCardSkeleton from "@/app/components/skeleton/budgetCard";
 
 import { getColor } from "@/app/lib/helper";
 import { formatUSD } from "@/app/lib/helper";
@@ -57,7 +59,9 @@ const BudgetCard = ({
 
       {/* Spending and Remaining */}
       <div className="mt-5 flex flex-col gap-4">
-        <div className="text-sm text-grey-500">Maximum of {formatUSD(max)}</div>
+        <div className="w-fit text-sm text-grey-500">
+          Maximum of {formatUSD(max)}
+        </div>
 
         {/* Bar */}
         <div className="p-1 w-full h-8 bg-beige-100 rounded-sm">
@@ -115,11 +119,7 @@ export default function Budgets({}) {
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const {
-    status,
-    data = [],
-    error,
-  } = useQuery({
+  const { data = [], isLoading } = useQuery({
     queryKey: ["budgets"],
     queryFn: async () => {
       const res = await fetch("/api/budgets");
@@ -199,7 +199,16 @@ export default function Budgets({}) {
         {/* Right */}
         <div className="col-span-7 flex flex-col gap-6">
           <AnimatePresence mode="popLayout">
-            {data?.length > 0 ? (
+            {isLoading ? (
+              <motion.div
+                layout={false}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <BudgetCardSkeleton />
+              </motion.div>
+            ) : data?.length > 0 ? (
               data.map((budget, index) => (
                 <BudgetCard
                   index={index}

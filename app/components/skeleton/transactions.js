@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 
-export function TransactionsOverviewSkeleton() {
+export function TransactionsOverviewSkeleton({itemAmount = 4}) {
   return (
     <motion.div
       key="skeleton"
@@ -8,10 +8,10 @@ export function TransactionsOverviewSkeleton() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      {Array.from({ length: 4 }).map((_, i) => (
+      {Array.from({ length: itemAmount }).map((_, i) => (
         <div
           key={i}
-          className={`flex items-center justify-between ${i !== 0 ? "pt-5" : ""} ${i !== 3 ? "pb-5 border-b border-grey-100" : ""}
+          className={`flex items-center justify-between ${i !== 0 ? "pt-5" : ""} ${i !== itemAmount - 1 ? "pb-5 border-b border-grey-100" : ""}
 `}
         >
           <div className="flex items-center gap-4">
