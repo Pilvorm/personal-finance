@@ -85,13 +85,6 @@ export default async function Login({ searchParams }) {
             </form>
           ))}
         </div>
-
-        <div className="mt-8 text-grey-500 text-sm text-center">
-          Need to create an account?{" "}
-          <Link href="/sign-up" className="underline font-bold">
-            Sign Up
-          </Link>
-        </div>
       </div>
     </main>
   );

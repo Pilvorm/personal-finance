@@ -128,8 +128,6 @@ export default function Budgets({}) {
     staleTime: 1000 * 60,
   });
 
-  console.log("budgets data", data);
-
   const usedCategories = new Set(data.map((c) => c.categoryName));
   const usedThemes = new Set(data.map((t) => t.theme));
 
