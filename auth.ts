@@ -1,11 +1,18 @@
 import NextAuth from "next-auth";
+import Resend from "next-auth/providers/resend";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/db";
 import type { Provider } from "next-auth/providers";
 
-const providers: Provider[] = [GitHub, Google];
+const providers: Provider[] = [
+  GitHub,
+  Google,
+  Resend({
+    from: "onboarding@resend.dev",
+  }),
+];
 
 export const providerMap = providers
   .map((provider) => {
@@ -26,10 +33,10 @@ export const config = {
   },
   callbacks: {
     session({ session, user }) {
-      session.user.id = user.id
-      return session
+      session.user.id = user.id;
+      return session;
     },
-  }
+  },
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

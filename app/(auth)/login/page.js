@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShowPassword, HidePassword } from "@/app/components/icons";
+import Input from "@/app/components/input";
 import { signIn, auth, providerMap } from "@/auth";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -13,42 +14,36 @@ export default async function Login({ searchParams }) {
       <div className="card w-full max-w-[560px]">
         <h2 className="card-title">Login</h2>
 
-        <div className="mt-8 flex flex-col gap-1">
-          <label htmlFor="email" className="text-xs text-grey-500 font-bold">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            className="btn-basic auth-input px-5 py-3"
-          />
-        </div>
+        <form
+          action={async (formData) => {
+            "use server";
 
-        {/* <div className="mt-4 flex flex-col gap-1">
-          <label htmlFor="password" className="text-xs text-grey-500 font-bold">
-            Password
-          </label>
-          <div className="relative">
+            const email = formData.get("email");
+
+            await signIn("resend", {
+              email: String(email),
+              redirectTo: "/",
+            });
+          }}
+        >
+          <div className="mt-8 flex flex-col gap-1">
+            <label htmlFor="email" className="text-xs text-grey-500 font-bold">
+              Email
+            </label>
+
             <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              id="password"
-              className="btn-basic auth-input px-5 py-3 w-full"
+              type="email"
+              name="email"
+              id="email"
+              required
+              className="btn-basic auth-input px-5 py-3"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2"
-            >
-              {showPassword ? <HidePassword /> : <ShowPassword />}
-            </button>
           </div>
-        </div> */}
 
-        <button type="submit" className="submit-btn mt-8">
-          Login
-        </button>
+          <button type="submit" className="submit-btn mt-8">
+            Send Magic Link
+          </button>
+        </form>
 
         <div className="my-4 flex items-center justify-center gap-2">
           <div className="w-full h-[1px] bg-grey-100 "></div>
@@ -57,33 +52,34 @@ export default async function Login({ searchParams }) {
         </div>
 
         <div className="flex flex-col justify-center gap-4">
-          {Object.values(providerMap).map((provider) => (
-            <form
-              key={provider.id}
-              action={async () => {
-                "use server";
-                try {
-                  await signIn(provider.id, {
-                    redirectTo: "/",
-                  });
-                } catch (error) {
-                  if (error instanceof AuthError) {
-                    // return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
+          {Object.values(providerMap)
+            .filter((provider) => provider.id !== "resend")
+            .map((provider) => (
+              <form
+                key={provider.id}
+                action={async () => {
+                  "use server";
+                  try {
+                    await signIn(provider.id, {
+                      redirectTo: "/",
+                    });
+                  } catch (error) {
+                    if (error instanceof AuthError) {
+                      // return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
+                    }
+                    throw error;
                   }
-                  throw error;
-                }
-              }}
-            >
-              <button type="submit" className="auth-btn w-full">
-                <div className="flex items-center justify-center gap-4">
-                  {provider.name == "GitHub" && <FaGithub size={22} />}
-                  {provider.name == "Google" && <FcGoogle size={22} />}
-                   Log in
-                  with {provider.name}
-                </div>
-              </button>
-            </form>
-          ))}
+                }}
+              >
+                <button type="submit" className="auth-btn w-full">
+                  <div className="flex items-center justify-center gap-4">
+                    {provider.name == "GitHub" && <FaGithub size={22} />}
+                    {provider.name == "Google" && <FcGoogle size={22} />}
+                    Log in with {provider.name}
+                  </div>
+                </button>
+              </form>
+            ))}
         </div>
       </div>
     </main>
