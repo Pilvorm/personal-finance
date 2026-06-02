@@ -14,7 +14,7 @@ export default async function Login({ searchParams }) {
       <div className="card w-full max-w-[560px]">
         <h2 className="card-title">Login</h2>
 
-        <form
+        {/* <form
           action={async (formData) => {
             "use server";
 
@@ -49,9 +49,9 @@ export default async function Login({ searchParams }) {
           <div className="w-full h-[1px] bg-grey-100 "></div>
           <span className="text-sm text-grey-500">or</span>
           <div className="w-full h-[1px] bg-grey-100 "></div>
-        </div>
+        </div> */}
 
-        <div className="flex flex-col justify-center gap-4">
+        <div className="mt-4 flex flex-col justify-center gap-4">
           {Object.values(providerMap)
             .filter((provider) => provider.id !== "resend")
             .map((provider) => (
