@@ -18,8 +18,6 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   
-  console.log("Session data:", session);
-
   return (
     <nav
       className={`fixed bottom-0 lg:top-0 left-0 w-full lg:h-full ${isMenuOpen ? "lg:w-[300px]" : "lg:w-[112px]"} transition-all duration-300 px-4 sm:px-10 lg:px-0 lg:pb-6 flex flex-col bg-grey-900 text-grey-300 max-lg:rounded-t-2xl lg:rounded-r-2xl z-10`}

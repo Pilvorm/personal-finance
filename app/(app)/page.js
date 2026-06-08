@@ -32,7 +32,7 @@ export default function Home() {
 
   return (
     <div id="overview" className="px-4 pt-8 pb-28 md:px-10 lg:py-8">
-      <PageHeader title="Overview" />
+      <PageHeader title="Overview" profile={true}/>
       <Summary
         balance={userData?.balance}
         transactionSummary={transactionSummary}

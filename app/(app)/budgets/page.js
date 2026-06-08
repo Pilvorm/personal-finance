@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import CategorySkeleton from "@/app/components/skeleton/category";
 
 import { CaretRight, BudgetsIcon } from "@/app/components/icons";
 import PageHeader from "@/app/components/pageHeader";
